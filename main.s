@@ -1,4 +1,4 @@
-.hd64 ; eZ80 supports these instructions
+  .hd64 ; eZ80 supports these instructions
 
 main:
   jr	main

@@ -1,4 +1,4 @@
-; ioutul.s i/o utility functions
+; ioutul.s - i/o utility functions
 
 ; write sequence to i/o registers
 ; HL points to list of addresses and values
@@ -12,4 +12,3 @@ io_out_seq_loop:
   inc	HL
   otim
   jr	io_out_seq_loop
-  
