@@ -15,3 +15,4 @@ XDEF outseq
 	;	HL <- HL+1
 	DEFM	$ED & $83
 	djnz	outseq
+	ret

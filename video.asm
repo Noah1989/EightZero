@@ -23,8 +23,7 @@ DEFC SPI_CTL = $BA
 .videoinit
 	ld	HL, videoinitseq
 	ld	B, #end_videoinitseq-videoinitseq
-	call	outseq
-	ret
+	jp	outseq
 .videoinitseq
 	DEFM	PB_DR & $02
 	DEFM	PB_DDR & $FD
