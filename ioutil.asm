@@ -5,7 +5,8 @@ XDEF outseq
 ; write sequence to i/o registers on page 0
 ; HL points to list of addresses (low byte only) and values
 ; B must be equal to the length of the list in bytes
-.outseq	ld	C, (HL)
+.outseq
+	ld	C, (HL)
 	inc	HL
 	; eZ80 otim instuction (ED 83):
 	;	({UU, $00, C}) <- (HL)

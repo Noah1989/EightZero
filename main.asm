@@ -4,5 +4,7 @@ ORG $E000
 
 XREF videoinit
 
-.main	call	videoinit
-.loop	jr	loop
+.main
+	call	videoinit
+.loop
+	jr	loop
