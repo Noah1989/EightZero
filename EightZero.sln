@@ -8,7 +8,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sources", "Sources", "{91C6
 		video.asm = video.asm
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EightZero", "EightZero", "{765BB8DB-1262-44CD-A346-AE48307DAF02}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{765BB8DB-1262-44CD-A346-AE48307DAF02}"
 	ProjectSection(SolutionItems) = preProject
 		Makefile = Makefile
 		README.md = README.md
@@ -16,9 +16,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EightZero", "EightZero", "{
 EndProject
 Global
 	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = TRUE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{91C6CF15-626D-40CD-B63C-7992DB8F9295} = {765BB8DB-1262-44CD-A346-AE48307DAF02}
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal

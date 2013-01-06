@@ -21,16 +21,16 @@ DEFC SPI_CTL = $BA
 ; 6 - MISO
 ; 7 - MOSI  
 .videoinit
-	ld	HL, videoinitseq
-	ld	B, #end_videoinitseq-videoinitseq
-	jp	outseq
+	LD	HL, videoinitseq
+	LD	B, #end_videoinitseq-videoinitseq
+	JP	outseq
 .videoinitseq
 	; port confuguration (see above)
-	DEFM	PB_DR & $02
-	DEFM	PB_DDR & $FD
-	DEFM	PB_ALT2 & $CC
+	DEFM	PB_DR, $02
+	DEFM	PB_DDR, $FD
+	DEFM	PB_ALT2, $CC
 	; fastest possible SPI speed
-	DEFM	SPI_BRG_L & $03
+	DEFM	SPI_BRG_L, $03
 	; enable SPI: mode 0, master
-	DEFM	SPI_CTL & $30
+	DEFM	SPI_CTL, $30
 .end_videoinitseq
