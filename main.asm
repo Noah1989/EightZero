@@ -1,4 +1,4 @@
-;main - startup code
+; main - startup code
 
 ORG $E000
 
