@@ -25,7 +25,7 @@ DEFC SPI_CTL = $BA
 	LD	B, #end_videoinitseq-videoinitseq
 	JP	outseq
 .videoinitseq
-	; port confuguration (see above)
+	; port configuration (see above)
 	DEFM	PB_DR, $02
 	DEFM	PB_DDR, $FD
 	DEFM	PB_ALT2, $CC
