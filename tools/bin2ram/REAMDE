@@ -1,0 +1,12 @@
+This is a simple script that helps with bootstrapping via the
+simple ZDI debugger (../debugger).
+
+Typing in machine code by hand is boring and error-prone ;-)
+
+It depends on pexpect and talks to the debugger through a tty
+such as /dev/ttyUSB0
+
+It's quite slow due to the verbosity of the simple debugger.
+This is not a big deal because we won't need it anymore when
+we have the system at a point where it can reprogram itself
+directly without the use of ZDI.
