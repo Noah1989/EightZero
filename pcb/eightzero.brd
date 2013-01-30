@@ -1,0 +1,210 @@
+PCBNEW-BOARD Version 1 date Wed 23 Jan 2013 09:42:14 PM CET
+
+# Created by Pcbnew(2012-apr-16-27)-stable
+
+$GENERAL
+encoding utf-8
+LayerCount 2
+Ly 1FFF8001
+EnabledLayers 1FFF8001
+Links 0
+NoConn 0
+Di 29376 19093 95818 58024
+Ndraw 6
+Ntrack 0
+Nzone 0
+BoardThickness 630
+Nmodule 4
+Nnets 1
+$EndGENERAL
+
+$SHEETDESCR
+Sheet A4 11700 8267
+Title ""
+Date "23 jan 2013"
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndSHEETDESCR
+
+$SETUP
+InternalUnit 0.000100 INCH
+Layers 2
+Layer[0] Back signal
+Layer[15] Front signal
+TrackWidth 80
+TrackClearence 100
+ZoneClearence 200
+TrackMinWidth 80
+DrawSegmWidth 150
+EdgeSegmWidth 150
+ViaSize 350
+ViaDrill 250
+ViaMinSize 350
+ViaMinDrill 200
+MicroViaSize 200
+MicroViaDrill 50
+MicroViasAllowed 0
+MicroViaMinSize 200
+MicroViaMinDrill 50
+TextPcbWidth 120
+TextPcbSize 600 800
+EdgeModWidth 150
+TextModSize 600 600
+TextModWidth 120
+PadSize 1378 1378
+PadDrill 1378
+Pad2MaskClearance 100
+AuxiliaryAxisOrg 0 0
+PcbPlotParams (pcbplotparams (layerselection 3178497) (usegerberextensions true) (excludeedgelayer true) (linewidth 60) (plotframeref false) (viasonmask false) (mode 1) (useauxorigin false) (hpglpennumber 1) (hpglpenspeed 20) (hpglpendiameter 15) (hpglpenoverlay 2) (pscolor true) (psnegative false) (psa4output false) (plotreference true) (plotvalue true) (plotothertext true) (plotinvisibletext false) (padsonsilk false) (subtractmaskfromsilk false) (outputformat 1) (mirror false) (drillshape 1) (scaleselection 1) (outputdirectory ""))
+$EndSETUP
+
+$EQUIPOT
+Na 0 ""
+St ~
+$EndEQUIPOT
+$NCLASS
+Name "Default"
+Desc "This is the default net class."
+Clearance 100
+TrackWidth 80
+ViaDia 350
+ViaDrill 250
+uViaDia 200
+uViaDrill 50
+AddNet ""
+$EndNCLASS
+$MODULE 1pin
+Po 31692 55906 0 15 50FFCF0D 50FFCE42 ~~
+Li 1pin
+Cd module 1 pin (ou trou mecanique de percage)
+Kw DEV
+Sc 50FFCE42
+AR 1pin
+Op 0 0 0
+T0 0 -1200 400 400 0 100 N V 21 N ""
+T1 0 1100 400 400 0 100 N I 21 N ""
+DC 0 0 0 -900 150 21
+$PAD
+Sh "" C 1378 1378 0 0 0
+Dr 1378 0 0
+At HOLE N 00E0FFFF
+Ne 0 ""
+Po 0 0
+.SolderMask 787
+.LocalClearance 1181
+$EndPAD
+$EndMODULE  1pin
+$MODULE 1pin
+Po 88778 55906 0 15 50FFCF02 50FFCE40 ~~
+Li 1pin
+Cd module 1 pin (ou trou mecanique de percage)
+Kw DEV
+Sc 50FFCE40
+AR 1pin
+Op 0 0 0
+T0 0 -1200 400 400 0 100 N V 21 N ""
+T1 0 1100 400 400 0 100 N I 21 N ""
+DC 0 0 0 -900 150 21
+$PAD
+Sh "" C 1378 1378 0 0 0
+Dr 1378 0 0
+At HOLE N 00E0FFFF
+Ne 0 ""
+Po 0 0
+.SolderMask 787
+.LocalClearance 1181
+$EndPAD
+$EndMODULE  1pin
+$MODULE 1pin
+Po 88778 23622 0 15 50FFCEF7 50FFCE10 ~~
+Li 1pin
+Cd module 1 pin (ou trou mecanique de percage)
+Kw DEV
+Sc 50FFCE10
+AR 1pin
+Op 0 0 0
+T0 0 -1200 400 400 0 100 N V 21 N ""
+T1 0 1100 400 400 0 100 N I 21 N ""
+DC 0 0 0 -900 150 21
+$PAD
+Sh "" C 1378 1378 0 0 0
+Dr 1378 0 0
+At HOLE N 00E0FFFF
+Ne 0 ""
+Po 0 0
+.SolderMask 787
+.LocalClearance 1181
+$EndPAD
+$EndMODULE  1pin
+$MODULE 1pin
+Po 31692 23622 0 15 50FFCEE8 50FFCCD2 ~~
+Li 1pin
+Cd module 1 pin (ou trou mecanique de percage)
+Kw DEV
+Sc 50FFCCD2
+AR 1pin
+Op 0 0 0
+T0 0 -1200 400 400 0 100 N V 21 N ""
+T1 0 1100 400 400 0 100 N I 21 N ""
+DC 0 0 0 -900 150 21
+$PAD
+Sh "" C 1378 1378 0 0 0
+Dr 1378 0 0
+At HOLE N 00C0FFFF
+Ne 0 ""
+Po 0 0
+.SolderMask 787
+.LocalClearance 1181
+$EndPAD
+$EndMODULE  1pin
+$DRAWSEGMENT
+Po 0 29527 57873 29527 21653 150
+De 28 0 900 0 0
+$EndDRAWSEGMENT
+$DRAWSEGMENT
+Po 0 90944 57873 29527 57873 150
+De 28 0 900 0 0
+$EndDRAWSEGMENT
+$DRAWSEGMENT
+Po 0 90944 21653 90944 57873 150
+De 28 0 900 0 0
+$EndDRAWSEGMENT
+$DRAWSEGMENT
+Po 0 29527 21653 90944 21653 150
+De 28 0 900 0 0
+$EndDRAWSEGMENT
+$COTATION
+Ge 0 24 0
+Va 36220
+Te "91.999 mm"
+Po 93158 39763 600 800 120 2701 1
+Sb 0 92518 21653 92518 57873 120
+Sd 0 90944 57873 93798 57873 120
+Sg 0 90944 21653 93798 21653 120
+S1 0 92518 57873 92288 57430 120
+S2 0 92518 57873 92748 57430 120
+S3 0 92518 21653 92288 22096 120
+S4 0 92518 21653 92748 22096 120
+$endCOTATION
+$COTATION
+Ge 0 24 0
+Va 61417
+Te "155.999 mm"
+Po 60235 19833 600 800 120 0 1
+Sb 0 29527 20473 90944 20473 120
+Sd 0 90944 21653 90944 19193 120
+Sg 0 29527 21653 29527 19193 120
+S1 0 90944 20473 90501 20703 120
+S2 0 90944 20473 90501 20243 120
+S3 0 29527 20473 29970 20703 120
+S4 0 29527 20473 29970 20243 120
+$endCOTATION
+$TRACK
+$EndTRACK
+$ZONE
+$EndZONE
+$EndBOARD
