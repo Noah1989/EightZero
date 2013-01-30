@@ -3,3 +3,5 @@
 *.sym
 *.obj
 *.map
+
+*.suo
