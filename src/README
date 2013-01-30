@@ -1,0 +1,6 @@
+This is the source for the code that runs on the microcomputer.
+
+I have many plans for this but I'm not ready to write it all down yet.
+For now I'm still bootstrapping a standalone system.
+
+Use the tools from Z88dk to compile/assemble.
