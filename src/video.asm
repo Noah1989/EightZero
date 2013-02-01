@@ -3,6 +3,7 @@
 XREF output_sequence
 
 XDEF video_init
+XDEF video_copy
 
 DEFC PB_DR = $9A
 DEFC PB_DDR = $9B
@@ -14,6 +15,12 @@ DEFC SPI_TSR = $BC
 
 DEFC BG_COLOR = $280E
 DEFC RAM_PIC = $0000
+DEFC RAM_SPR = $3000
+
+DEFC COLOR_A = 2^15
+DEFC COLOR_R = 2^10
+DEFC COLOR_G = 2^5
+DEFC COLOR_B = 2^0
 
 ; initialize PORTB and SPI
 ; pin usage:
@@ -24,7 +31,7 @@ DEFC RAM_PIC = $0000
 ; 4 - unused
 ; 5 - unused
 ; 6 - MISO
-; 7 - MOSI  
+; 7 - MOSI
 .video_init
 	LD	HL, video_init_sequence
 	LD	B, #end_video_init_sequence-video_init_sequence
@@ -51,7 +58,7 @@ DEFC RAM_PIC = $0000
 	; check for SPIF (bit 7 in SPI_SR)
 	; eZ80 instruction: TSTIO $80
 	DEFB	$ED, $74, $80
-	; '0' means SPI transfer not finished	
+	; '0' means SPI transfer not finished
 	JR	Z, video_spi_wait_loop
 	LD	C, A
 	RET
@@ -73,7 +80,7 @@ DEFC RAM_PIC = $0000
 	CALL	video_spi_wait
 	; transmit address low byte
 	; eZ80 instruction: OUT0 (SPI_TSR), E
-	DEFB	$ED, $19, SPI_TSR				
+	DEFB	$ED, $19, SPI_TSR
 	JR	video_spi_wait
 	;RET optimized away by JR above
 
@@ -111,7 +118,7 @@ DEFC RAM_PIC = $0000
 ; HL points to the byte to fill with
 ; BC contains the number of bytes to write
 .video_fill
-	CALL	video_start_write	
+	CALL	video_start_write
 .video_fill_loop
 	CALL	video_spi_write
 	DEC	BC
@@ -121,20 +128,61 @@ DEFC RAM_PIC = $0000
 	JR	video_end_transfer
 	;RET	optimized away by JR above
 
+; fill video memory with 16-bit values
+; DE contains the fill start address
+; HL points to the word to fill with
+; BC contains the number of words to write
+.video_fill_16
+	CALL	video_start_write
+.video_fill_16_loop
+	CALL	video_spi_write
+	INC	HL
+	CALL	video_spi_write
+	DEC	HL
+	DEC	BC
+	LD	A, B
+	OR	C
+	JR	NZ, video_fill_16_loop
+	JR	video_end_transfer
+	;RET	optimized away by JR above
+
+; copy to video memory
+; DE contains the target address
+; HL points to the data to copy
+; BC contains the number of bytes to copy
+.video_copy
+	CALL	video_start_write
+.video_copy_loop
+	CALL	video_spi_write
+	INC	HL
+	DEC	BC
+	LD	A, B
+	OR	C
+	JR	NZ, video_copy_loop
+	JR	video_end_transfer
+	;RET	optimized away by JR above
+
 .video_reset
 	; background color
 	LD	HL, bg_color_default
 	LD	DE, BG_COLOR
 	CALL	video_write_16
-	; clear character RAM
+	; clear character RAM (64*64)
 	LD	HL, clear_character
 	LD	DE, RAM_PIC
 	LD	BC, 64*64
 	CALL	video_fill
-	RET
+	; hide all 256 sprites (on both pages) off screen
+	; upper sprite control bits are set to zero
+	LD	HL, sprite_offscreen_position
+	LD	DE, RAM_SPR
+	; 2 words per sprite, 256 sprites per page, 2 pages
+	LD	BC, 2*256*2
+	JR	video_fill_16
+	;RET optimized away by JR above
 .bg_color_default
-	DEFW	$00FF
+	DEFW	@00100*COLOR_R | @00100*COLOR_G | @01000*COLOR_B
 .clear_character
-	DEFM	"B"
-
-
+	DEFB	0
+.sprite_offscreen_position
+	DEFW	400
