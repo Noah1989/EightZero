@@ -1,11 +1,11 @@
 ; ioutil - i/o utility functions
 
-XDEF outseq
+XDEF output_sequence
 
 ; write sequence to i/o registers on page 0
 ; HL points to list of addresses (low byte only) and values
 ; B must be equal to the length of the list in bytes
-.outseq
+.output_sequence
 	LD	C, (HL)
 	INC	HL
 	; eZ80 OTIM instuction (ED 83):
@@ -13,6 +13,6 @@ XDEF outseq
 	;	B <- B-1
 	;	C <- C+1
 	;	HL <- HL+1
-	DEFM	$ED, $83
-	DJNZ	outseq
+	DEFB	$ED, $83
+	DJNZ	output_sequence
 	RET

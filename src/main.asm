@@ -2,9 +2,10 @@
 
 ORG $E000
 
-XREF videoinit
+XREF video_init
 
 .main
-	CALL	videoinit
+	LD	SP, $FFFF
+	CALL	video_init
 .loop
 	JR	loop
