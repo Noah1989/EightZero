@@ -123,7 +123,7 @@ DEFC COLOR_B = 2^0
 	CALL	video_spi_write
 	DEC	BC
 	LD	A, B
-	OR	C
+	OR	A, C
 	JR	NZ, video_fill_loop
 	JR	video_end_transfer
 	;RET	optimized away by JR above
@@ -141,7 +141,7 @@ DEFC COLOR_B = 2^0
 	DEC	HL
 	DEC	BC
 	LD	A, B
-	OR	C
+	OR	A, C
 	JR	NZ, video_fill_16_loop
 	JR	video_end_transfer
 	;RET	optimized away by JR above
@@ -157,7 +157,7 @@ DEFC COLOR_B = 2^0
 	INC	HL
 	DEC	BC
 	LD	A, B
-	OR	C
+	OR	A, C
 	JR	NZ, video_copy_loop
 	JR	video_end_transfer
 	;RET	optimized away by JR above
