@@ -4,6 +4,18 @@ XREF output_sequence
 
 XDEF video_init
 XDEF video_copy
+XDEF video_start_write
+XDEF video_spi_write
+XDEF video_end_transfer
+
+XDEF RAM_PIC
+XDEF RAM_CHR
+XDEF RAM_PAL
+
+XDEF COLOR_A
+XDEF COLOR_R
+XDEF COLOR_G
+XDEF COLOR_B
 
 DEFC PB_DR = $9A
 DEFC PB_DDR = $9B
@@ -15,6 +27,8 @@ DEFC SPI_TSR = $BC
 
 DEFC BG_COLOR = $280E
 DEFC RAM_PIC = $0000
+DEFC RAM_CHR = $1000
+DEFC RAM_PAL = $2000
 DEFC RAM_SPR = $3000
 
 DEFC COLOR_A = 2^15
