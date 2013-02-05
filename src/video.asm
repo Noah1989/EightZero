@@ -95,21 +95,21 @@ DEFC COLOR_B = 2^0
 	; transmit address low byte
 	; eZ80 instruction: OUT0 (SPI_TSR), E
 	DEFB	$ED, $19, SPI_TSR
-	JR	video_spi_wait
-	;RET optimized away by JR above
+	RET
 
 ; transfer byte to video device via SPI
 ; HL points to the byte to write
 .video_spi_write
+	CALL	video_spi_wait
 	; transmit data byte
 	LD	A, (HL)
 	; eZ80 instruction: OUT0 (SPI_TSR), A
 	DEFB	$ED, $39, SPI_TSR
-	JR	video_spi_wait
-	;RET optimized away by JR above
+	RET
 
 ; end video read or write operation
 .video_end_transfer
+	CALL	video_spi_wait
 	; bring slave select high (inactive)
 	LD	A, $02
 	; eZ80 instruction: OUT0 (PB_DR), A
@@ -137,7 +137,7 @@ DEFC COLOR_B = 2^0
 	CALL	video_spi_write
 	DEC	BC
 	LD	A, B
-	OR	C
+	OR	A, C
 	JR	NZ, video_fill_loop
 	JR	video_end_transfer
 	;RET	optimized away by JR above
@@ -155,7 +155,7 @@ DEFC COLOR_B = 2^0
 	DEC	HL
 	DEC	BC
 	LD	A, B
-	OR	C
+	OR	A, C
 	JR	NZ, video_fill_16_loop
 	JR	video_end_transfer
 	;RET	optimized away by JR above
@@ -171,7 +171,7 @@ DEFC COLOR_B = 2^0
 	INC	HL
 	DEC	BC
 	LD	A, B
-	OR	C
+	OR	A, C
 	JR	NZ, video_copy_loop
 	JR	video_end_transfer
 	;RET	optimized away by JR above
