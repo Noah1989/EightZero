@@ -6,7 +6,10 @@ XDEF video_init
 XDEF video_copy
 XDEF video_start_write
 XDEF video_spi_write
+XDEF video_spi_write_A
 XDEF video_end_transfer
+XDEF video_fill
+XDEF video_write_16
 
 XDEF RAM_PIC
 XDEF RAM_CHR
@@ -199,7 +202,7 @@ DEFC COLOR_B = 2^0
 	JR	video_fill_16
 	;RET optimized away by JR above
 .bg_color_default
-	DEFW	@00100*COLOR_R | @00100*COLOR_G | @01000*COLOR_B
+	DEFW	@00000*COLOR_R | @00000*COLOR_G | @10000*COLOR_B
 .clear_character
 	DEFB	0
 .sprite_offscreen_position

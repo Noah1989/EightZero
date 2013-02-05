@@ -1,5 +1,8 @@
-main.bin: main.asm ioutil.asm video.asm hexdigits.asm
-	z80asm -v -l -a main ioutil video hexdigits
+sources = main.asm ioutil.asm video.asm \
+          hexdigits.asm linechars.asm monitor.asm
+
+main.bin: $(sources)
+	z80asm -v -l -a $(sources)
 
 .PHONY: program
 program: main.bin

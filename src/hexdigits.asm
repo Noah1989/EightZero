@@ -1,5 +1,3 @@
-XDEF hexdigits_load
-
 XREF RAM_CHR
 XREF RAM_PAL
 
@@ -9,6 +7,8 @@ XREF COLOR_G
 XREF COLOR_B
 
 XREF video_copy
+
+XDEF hexdigits_load
 
 DEFC COLOR_BACKGROUND = 0
 
