@@ -50,8 +50,9 @@ DEFC COLOR_B = 2^0
 .end_video_init_sequence
 
 ; wait for SPI transaction to complete
-; preserves all registers except A
+; preserves all registers except A'
 .video_spi_wait
+	EX	AF, AF'
 	LD	A, C
 	LD	C, SPI_SR
 .video_spi_wait_loop
@@ -61,6 +62,7 @@ DEFC COLOR_B = 2^0
 	; '0' means SPI transfer not finished
 	JR	Z, video_spi_wait_loop
 	LD	C, A
+	EX	AF, AF'
 	RET
 
 ; start data write to video device
@@ -86,9 +88,11 @@ DEFC COLOR_B = 2^0
 ; transfer byte to video device via SPI
 ; HL points to the byte to write
 .video_spi_write
+	LD	A, (HL)
+; same as above but takes value from A
+.video_spi_write_A
 	CALL	video_spi_wait
 	; transmit data byte
-	LD	A, (HL)
 	; eZ80 instruction: OUT0 (SPI_TSR), A
 	DEFB	$ED, $39, SPI_TSR
 	RET
