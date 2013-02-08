@@ -7,6 +7,8 @@ XREF video_copy
 
 XREF keyboard_init
 
+XREF KEYBOARD_ISR_DATA
+
 XDEF INTERRUPT_TABLE
 
 ; interrupt vector table address
@@ -28,7 +30,13 @@ DEFC INTERRUPT_TABLE = $FE00
 
 	EI
 
+	; just a test: copy raw keyboard data to video RAM
+	; enjoy random characters when pressing some keys :)
 .loop
+	LD	HL, INTERRUPT_TABLE + KEYBOARD_ISR_DATA
+	LD	BC, 2
+	LD	DE, 3 + 64*5
+	CALL	video_copy
 	JR	loop
 
 .hello_string

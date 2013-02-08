@@ -6,6 +6,8 @@ XREF INTERRUPT_TABLE
 
 XDEF keyboard_init
 
+XDEF KEYBOARD_ISR_DATA
+
 DEFC INT_PORT_A1 = $84
 ; only the lower two bytes of the interrupt vector table entry are used
 ; so we can use the other two to store some data between interrupts
@@ -16,12 +18,13 @@ DEFC PA_DR = $96
 DEFC PA_DDR = $97
 DEFC PA_ALT1 = $98
 DEFC PA_ALT2 = $99
+DEFC PA_ALT0 = $A6
 
 .keyboard_init
 	; set interrupt vector
 	LD	HL, keyboard_isr
 	LD	(INTERRUPT_TABLE + INT_PORT_A1), HL
-	LD	HL, $0800
+	LD	HL, $0900
 	LD	(INTERRUPT_TABLE + KEYBOARD_ISR_DATA), HL
 	; initialize port pins
 	LD	HL, keyboard_init_sequence
@@ -47,21 +50,43 @@ DEFC PA_ALT2 = $99
 	LD	BC, (INTERRUPT_TABLE + KEYBOARD_ISR_DATA)
 
 	; the status byte has to be interpreted like this:
-	; $0A: getting parity bit
-	; $09: waiting for stop bit
-	; $08: waiting for start bit <-default
-	; $07..$00: getting data bits
+	; $0B: getting parity bit
+	; $0A: waiting for stop bit
+	; $09: waiting for start bit <-default
+	; $08..$01: getting data bits
 
-	LD	A, $07
+	LD	A, $08
 	CP	A, B
-	; no carry means that status is not greater than 7
-	JR	NC, keyboard_isr_get_data_bit
+	; carry means that status greater than $08
+	JR	C, keyboard_isr_get_frame_bit
 
-	;...
+	; get data bit
+	LD	A, C
+	LD	C, PA_DR
+	; eZ80 instruction: TSTIO $01
+	; note that this clears the carry flag
+	DEFB	$ED, $74, $01
+	JR	Z, keyboard_isr_data_bit_low
+	SCF
+.keyboard_isr_data_bit_low
+	RRA
+	LD	C, A
+	;JR	keyboard_isr_next_status
 
-.keyboard_isr_get_data_bit
-	;...
+.keyboard_isr_get_frame_bit
+	; ... frame bits are currently ignored and not validated
 
+.keyboard_isr_next_status
+	DJNZ	keyboard_isr_end
+	LD	B, $0B
+
+.keyboard_isr_end
+	; save data and status
+	LD	(INTERRUPT_TABLE + KEYBOARD_ISR_DATA), BC
+	; clear interrupt flag
+	LD	A, $02
+	; eZ80 instruction: OUT0 (PA_ALT0), A
+	DEFB	$ED, $39, PA_ALT0
 	; restore original state
 	POP	BC
 	POP	AF
