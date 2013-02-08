@@ -16,10 +16,10 @@ DEFC HEX_CHAR_OFFSET = $F0 ; <- white hex digits
 DEFC SPACE_CHARACTER = $08 ; <- black square
 
 ; default listing start address
-DEFC listing_start = $E000
+DEFC LISTING_START = $E000
 
 .monitor
-	LD	HL, listing_start
+	LD	HL, LISTING_START
 	LD	IY, RAM_PIC + ORIGIN_X + ORIGIN_Y*64
 	; write 32 lines
 	LD	B, 32
