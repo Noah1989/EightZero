@@ -31,7 +31,6 @@ DEFC INTERRUPT_TABLE = $FE00
 	EI
 
 	LD	DE, 3 + 64*5
-	; enjoy random characters when pressing some keys :)
 .loop
 	CALL	keyboard_getchar
 	LD	A, C
