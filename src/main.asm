@@ -4,6 +4,16 @@ ORG $E000
 
 XREF video_init
 XREF video_copy
+XREF video_write_A
+
+XREF keyboard_init
+XREF keyboard_getchar
+
+XDEF INTERRUPT_TABLE
+
+; interrupt vector table address
+; must be at 512 byte boundary
+DEFC INTERRUPT_TABLE = $FE00
 
 XREF keyboard_init
 
@@ -30,13 +40,15 @@ DEFC INTERRUPT_TABLE = $FE00
 
 	EI
 
-	; just a test: copy raw keyboard data to video RAM
+	LD	DE, 3 + 64*5
 	; enjoy random characters when pressing some keys :)
 .loop
-	LD	HL, INTERRUPT_TABLE + KEYBOARD_ISR_DATA
-	LD	BC, 2
-	LD	DE, 3 + 64*5
-	CALL	video_copy
+	CALL	keyboard_getchar
+	LD	A, C
+	OR	A, A
+	JR	Z, loop
+	CALL	video_write_A
+	INC	DE
 	JR	loop
 
 .hello_string
