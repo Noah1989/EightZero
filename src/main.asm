@@ -15,16 +15,6 @@ XDEF INTERRUPT_TABLE
 ; must be at 512 byte boundary
 DEFC INTERRUPT_TABLE = $FE00
 
-XREF keyboard_init
-
-XREF KEYBOARD_ISR_DATA
-
-XDEF INTERRUPT_TABLE
-
-; interrupt vector table address
-; must be at 512 byte boundary
-DEFC INTERRUPT_TABLE = $FE00
-
 .main
 	LD	A, INTERRUPT_TABLE/$100
 	LD	I, A
