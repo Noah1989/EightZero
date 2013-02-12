@@ -4,6 +4,9 @@ XREF output_sequence
 
 XDEF video_init
 XDEF video_copy
+XDEF video_write
+XDEF video_write_A
+XDEF video_write_16
 
 DEFC PB_DR = $9A
 DEFC PB_DDR = $9B
@@ -32,12 +35,40 @@ DEFC COLOR_B = 2^0
 ; 5 - unused
 ; 6 - MISO
 ; 7 - MOSI
+
 .video_init
 	LD	HL, video_init_sequence
 	LD	B, #end_video_init_sequence-video_init_sequence
 	CALL	output_sequence
 	JR	video_reset
-	;RET	optimized away by JR above
+	; fall through
+.video_reset
+	; background color
+	LD	HL, bg_color_default
+	LD	DE, BG_COLOR
+	CALL	video_write_16
+	; clear character RAM (64*64)
+	LD	HL, clear_character
+	LD	DE, RAM_PIC
+	LD	BC, 64*64
+	CALL	video_fill
+	; hide all 256 sprites (on both pages) off screen
+	; upper sprite control bits are set to zero
+	LD	HL, sprite_offscreen_position
+	LD	DE, RAM_SPR
+	; 2 words per sprite, 256 sprites per page, 2 pages
+	LD	BC, 2*256*2
+	JR	video_fill_16
+	;RET optimized away by JR above
+
+.bg_color_default
+	DEFW	@00100*COLOR_R | @00100*COLOR_G | @01000*COLOR_B
+.clear_character
+	DEFB	0
+.sprite_offscreen_position
+	DEFW	400
+
+
 .video_init_sequence
 	; port configuration (see above)
 	DEFB	PB_DR, $02
@@ -48,6 +79,9 @@ DEFC COLOR_B = 2^0
 	; enable SPI: mode 0, master
 	DEFB	SPI_CTL, $30
 .end_video_init_sequence
+
+
+
 
 ; wait for SPI transaction to complete
 ; preserves all registers except A'
@@ -87,10 +121,10 @@ DEFC COLOR_B = 2^0
 
 ; transfer byte to video device via SPI
 ; HL points to the byte to write
-.video_spi_write
+.video_spi_transmit
 	LD	A, (HL)
 ; same as above but takes value from A
-.video_spi_write_A
+.video_spi_transmit_A
 	CALL	video_spi_wait
 	; transmit data byte
 	; eZ80 instruction: OUT0 (SPI_TSR), A
@@ -106,14 +140,32 @@ DEFC COLOR_B = 2^0
 	DEFB	$ED, $39, PB_DR
 	RET
 
+; write a single byte to video device
+; DE contains the target address
+; HL points to the byte to write
+.video_write
+	CALL	video_start_write
+	CALL	video_spi_transmit
+	JR	video_end_transfer
+	;RET	optimized away by JR above
+
+; write a single byte to video device
+; DE contains the target address
+; A contains the byte to write
+.video_write_A
+	CALL	video_start_write
+	CALL	video_spi_transmit_A
+	JR	video_end_transfer
+	;RET	optimized away by JR above
+
 ; write 16-bit value to video device
 ; DE contains the target address
 ; HL points to the word to write
 .video_write_16
 	CALL	video_start_write
-	CALL	video_spi_write
+	CALL	video_spi_transmit
 	INC	HL
-	CALL	video_spi_write
+	CALL	video_spi_transmit
 	JR	video_end_transfer
 	;RET	optimized away by JR above
 
@@ -124,7 +176,7 @@ DEFC COLOR_B = 2^0
 .video_fill
 	CALL	video_start_write
 .video_fill_loop
-	CALL	video_spi_write
+	CALL	video_spi_transmit
 	DEC	BC
 	LD	A, B
 	OR	A, C
@@ -139,9 +191,9 @@ DEFC COLOR_B = 2^0
 .video_fill_16
 	CALL	video_start_write
 .video_fill_16_loop
-	CALL	video_spi_write
+	CALL	video_spi_transmit
 	INC	HL
-	CALL	video_spi_write
+	CALL	video_spi_transmit
 	DEC	HL
 	DEC	BC
 	LD	A, B
@@ -157,7 +209,7 @@ DEFC COLOR_B = 2^0
 .video_copy
 	CALL	video_start_write
 .video_copy_loop
-	CALL	video_spi_write
+	CALL	video_spi_transmit
 	INC	HL
 	DEC	BC
 	LD	A, B
@@ -165,28 +217,3 @@ DEFC COLOR_B = 2^0
 	JR	NZ, video_copy_loop
 	JR	video_end_transfer
 	;RET	optimized away by JR above
-
-.video_reset
-	; background color
-	LD	HL, bg_color_default
-	LD	DE, BG_COLOR
-	CALL	video_write_16
-	; clear character RAM (64*64)
-	LD	HL, clear_character
-	LD	DE, RAM_PIC
-	LD	BC, 64*64
-	CALL	video_fill
-	; hide all 256 sprites (on both pages) off screen
-	; upper sprite control bits are set to zero
-	LD	HL, sprite_offscreen_position
-	LD	DE, RAM_SPR
-	; 2 words per sprite, 256 sprites per page, 2 pages
-	LD	BC, 2*256*2
-	JR	video_fill_16
-	;RET optimized away by JR above
-.bg_color_default
-	DEFW	@00100*COLOR_R | @00100*COLOR_G | @01000*COLOR_B
-.clear_character
-	DEFB	0
-.sprite_offscreen_position
-	DEFW	400
