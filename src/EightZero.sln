@@ -4,6 +4,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sources", "Sources", "{91C6CF15-626D-40CD-B63C-7992DB8F9295}"
 	ProjectSection(SolutionItems) = preProject
 		ioutil.asm = ioutil.asm
+		keyboard.asm = keyboard.asm
 		main.asm = main.asm
 		video.asm = video.asm
 	EndProjectSection
