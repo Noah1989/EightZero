@@ -38,16 +38,15 @@ DEFC LIGHT_SHADE_3 = @11100
 	INC	D ; <- this works because we wrote exactly 256 bytes
 	EXX
 	DJNZ	hexdigits_load_loop_characters
-	EXX
+	;EXX
 
 	; load palette data
 	LD	IX, hexdigits_colors
 	LD	IY, RAM_PAL + ($80*8)
-	EXX
+	;EXX
 	; outer loop: 8 palettes
-	LD	B, 8
+	LD	C, 8
 .hexdigits_load_loop_palette_outer
-	LD	C, B
 	; repeat the same colors 16 times (once for each character)
 	LD	B, 16
 .hexdigits_load_loop_palette_inner
@@ -65,8 +64,8 @@ DEFC LIGHT_SHADE_3 = @11100
 	; next palette
 	; eZ80 instruction: LEA IX, IX + 8
 	DEFB	$ED, $32, 4*2
-	LD	B, C
-	DJNZ	hexdigits_load_loop_palette_outer
+	DEC	C
+	JR	NZ, hexdigits_load_loop_palette_outer
 	EXX
 	RET
 
