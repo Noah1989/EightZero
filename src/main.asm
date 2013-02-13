@@ -4,7 +4,7 @@ ORG $E000
 
 XREF video_init
 XREF video_copy
-XREF video_write_A
+XREF video_write_C
 
 XREF keyboard_init
 XREF keyboard_getchar
@@ -36,7 +36,7 @@ DEFC INTERRUPT_TABLE = $FE00
 	LD	A, C
 	OR	A, A
 	JR	Z, loop
-	CALL	video_write_A
+	CALL	video_write_C
 	INC	DE
 	JR	loop
 

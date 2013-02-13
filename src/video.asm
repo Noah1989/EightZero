@@ -5,7 +5,7 @@ XREF output_sequence
 XDEF video_init
 XDEF video_copy
 XDEF video_write
-XDEF video_write_A
+XDEF video_write_C
 XDEF video_write_16
 
 DEFC PB_DR = $9A
@@ -40,8 +40,6 @@ DEFC COLOR_B = 2^0
 	LD	HL, video_init_sequence
 	LD	B, #end_video_init_sequence-video_init_sequence
 	CALL	output_sequence
-	JR	video_reset
-	; fall through
 .video_reset
 	; background color
 	LD	HL, bg_color_default
@@ -60,15 +58,12 @@ DEFC COLOR_B = 2^0
 	LD	BC, 2*256*2
 	JR	video_fill_16
 	;RET optimized away by JR above
-
 .bg_color_default
 	DEFW	@00100*COLOR_R | @00100*COLOR_G | @01000*COLOR_B
 .clear_character
 	DEFB	0
 .sprite_offscreen_position
 	DEFW	400
-
-
 .video_init_sequence
 	; port configuration (see above)
 	DEFB	PB_DR, $02
@@ -79,9 +74,6 @@ DEFC COLOR_B = 2^0
 	; enable SPI: mode 0, master
 	DEFB	SPI_CTL, $30
 .end_video_init_sequence
-
-
-
 
 ; wait for SPI transaction to complete
 ; preserves all registers except A'
@@ -151,9 +143,10 @@ DEFC COLOR_B = 2^0
 
 ; write a single byte to video device
 ; DE contains the target address
-; A contains the byte to write
-.video_write_A
+; C contains the byte to write
+.video_write_C
 	CALL	video_start_write
+	LD	A, C
 	CALL	video_spi_transmit_A
 	JR	video_end_transfer
 	;RET	optimized away by JR above
