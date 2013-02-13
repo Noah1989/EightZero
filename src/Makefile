@@ -1,4 +1,4 @@
-sources = main.asm ioutil.asm video.asm \
+sources = main.asm ioutil.asm keyboard.asm video.asm \
           hexdigits.asm linechars.asm monitor.asm
 
 main.bin: $(sources)

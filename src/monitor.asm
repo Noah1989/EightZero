@@ -1,7 +1,7 @@
 ; monitor - a machine code monitor program
 
 XREF video_start_write
-XREF video_spi_write_A
+XREF video_spi_transmit_A
 XREF video_end_transfer
 
 XREF RAM_PIC
@@ -22,9 +22,8 @@ DEFC LISTING_START = $E000
 	LD	HL, LISTING_START
 	LD	IY, RAM_PIC + ORIGIN_X + ORIGIN_Y*64
 	; write 32 lines
-	LD	B, 32
+	LD	C, 32
 .monitor_outer_loop
-	LD	C, B
 	; eZ80 instruction: LEA DE, IY + 0
 	DEFB	$ED, $13, 0
 	; next line
@@ -36,7 +35,7 @@ DEFC LISTING_START = $E000
 .monitor_line_loop
 	; space
 	LD	A, SPACE_CHARACTER
-	CALL	video_spi_write_A
+	CALL	video_spi_transmit_A
 .monitor_line_loop_start
 	; high nibble
 	LD	A, (HL)
@@ -46,15 +45,15 @@ DEFC LISTING_START = $E000
 	RRA
 	AND	A, $0F
 	OR	A, HEX_CHAR_OFFSET
-	CALL	video_spi_write_A
+	CALL	video_spi_transmit_A
 	; low nibble
 	LD	A, (HL)
 	AND	A, $0F
 	OR	A, HEX_CHAR_OFFSET
-	CALL	video_spi_write_A
+	CALL	video_spi_transmit_A
 	INC	HL
 	DJNZ	monitor_line_loop
 	CALL	video_end_transfer
-	LD	B, C
-	DJNZ	monitor_outer_loop
+	DEC	C
+	JR	NZ, monitor_outer_loop
 	JR	monitor
