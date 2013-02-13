@@ -7,6 +7,9 @@ XREF INTERRUPT_TABLE
 XDEF keyboard_init
 XDEF keyboard_getchar
 
+XDEF K_PGU
+XDEF K_PGD
+
 DEFC INT_PORT_A1 = $84
 ; Only the lower two bytes of the interrupt vector table entry are used,
 ; so we can use the other two to store some data between interrupts.

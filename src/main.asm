@@ -22,7 +22,8 @@ DEFC INTERRUPT_TABLE = $FE00
 .main
 	LD	A, INTERRUPT_TABLE/$100
 	LD	I, A
-	LD	SP, INTERRUPT_TABLE - 1
+	; stack below interrupt table
+	LD	SP, INTERRUPT_TABLE
 
 	CALL	keyboard_init
 	CALL	video_init
