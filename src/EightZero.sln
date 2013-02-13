@@ -3,8 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sources", "Sources", "{91C6CF15-626D-40CD-B63C-7992DB8F9295}"
 	ProjectSection(SolutionItems) = preProject
+		hexdigits.asm = hexdigits.asm
 		ioutil.asm = ioutil.asm
+		keyboard.asm = keyboard.asm
+		linechars.asm = linechars.asm
 		main.asm = main.asm
+		monitor.asm = monitor.asm
 		video.asm = video.asm
 	EndProjectSection
 EndProject
