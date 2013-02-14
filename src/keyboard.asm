@@ -359,7 +359,7 @@ DEFC K_BRK = 0x9A ; break
 
 	; starts with scancode $01
 .keyboard_isr_scancode_table
-	DEFB	       K_F9,  0,     K_F5,  K_F3,  K_F12, K_F2,  K_F12
+	DEFB	       K_F9,  0,     K_F5,  K_F3,  K_F1,  K_F2,  K_F12
 	DEFB	0,     K_F10, K_F8,  K_F6,  K_F4,  9,     '`',   0
 	DEFB	0,     0,     0,     0,     0,     'q',   '1',   0
 	DEFB	0,     0,     'z',   's',   'a',   'w',   '2',   0
@@ -378,7 +378,7 @@ DEFC K_BRK = 0x9A ; break
 
 	; starts with scancode $01
 .keyboard_isr_scancode_table_shifted
-	DEFB	       K_F9,  0,     K_F5,  K_F3,  K_F12, K_F2,  K_F12
+	DEFB	       K_F9,  0,     K_F5,  K_F3,  K_F1,  K_F2,  K_F12
 	DEFB	0,     K_F10, K_F8,  K_F6,  K_F4,  9,     '~',   0
 	DEFB	0,     0,     0,     0,     0,     'Q',   '!',   0
 	DEFB	0,     0,     'Z',   'S',   'A',   'W',   '@',   0
