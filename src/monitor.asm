@@ -1,6 +1,7 @@
 ; monitor - a machine code monitor program
 
 XREF video_fill
+XREF video_copy
 XREF video_start_write
 XREF video_spi_transmit
 XREF video_spi_transmit_A
@@ -10,6 +11,8 @@ XREF video_write_C
 
 XREF keyboard_getchar
 
+XREF SCROLL_X
+
 XREF RAM_PIC
 
 XREF K_PGD
@@ -18,12 +21,16 @@ XREF K_PGU
 XDEF monitor
 
 ; top-left screen coordinates of the main hex listing
-DEFC ORIGIN_X = 2
-DEFC ORIGIN_Y = 4
+DEFC ORIGIN_X = 3
+DEFC ORIGIN_Y = 5
 
 ; screen coordinates of the address indicator
-DEFC ADDRESS_X = 0
-DEFC ADDRESS_Y = 2
+DEFC ADDRESS_X = 1
+DEFC ADDRESS_Y = 3
+
+; screen coordinate of the menu
+DEFC MENU_X = 1
+DEFC MENU_Y = 0
 
 DEFC LISTING_CHAR_OFFSET = $F0 ; <- white hex digits
 DEFC ADDRESS_CHAR_OFFSET = $B0 ; <- cyan hex digits
@@ -35,19 +42,35 @@ DEFC LISTING_START = $E000
 .border_character
 	DEFB	$0F ; <- gray square
 
+.menu_string
+	DEFM	"F1:Help  F2:GoTo  F3:Load  F4:Copy  F5:Call"
+.end_menu_string
+
 .monitor
+	; scroll 4px to the left
+	LD	C, 4
+	LD	DE, SCROLL_X
+	CALL	video_write_C
+	; print menu
+	LD	HL, menu_string
+	LD	DE, MENU_X + MENU_Y*64
+	LD	BC, #end_menu_string-menu_string
+	CALL	video_copy
 	; draw some borders and static labels
 	LD	HL, border_character
 	; horizontal borders
 	LD	DE, [ADDRESS_Y - 1]*64
-	LD	BC, 50
+	LD	BC, 51
 	CALL	video_fill
 	LD	DE, [ADDRESS_Y + 1]*64
-	LD	BC, 50
+	LD	BC, 51
 	CALL	video_fill
 	LD	DE, [ORIGIN_Y + 32]*64
-	LD	BC, 50
+	LD	BC, 51
 	CALL	video_fill
+	; small border left of address
+	LD	DE, ADDRESS_X - 1 + ADDRESS_Y*64
+	CALL	video_write
 	; top border address labels
 	LD	DE, ORIGIN_X + ADDRESS_Y*64
 	CALL	video_start_write
@@ -66,7 +89,7 @@ DEFC LISTING_START = $E000
 	CALL	video_spi_transmit
 	CALL	video_end_transfer
 	; left border address labels
-	LD	IY, ORIGIN_X - 2 + ORIGIN_Y*64
+	LD	IY, ORIGIN_X - 3 + ORIGIN_Y*64
 	LD	B, 32
 .monitor_left_address_labels_loop
 	; eZ80 instruction: LEA DE, IY + 0
@@ -75,6 +98,7 @@ DEFC LISTING_START = $E000
 	; eZ80 instruction: LEA IY, IY + 64
 	DEFB	$ED, $33, 64
 	CALL	video_start_write
+	CALL	video_spi_transmit
 	LD	A, B
 	NEG	A
 	OR	A, $F0
