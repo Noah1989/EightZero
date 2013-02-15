@@ -1,8 +1,11 @@
 ; monitor - a machine code monitor program
 
+XREF video_fill
 XREF video_start_write
+XREF video_spi_transmit
 XREF video_spi_transmit_A
 XREF video_end_transfer
+XREF video_write
 XREF video_write_C
 
 XREF keyboard_getchar
@@ -20,7 +23,7 @@ DEFC ORIGIN_Y = 4
 
 ; screen coordinates of the address indicator
 DEFC ADDRESS_X = 0
-DEFC ADDRESS_y = 2
+DEFC ADDRESS_Y = 2
 
 DEFC LISTING_CHAR_OFFSET = $F0 ; <- white hex digits
 DEFC ADDRESS_CHAR_OFFSET = $B0 ; <- cyan hex digits
@@ -29,9 +32,71 @@ DEFC SPACE_CHARACTER = $08 ; <- black square
 ; default listing start address
 DEFC LISTING_START = $E000
 
-.monitor
-	LD	HL, LISTING_START
+.border_character
+	DEFB	$0F ; <- gray square
 
+.monitor
+	; draw some borders and static labels
+	LD	HL, border_character
+	; horizontal borders
+	LD	DE, [ADDRESS_Y - 1]*64
+	LD	BC, 50
+	CALL	video_fill
+	LD	DE, [ADDRESS_Y + 1]*64
+	LD	BC, 50
+	CALL	video_fill
+	LD	DE, [ORIGIN_Y + 32]*64
+	LD	BC, 50
+	CALL	video_fill
+	; top border address labels
+	LD	DE, ORIGIN_X + ADDRESS_Y*64
+	CALL	video_start_write
+	CALL	video_spi_transmit
+	LD	B, 16
+	JR	monitor_top_address_labels_loop_start
+.monitor_top_address_labels_loop
+	LD	A, SPACE_CHARACTER
+	CALL	video_spi_transmit_A
+	CALL	video_spi_transmit_A
+.monitor_top_address_labels_loop_start
+	LD	A, ADDRESS_CHAR_OFFSET + 16
+	SUB	A, B
+	CALL	video_spi_transmit_A
+	DJNZ	monitor_top_address_labels_loop
+	CALL	video_spi_transmit
+	CALL	video_end_transfer
+	; left border address labels
+	LD	IY, ORIGIN_X - 2 + ORIGIN_Y*64
+	LD	B, 32
+.monitor_left_address_labels_loop
+	; eZ80 instruction: LEA DE, IY + 0
+	DEFB	$ED, $13, 0
+	; next line
+	; eZ80 instruction: LEA IY, IY + 64
+	DEFB	$ED, $33, 64
+	CALL	video_start_write
+	LD	A, B
+	NEG	A
+	OR	A, $F0
+	ADD	A, ADDRESS_CHAR_OFFSET + 16
+	CALL	video_spi_transmit_A
+	CALL	video_spi_transmit
+	CALL	video_end_transfer
+	DJNZ	monitor_left_address_labels_loop
+	; right vertical border
+	LD	IY, ORIGIN_X + 47 + ORIGIN_Y*64
+	LD	B, 32
+.monitor_right_border_loop
+	; eZ80 instruction: LEA DE, IY + 0
+	DEFB	$ED, $13, 0
+	; next line
+	; eZ80 instruction: LEA IY, IY + 64
+	DEFB	$ED, $33, 64
+	CALL	video_write
+	DJNZ	monitor_right_border_loop
+
+	; reset HL to RAM start
+	LD	HL, LISTING_START
 	; main display loop
 .monitor_main_loop
 	; address indicator

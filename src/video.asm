@@ -6,7 +6,7 @@ XDEF video_init
 XDEF video_copy
 XDEF video_fill
 XDEF video_start_write
-XDEF video_spi_trasmit
+XDEF video_spi_transmit
 XDEF video_spi_transmit_A
 XDEF video_end_transfer
 XDEF video_write
