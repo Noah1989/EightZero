@@ -7,6 +7,7 @@ XREF INTERRUPT_TABLE
 XDEF keyboard_init
 XDEF keyboard_getchar
 
+XDEF K_F1
 XDEF K_PGU
 XDEF K_PGD
 

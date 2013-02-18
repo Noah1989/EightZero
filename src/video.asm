@@ -84,7 +84,7 @@ DEFC COLOR_B = 2^0
 .bg_color_default
 	DEFW	@00000*COLOR_R | @00000*COLOR_G | @10000*COLOR_B
 .clear_character
-	DEFB	0
+	DEFB	' '
 .sprite_offscreen_position
 	DEFW	400
 .video_init_sequence

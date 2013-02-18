@@ -13,19 +13,21 @@ XREF COLOR_B
 
 XDEF linechars_load
 
-DEFC SQUARE_SHADE = @10000
+DEFC SQUARE_SHADE_1 = @10000
+DEFC SQUARE_SHADE_2 = @11000
+DEFC SQUARE_SHADE_3 = @11100
 
 .linechars_load
-	; 8 blank square characters
+	; 16 blank square characters
 	LD	HL, zerobyte
-	LD	DE, RAM_CHR + $08*16
+	LD	DE, RAM_CHR
 	; 16 bytes per character
-	LD	BC, 8 * 16
+	LD	BC, 16*16
 	CALL	video_fill
 	; palette data
 	LD	HL, square_colors
-	LD	IY, RAM_PAL + $08*8
-	LD	B, 8
+	LD	IY, RAM_PAL
+	LD	B, 16
 .linechars_load_palette_loop
 	; eZ80 instruction: LEA DE, IY + 0
 	DEFB	$ED, $13, 0
@@ -38,22 +40,38 @@ DEFC SQUARE_SHADE = @10000
 	RET
 
 .square_colors
-; black  (000)
-	DEFW	SQUARE_SHADE * (0*COLOR_R + 0*COLOR_G + 0*COLOR_B)
-; blue   (001)
-	DEFW	SQUARE_SHADE * (0*COLOR_R + 0*COLOR_G + 1*COLOR_B)
-; green  (010)
-	DEFW	SQUARE_SHADE * (0*COLOR_R + 1*COLOR_G + 0*COLOR_B)
-; cyan   (011)
-	DEFW	SQUARE_SHADE * (0*COLOR_R + 1*COLOR_G + 1*COLOR_B)
-; red    (100)
-	DEFW	SQUARE_SHADE * (1*COLOR_R + 0*COLOR_G + 0*COLOR_B)
-; purple (101)
-	DEFW	SQUARE_SHADE * (1*COLOR_R + 0*COLOR_G + 1*COLOR_B)
-; yellow (110)
-	DEFW	SQUARE_SHADE * (1*COLOR_R + 1*COLOR_G + 0*COLOR_B)
-; white  (111)
-	DEFW	SQUARE_SHADE * (1*COLOR_R + 1*COLOR_G + 1*COLOR_B)
+; black
+	DEFW	SQUARE_SHADE_1 * (0*COLOR_R + 0*COLOR_G + 0*COLOR_B)
+; blue
+	DEFW	SQUARE_SHADE_1 * (0*COLOR_R + 0*COLOR_G + 1*COLOR_B)
+; green
+	DEFW	SQUARE_SHADE_1 * (0*COLOR_R + 1*COLOR_G + 0*COLOR_B)
+; cyan
+	DEFW	SQUARE_SHADE_1 * (0*COLOR_R + 1*COLOR_G + 1*COLOR_B)
+; red
+	DEFW	SQUARE_SHADE_1 * (1*COLOR_R + 0*COLOR_G + 0*COLOR_B)
+; purple
+	DEFW	SQUARE_SHADE_1 * (1*COLOR_R + 0*COLOR_G + 1*COLOR_B)
+; yellow
+	DEFW	SQUARE_SHADE_1 * (1*COLOR_R + 1*COLOR_G + 0*COLOR_B)
+; white
+	DEFW	SQUARE_SHADE_2 * (1*COLOR_R + 1*COLOR_G + 1*COLOR_B)
+; gray
+	DEFW	SQUARE_SHADE_1 * (1*COLOR_R + 1*COLOR_G + 1*COLOR_B)
+; light blue
+	DEFW	SQUARE_SHADE_3 * (0*COLOR_R + 0*COLOR_G + 1*COLOR_B)
+; light green
+	DEFW	SQUARE_SHADE_3 * (0*COLOR_R + 1*COLOR_G + 0*COLOR_B)
+; light cyan
+	DEFW	SQUARE_SHADE_3 * (0*COLOR_R + 1*COLOR_G + 1*COLOR_B)
+; light red
+	DEFW	SQUARE_SHADE_3 * (1*COLOR_R + 0*COLOR_G + 0*COLOR_B)
+; light purple
+	DEFW	SQUARE_SHADE_3 * (1*COLOR_R + 0*COLOR_G + 1*COLOR_B)
+; light yellow
+	DEFW	SQUARE_SHADE_3 * (1*COLOR_R + 1*COLOR_G + 0*COLOR_B)
+; bright white
+	DEFW	SQUARE_SHADE_3 * (1*COLOR_R + 1*COLOR_G + 1*COLOR_B)
 
 .zerobyte
 	DEFB	0

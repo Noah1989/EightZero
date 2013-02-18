@@ -11,10 +11,13 @@ XREF video_write_C
 
 XREF keyboard_getchar
 
+XREF draw_box
+
 XREF SCROLL_X
 
 XREF RAM_PIC
 
+XREF K_F1
 XREF K_PGD
 XREF K_PGU
 
@@ -34,14 +37,20 @@ DEFC MENU_Y = 0
 
 DEFC LISTING_CHAR_OFFSET = $F0 ; <- white hex digits
 DEFC ADDRESS_CHAR_OFFSET = $B0 ; <- cyan hex digits
-DEFC SPACE_CHARACTER = $08 ; <- black square
+DEFC SPACE_CHARACTER = $00 ; <- black square
 
 ; default listing start address
 DEFC LISTING_START = $E000
 
+.dialog_style
+.dialog_fill_character
+	DEFB	' '
+.dialog_border_character
+	DEFB	$07 ; <- white square
+.dialog_shadow_character
+	DEFB	$00 ; <- black square
 .border_character
-	DEFB	$0F ; <- gray square
-
+	DEFB	$08 ; <- gray square
 .menu_string
 	DEFM	"F1:Help  F2:GoTo  F3:Load  F4:Copy  F5:Call"
 .end_menu_string
@@ -194,7 +203,48 @@ DEFC LISTING_START = $E000
 	LD	A, K_PGU
 	CP	A, C
 	; page up _not_ pressed, no effective change
-	JR	NZ, monitor_main_loop_listing
+	JR	NZ, monitor_main_loop_function_keys
 	; page up pressed, effective decrement: 1
 	DEC	H
 	JR	monitor_main_loop
+	; handle function keys
+.monitor_main_loop_function_keys
+	LD	A, K_F1
+	CP	A, C
+	JR	Z, monitor_help
+	JR	monitor_main_loop_listing
+
+DEFC HELP_WIDTH = 37
+DEFC HELP_HEIGHT = 16
+DEFC HELP_TOP = 10
+DEFC HELP_LEFT = 7
+.monitor_help
+	PUSH	HL
+	LD	B, HELP_WIDTH
+	LD	C, HELP_HEIGHT
+	LD	D, HELP_TOP
+	LD	E, HELP_LEFT
+	LD	HL, dialog_style
+	CALL	draw_box
+	LD	HL, monitor_help_string_1
+	LD	DE, [HELP_LEFT + 1] + [HELP_TOP + 1]*64
+	LD	BC, #end_monitor_help_string_1-monitor_help_string_1
+	CALL	video_copy
+	LD	DE, [HELP_LEFT + 1] + [HELP_TOP + 2]*64
+	LD	BC, #end_monitor_help_string_2-monitor_help_string_2
+	CALL	video_copy
+	; wait for keypress
+.monitor_help_pause
+	CALL	keyboard_getchar
+	XOR	A, A
+	OR	A, C
+	JR	Z, monitor_help_pause
+	POP	HL
+	; the user might have pressed a function key, process it immediately
+	JR	monitor_main_loop_function_keys
+.monitor_help_string_1
+	DEFM	"Use this program to view and change"
+.end_monitor_help_string_1
+.monitor_help_string_2
+	DEFM	"memory locations on your computer."
+.end_monitor_help_string_2
