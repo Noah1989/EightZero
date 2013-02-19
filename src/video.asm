@@ -12,6 +12,7 @@ XDEF video_end_transfer
 XDEF video_write
 XDEF video_write_C
 XDEF video_write_16
+XDEF video_write_32
 
 XDEF BG_COLOR
 XDEF SCROLL_X
@@ -184,6 +185,22 @@ DEFC COLOR_B = 2^0
 	CALL	video_spi_transmit
 	JR	video_end_transfer
 	;RET	optimized away by JR above
+
+; write 32-bit value to video device
+; DE contains the target address
+; HL points to the doubleword to write
+.video_write_32
+	CALL	video_start_write
+	CALL	video_spi_transmit
+	INC	HL
+	CALL	video_spi_transmit
+	INC	HL
+	CALL	video_spi_transmit
+	INC	HL
+	CALL	video_spi_transmit
+	JR	video_end_transfer
+	;RET	optimized away by JR above
+
 
 ; fill video memory
 ; DE contains the fill start address

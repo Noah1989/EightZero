@@ -215,8 +215,8 @@ DEFC LISTING_START = $E000
 	JR	monitor_main_loop_listing
 
 DEFC HELP_WIDTH = 37
-DEFC HELP_HEIGHT = 16
-DEFC HELP_TOP = 10
+DEFC HELP_HEIGHT = 10
+DEFC HELP_TOP = 13
 DEFC HELP_LEFT = 7
 .monitor_help
 	PUSH	HL
@@ -233,6 +233,15 @@ DEFC HELP_LEFT = 7
 	LD	DE, [HELP_LEFT + 1] + [HELP_TOP + 2]*64
 	LD	BC, #end_monitor_help_string_2-monitor_help_string_2
 	CALL	video_copy
+	LD	DE, [HELP_LEFT + 4] + [HELP_TOP + 4]*64
+	LD	BC, #end_monitor_help_string_3-monitor_help_string_3
+	CALL	video_copy
+	LD	DE, [HELP_LEFT + 4] + [HELP_TOP + 6]*64
+	LD	BC, #end_monitor_help_string_4-monitor_help_string_4
+	CALL	video_copy
+	LD	DE, [HELP_LEFT + 4] + [HELP_TOP + 8]*64
+	LD	BC, #end_monitor_help_string_5-monitor_help_string_5
+	CALL	video_copy
 	; wait for keypress
 .monitor_help_pause
 	CALL	keyboard_getchar
@@ -243,8 +252,17 @@ DEFC HELP_LEFT = 7
 	; the user might have pressed a function key, process it immediately
 	JR	monitor_main_loop_function_keys
 .monitor_help_string_1
-	DEFM	"Use this program to view and change"
+	DEFM	2, 2, " This program can view and change"
 .end_monitor_help_string_1
 .monitor_help_string_2
-	DEFM	"memory locations on your computer."
+	DEFM	2, 2, " memory locations on the machine."
 .end_monitor_help_string_2
+.monitor_help_string_3
+	DEFM	$10, " ", $11, " ", $12, " ", $13, "    move cursor"
+.end_monitor_help_string_3
+.monitor_help_string_4
+	DEFM	"PgUp PgDn  scroll 256 bytes"
+.end_monitor_help_string_4
+.monitor_help_string_5
+	DEFM	"0..9 A..F  write selected byte"
+.end_monitor_help_string_5

@@ -10,6 +10,7 @@ XREF video_init
 
 XREF hexdigits_load
 XREF linechars_load
+XREF symbolchars_load
 
 XREF monitor
 
@@ -29,6 +30,7 @@ DEFC INTERRUPT_TABLE = $FE00
 	CALL	video_init
 	CALL	hexdigits_load
 	CALL	linechars_load
+	CALL	symbolchars_load
 
 	EI
 
