@@ -39,7 +39,7 @@ prompt:
         rcall   write_string
         rjmp    input
 prompt_string:
-        .db     "debug: ", 0
+        .db     ":", 0
 
 input:  
         ; get user input

@@ -7,4 +7,4 @@ main.bin: $(sources)
 
 .PHONY: program
 program: main.bin
-	../tools/bin2ram/bin2ram.py main.bin /dev/ttyUSB0
+	../tool/bin2ram/bin2ram.py main.bin /dev/ttyUSB0
