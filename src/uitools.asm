@@ -2,18 +2,16 @@
 
 XREF video_start_write
 XREF video_spi_transmit
+XREF video_spi_transmit_A
 XREF video_end_transfer
 
+XDEF screen_locate
 XDEF draw_box
+XDEF print_string
 
-; draw a fancy box with border and shadow
-; B = inner width, C = inner height, D = top, E = left
-; HL points to fill character,
-;    followed by border character,
-;    followed by shadow character
-.draw_box
-
-	; calculate RAM_PIC position into IY
+; use top/left coordinates in D/E to
+; calculate RAM_PIC address into IY
+.screen_locate
 	; top*64 (lower byte)
 	LD	A, D
 	SLA	A
@@ -32,7 +30,15 @@ XDEF draw_box
 	LD	A, D
 	ADC	A, 0
 	LD	IYH, A
+	RET
 
+; draw a fancy box with border and shadow
+; B = inner width, C = inner height
+; IY contains screen RAM address
+; HL points to fill character,
+;    followed by border character,
+;    followed by shadow character
+.draw_box
 	;upper border
 	INC	HL
 	; eZ80 instruction: LEA DE, IY - 65
@@ -107,3 +113,26 @@ XDEF draw_box
 	DJNZ	draw_box_bottom_shadow_loop
 	JP	video_end_transfer
 	;RET optimized away by JP above
+
+.print_string_newline
+	CALL	video_end_transfer
+	; eZ80 instruction: LEA IY, IY + 64
+	DEFB	$ED, $33, 64
+; print a null-terminated string on screen, handling newlines
+; IY contains screen RAM address
+; HL points to string
+.print_string
+	; eZ80 instruction: LEA DE, IY
+	DEFB	$ED, $13, 0
+	CALL	video_start_write
+.print_string_loop
+	LD	A, (HL)
+	INC	HL
+	; check for terminator
+	OR	A, A
+	; jump instead of call because we want to return after that
+	JP	Z, video_end_transfer
+	CP	A, 10 ; <- line feed
+	JR	Z, print_string_newline
+	CALL	video_spi_transmit_A
+	JR	print_string_loop

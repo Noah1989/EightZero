@@ -12,6 +12,7 @@ XREF video_write_C
 XREF keyboard_getchar
 
 XREF draw_box
+XREF print_string
 
 XREF SCROLL_X
 
@@ -220,28 +221,13 @@ DEFC HELP_TOP = 13
 DEFC HELP_LEFT = 7
 .monitor_help
 	PUSH	HL
-	LD	B, HELP_WIDTH
-	LD	C, HELP_HEIGHT
-	LD	D, HELP_TOP
-	LD	E, HELP_LEFT
+	LD	BC, HELP_WIDTH*256 + HELP_HEIGHT
+	LD	IY, HELP_TOP*64 + HELP_LEFT
 	LD	HL, dialog_style
 	CALL	draw_box
-	LD	HL, monitor_help_string_1
-	LD	DE, [HELP_LEFT + 1] + [HELP_TOP + 1]*64
-	LD	BC, #end_monitor_help_string_1-monitor_help_string_1
-	CALL	video_copy
-	LD	DE, [HELP_LEFT + 1] + [HELP_TOP + 2]*64
-	LD	BC, #end_monitor_help_string_2-monitor_help_string_2
-	CALL	video_copy
-	LD	DE, [HELP_LEFT + 4] + [HELP_TOP + 4]*64
-	LD	BC, #end_monitor_help_string_3-monitor_help_string_3
-	CALL	video_copy
-	LD	DE, [HELP_LEFT + 4] + [HELP_TOP + 6]*64
-	LD	BC, #end_monitor_help_string_4-monitor_help_string_4
-	CALL	video_copy
-	LD	DE, [HELP_LEFT + 4] + [HELP_TOP + 8]*64
-	LD	BC, #end_monitor_help_string_5-monitor_help_string_5
-	CALL	video_copy
+	LD	HL, monitor_help_string
+	LD	IY, [HELP_TOP + 1]*64 + [HELP_LEFT + 4]
+	CALL	print_string
 	; wait for keypress
 .monitor_help_pause
 	CALL	keyboard_getchar
@@ -251,18 +237,9 @@ DEFC HELP_LEFT = 7
 	POP	HL
 	; the user might have pressed a function key, process it immediately
 	JR	monitor_main_loop_function_keys
-.monitor_help_string_1
-	DEFM	2, 2, " This program can view and change"
-.end_monitor_help_string_1
-.monitor_help_string_2
-	DEFM	2, 2, " memory locations on the machine."
-.end_monitor_help_string_2
-.monitor_help_string_3
-	DEFM	$10, " ", $11, " ", $12, " ", $13, "    move cursor"
-.end_monitor_help_string_3
-.monitor_help_string_4
-	DEFM	"PgUp PgDn  scroll 256 bytes"
-.end_monitor_help_string_4
-.monitor_help_string_5
-	DEFM	"0..9 A..F  write selected byte"
-.end_monitor_help_string_5
+.monitor_help_string
+	DEFM	"This program can view and change", 10
+	DEFM	"memory locations on the machine.", 10, 10
+	DEFM	$10, " ", $11, " ", $12, " ", $13, "    move cursor", 10, 10
+	DEFM	"PgUp PgDn  scroll 256 bytes", 10, 10
+	DEFM	"0..9 A..F  write selected byte", 0
