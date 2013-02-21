@@ -62,12 +62,15 @@ def reset_program_counter():
 reset_program_counter()
 
 print 'Writing', len(image_bytes), 'bytes...'
+default_delay = tty.delaybeforesend
+tty.delaybeforesend = 0
 for byte_to_write in image_bytes:
     hex_byte = '%0.2X' % ord(byte_to_write)
     tty.send('w')
     tty.send(hex_byte)
     tty.expect(hex_byte)
 print 'Image written.'
+tty.delaybeforesend = default_delay
 
 print 'PC is now at: ', get_program_counter()
 

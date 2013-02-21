@@ -13,7 +13,7 @@ command_table:
         .dw     '0', reset_pc
         .dw     0
 
-help:   
+help:
         ldi     ZH, HIGH(help_string*2)
         ldi     ZL, LOW(help_string*2)
         rcall   write_string
@@ -28,22 +28,22 @@ help_string:
         .db     "m: read from memory at PC ", 13, 10
         .db     "w: write to memory at PC", 13, 10
         .db     "+: increase PC", 13, 10
-        .db     "-: decrease PC", 13, 10 
+        .db     "-: decrease PC", 13, 10
         .db     "0: set PC to RAM start ", 13, 10, 0
 
 read_product_id:
         ; high
-        ldi     addr, ZDI_ID_H       
+        ldi     addr, ZDI_ID_H
         rcall   zdi_read
         mov     temp, data
         rcall   write_hex_byte
         ; low
-        ldi     addr, ZDI_ID_L       
+        ldi     addr, ZDI_ID_L
         rcall   zdi_read
         mov     temp, data
         rcall   write_hex_byte
         ; revision
-        ldi     addr, ZDI_ID_REV       
+        ldi     addr, ZDI_ID_REV
         rcall   zdi_read
         mov     temp, data
         rcall   write_hex_byte
@@ -76,12 +76,12 @@ read_status:
         rcall   read_status_print_bit
         ldi     ZH, HIGH(read_status_string_ief1*2)
         ldi     ZL, LOW(read_status_string_ief1*2)
-        bst     data, IEF1        
+        bst     data, IEF1
 read_status_print_bit:
-        rcall   write_string        
+        rcall   write_string
         bld     temp, 0
         rcall   write_hex_nibble
-        rcall   write_newline        
+        rcall   write_newline
         ret
 read_status_string_zdi_active:
         .db     "ZDI ACTIVE: ", 0, 0
@@ -112,21 +112,21 @@ read_cpu_registers:
         ldi     readcmd, READ_AF
         ldi     ZH, HIGH(read_cpu_registers_string_af*2)
         ldi     ZL, LOW(read_cpu_registers_string_af*2)
-read_cpu_registers_loop:        
+read_cpu_registers_loop:
         rcall   read_cpu_registers_print
         ; next string (skip padding zero byte)
         adiw    ZL, 1
         ; next read command
         inc     readcmd
-        cpi     readcmd, READ_PC        
+        cpi     readcmd, READ_PC
         brlo    read_cpu_registers_loop
 read_cpu_registers_print:
         ; label
-        rcall   write_string        
+        rcall   write_string
         ; command
         ldi     addr, ZDI_RW_CTL
         mov     data, readcmd
-        rcall   zdi_write        
+        rcall   zdi_write
         ; get high
         ldi     addr, ZDI_RD_H
         rcall   zdi_read
@@ -161,7 +161,7 @@ read_cpu_registers_string_pc:
 
 read_memory:
         rcall   get_pc
-        ; read 8 bytes                
+        ; read 8 bytes
         ldi     counter, 8
 read_memory_loop:    
         ; read byte
@@ -181,7 +181,7 @@ read_memory_loop:
         ; newline
         rcall   write_newline
         ret
- 
+
 write_memory:
         ; get byte
         rcall   read_hex_byte
@@ -199,7 +199,7 @@ get_pc:
         ; get PC
         ldi     addr, ZDI_RW_CTL
         ldi     data, READ_PC
-        rcall   zdi_write        
+        rcall   zdi_write
         ; get PC high
         ldi     addr, ZDI_RD_H
         rcall   zdi_read
@@ -223,33 +223,33 @@ set_pc:
         ldi     addr, ZDI_RW_CTL
         ldi     data, WRITE_PC
         rcall   zdi_write
-        ret  
-       
+        ret
+
 print_pc:                
         mov     temp, XH
         rcall   write_hex_byte
         mov     temp, XL
         rcall   write_hex_byte
         rcall   write_newline
-        ret    
-        
+        ret
+
 increase_pc:
         rcall   get_pc
         adiw    XL, 1
         rcall   set_pc
         rcall   print_pc
         ret
-        
+
 decrease_pc:
         rcall   get_pc
         sbiw    XL, 1
         rcall   set_pc
-        rcall   print_pc    
+        rcall   print_pc
         ret
 
 
-reset_pc:    
-        ; this sets MBASE:PC to 0xFFE000                 
+reset_pc:
+        ; this sets MBASE:PC to 0xFFE000
         ; ADL mode on
         ldi     addr, ZDI_RW_CTL
         ldi     data, SET_ADL
@@ -263,14 +263,14 @@ reset_pc:
         ; by executing an instruction
         ldi     addr, ZDI_RW_CTL
         ldi     data, WRITE_AF
-        rcall   zdi_write        
+        rcall   zdi_write
         ; eZ80: LD MB, A (ED 6D)
         ldi     addr, ZDI_IS1
         ldi     data, 0x6D
-        rcall   zdi_write 
+        rcall   zdi_write
         ldi     addr, ZDI_IS0
         ldi     data, 0xED
-        rcall   zdi_write  
+        rcall   zdi_write
         ; ADL mode off
         ldi     addr, ZDI_RW_CTL
         ldi     data, RESET_ADL
@@ -278,5 +278,5 @@ reset_pc:
         ldi     XH, 0xE0
         ldi     XL, 0x00
         rcall   set_pc
-        rcall   print_pc         
+        rcall   print_pc
         ret
