@@ -8,6 +8,11 @@ XDEF keyboard_init
 XDEF keyboard_getchar
 
 XDEF K_F1
+XDEF K_F5
+XDEF K_UPA
+XDEF K_LFA
+XDEF K_DNA
+XDEF K_RTA
 XDEF K_PGU
 XDEF K_PGD
 

@@ -14,11 +14,18 @@ XREF keyboard_getchar
 XREF draw_box
 XREF print_string
 
+XREF cursor_move
+
 XREF SCROLL_X
 
 XREF RAM_PIC
 
 XREF K_F1
+XREF K_F5
+XREF K_UPA
+XREF K_LFA
+XREF K_DNA
+XREF K_RTA
 XREF K_PGD
 XREF K_PGU
 
@@ -56,7 +63,7 @@ DEFC LISTING_START = $E000
 	DEFM	"F1:Help  F2:GoTo  F3:Load  F4:Copy  F5:Call"
 .end_menu_string
 
-.monitor
+.monitor_redraw
 	; scroll 4px to the left
 	LD	C, 4
 	LD	DE, SCROLL_X
@@ -128,9 +135,14 @@ DEFC LISTING_START = $E000
 	DEFB	$ED, $33, 64
 	CALL	video_write
 	DJNZ	monitor_right_border_loop
+	RET
 
+.monitor
+	CALL	monitor_redraw
 	; reset HL to RAM start
 	LD	HL, LISTING_START
+	; IX tracks the cursor address relative to HL
+	LD	IX, 0
 	; main display loop
 .monitor_main_loop
 	; address indicator
@@ -204,16 +216,127 @@ DEFC LISTING_START = $E000
 	LD	A, K_PGU
 	CP	A, C
 	; page up _not_ pressed, no effective change
-	JR	NZ, monitor_main_loop_function_keys
+	JR	NZ, monitor_main_loop_arrow_keys
 	; page up pressed, effective decrement: 1
 	DEC	H
 	JR	monitor_main_loop
+	; handle arrow keys
+.monitor_main_loop_arrow_keys
+	LD	A, K_LFA
+	CP	A, C
+	JR	Z, monitor_cursor_left
+	LD	A, K_RTA
+	CP	A, C
+	JR	Z, monitor_cursor_right
+	LD	A, K_UPA
+	CP	A, C
+	JR	Z, monitor_cursor_up
+	LD	A, K_DNA
+	CP	A, C
+	JR	Z, monitor_cursor_down
 	; handle function keys
 .monitor_main_loop_function_keys
 	LD	A, K_F1
 	CP	A, C
 	JR	Z, monitor_help
-	JR	monitor_main_loop_listing
+	LD	A, K_F5
+	CP	A, C
+	JR	Z, monitor_call
+	; handle hex input
+.monitor_main_loop_hex_input
+	LD	A, C
+	; decode ascii
+	SUB	A, '0'
+	; ignore if below '0'
+	JR	C, monitor_main_loop_listing
+	; handle 0..9
+	CP	A, $A
+	JR	C, monitor_hex_input_write
+	; to lowercase
+	OR	A, $20
+	; decode a..f
+	SUB	A, 'a' - ('9' + 1)
+	; ignore if below $A
+	CP	A, $A
+	JR	C, monitor_main_loop_listing
+	; ignore if above $F
+	; eZ80 instruction: TST A, $F0
+	DEFB	$ED, $64, $F0
+	JR	NZ, monitor_main_loop_listing
+.monitor_hex_input_write
+	; calculate IX = HL + IX (and save original HL value in DE)
+	; note that L is zero here, so IXL does not change
+	EX	DE, HL
+	ADD	IX, DE
+	; eZ80 instruction: LEA HL, IX
+	DEFB	$ED, $22, $00
+	; insert halfbyte
+	RLD
+	; restore HL from DE
+	EX	DE, HL
+	; restore IXH
+	LD	A, IXH
+	SUB	A, H
+	LD	IXH, A
+	JP	monitor_main_loop_listing
+
+.monitor_cursor_left
+	DEC	IX
+	JR	monitor_cursor_update
+.monitor_cursor_right
+	INC	IX
+	JR	monitor_cursor_update
+.monitor_cursor_up
+	; eZ80 instruction: LEA IX, IX - 16
+	DEFB	$ED, $32, -16
+	JR	monitor_cursor_update
+.monitor_cursor_down
+	; eZ80 instruction: LEA IX, IX + 16
+	DEFB	$ED, $32, 16
+.monitor_cursor_update
+	; clamp IX to $01FF
+	LD	A, IXH
+	AND	A, 1
+	LD	IXH, A
+	; x location for cursor
+	LD	A, IXL
+	AND	A, $0F
+	LD	B, A
+	; y location for cursor
+	LD	A, IXL
+	AND	A, $F0
+	ADD	A, IXH
+	RLCA
+	RLCA
+	RLCA
+	RLCA
+	LD	C, A
+	PUSH	HL
+	CALL	cursor_move
+	POP	HL
+	JP	monitor_main_loop
+
+.monitor_call
+	EX	DE, HL
+	ADD	IX, DE
+	LD	HL, monitor_call_return
+	; save DE (original HL value) and IX
+	PUSH	DE
+	PUSH	IX
+	; return address for called function
+	PUSH	HL
+	JP	(IX)
+.monitor_call_return
+	; redraw monitor user interface
+	CALL	monitor_redraw
+	; restore IX and original HL
+	POP	IX
+	POP	HL
+	LD	A, IXH
+	AND	A, 1
+	LD	IXH, A
+	; always reposition cursor
+	JP	monitor_cursor_update
 
 DEFC HELP_WIDTH = 37
 DEFC HELP_HEIGHT = 10
@@ -236,7 +359,7 @@ DEFC HELP_LEFT = 7
 	JR	Z, monitor_help_pause
 	POP	HL
 	; the user might have pressed a function key, process it immediately
-	JR	monitor_main_loop_function_keys
+	JP	monitor_main_loop_function_keys
 .monitor_help_string
 	DEFM	"This program can view and change", 10
 	DEFM	"memory locations on the machine.", 10, 10

@@ -12,6 +12,8 @@ XREF hexdigits_load
 XREF linechars_load
 XREF symbolchars_load
 
+XREF cursor_init
+
 XREF monitor
 
 XDEF INTERRUPT_TABLE
@@ -31,6 +33,7 @@ DEFC INTERRUPT_TABLE = $FE00
 	CALL	hexdigits_load
 	CALL	linechars_load
 	CALL	symbolchars_load
+	CALL	cursor_init
 
 	EI
 
