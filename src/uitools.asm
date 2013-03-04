@@ -9,29 +9,6 @@ XDEF screen_locate
 XDEF draw_box
 XDEF print_string
 
-; use top/left coordinates in D/E to
-; calculate RAM_PIC address into IY
-.screen_locate
-	; top*64 (lower byte)
-	LD	A, D
-	SLA	A
-	SLA	A
-	SLA	A
-	SLA	A
-	SLA	A
-	SLA	A
-	; top*64 (upper byte)
-	SRL	D
-	SRL	D
-	; top*64 + left (lower byte)
-	ADD	A, E
-	LD	IYL, A
-	; top*64 + left (upper byte)
-	LD	A, D
-	ADC	A, 0
-	LD	IYH, A
-	RET
-
 ; draw a fancy box with border and shadow
 ; B = inner width, C = inner height
 ; IY contains screen RAM address
