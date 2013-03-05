@@ -116,8 +116,8 @@ DEFC LISTING_START = $E000
 	DEFB	$ED, $33, 64
 	CALL	video_start_write
 	CALL	video_spi_transmit
-	LD	A, B
-	NEG	A
+	XOR	A, A
+	SUB	A, B
 	OR	A, $F0
 	ADD	A, ADDRESS_CHAR_OFFSET + 16
 	CALL	video_spi_transmit_A
