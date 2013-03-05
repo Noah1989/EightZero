@@ -13,13 +13,17 @@ XREF keyboard_getchar
 
 XREF draw_box
 XREF print_string
+XREF icon_show
+XREF icon_hide
 
+XREF cursor_hide
 XREF cursor_move
 
 XREF SCROLL_X
 
 XREF RAM_PIC
 
+XREF K_ESC
 XREF K_F1
 XREF K_F5
 XREF K_UPA
@@ -339,30 +343,35 @@ DEFC LISTING_START = $E000
 	JP	monitor_cursor_update
 
 DEFC HELP_WIDTH = 37
-DEFC HELP_HEIGHT = 10
-DEFC HELP_TOP = 13
+DEFC HELP_HEIGHT = 13
+DEFC HELP_TOP = 12
 DEFC HELP_LEFT = 7
 .monitor_help
 	PUSH	HL
+	CALL	cursor_hide
 	LD	BC, HELP_WIDTH*256 + HELP_HEIGHT
 	LD	IY, HELP_TOP*64 + HELP_LEFT
 	LD	HL, dialog_style
 	CALL	draw_box
+	LD	BC, [HELP_LEFT + 1]*256 + [HELP_TOP + 1]
+	CALL	icon_show
 	LD	HL, monitor_help_string
 	LD	IY, [HELP_TOP + 1]*64 + [HELP_LEFT + 4]
 	CALL	print_string
 	; wait for keypress
 .monitor_help_pause
 	CALL	keyboard_getchar
-	XOR	A, A
-	OR	A, C
-	JR	Z, monitor_help_pause
+	LD	A, K_ESC
+	CP	A, C
+	JR	NZ, monitor_help_pause
+	CALL	icon_hide
 	POP	HL
-	; the user might have pressed a function key, process it immediately
-	JP	monitor_main_loop_function_keys
+	; reposition cursor
+	JP	monitor_cursor_update
 .monitor_help_string
 	DEFM	"This program can view and change", 10
 	DEFM	"memory locations on the machine.", 10, 10
 	DEFM	$10, " ", $11, " ", $12, " ", $13, "    move cursor", 10, 10
 	DEFM	"PgUp PgDn  scroll 256 bytes", 10, 10
-	DEFM	"0..9 A..F  write selected byte", 0
+	DEFM	"0..9 A..F  modify selected byte", 10, 10, 10
+	DEFM	"Press ESC to close this window.", 0
