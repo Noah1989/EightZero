@@ -1,10 +1,7 @@
 ; cursor - a cursor for the machine code monitor
 
 XREF video_copy
-XREF video_write_32
-XREF video_start_write
-XREF video_spi_transmit_A
-XREF video_end_transfer
+XREF sprite_move
 
 XREF PALETTE4A
 XREF RAM_SPR
@@ -17,10 +14,11 @@ XREF COLOR_B
 
 XDEF cursor_init
 XDEF cursor_move
+XDEF cursor_hide
 
 .cursor_default
-	; X=20, Y=36, IMAGE=0, PAL=6, ROT=0, C=0
-	DEFB	20, $E0, 36, $00
+	; X=20, ROT=0, PAL=$E, Y=36, IMAGE=0, C=0
+	DEFB	20, $E0, 36, 0*2
 
 .cursor_init
 	; load sprite image
@@ -33,42 +31,24 @@ XDEF cursor_move
 	LD	DE, PALETTE4A
 	LD	BC, #end_cursor_colors-cursor_colors
 	CALL	video_copy
+	; move cursor to origin
 	LD	BC, 0
-	; fall through to move cursor to origin
+	JR	cursor_move
 
+.cursor_hide
+	LD	BC, 16*256
 ; move the cursor to byte in listing
 ; B contains x location ($00..$0F)
 ; C contains y location ($00..$1F)
 .cursor_move
-	LD	DE, RAM_SPR
-	CALL	video_start_write
-	; DE = B*8*3 (relative x in pixels)
-	LD	D, 8*3
-	LD	E, B
-	; eZ80 instruction: MLT DE
-	DEFB	$ED, $5C
 	LD	HL, cursor_default
-	LD	A, (HL)
-	ADD	A, E
-	CALL	video_spi_transmit_A
-	INC	HL
-	LD	A, (HL)
-	ADC	A, D
-	CALL	video_spi_transmit_A
-	; DE = C*8 (relative y in pixels)
-	LD	D, 8
-	LD	E, C
-	; eZ80 instruction: MLT DE
-	DEFB	$ED, $5C
-	INC	HL
-	LD	A, (HL)
-	ADD	A, E
-	CALL	video_spi_transmit_A
-	INC	HL
-	LD	A, (HL)
-	ADC	A, D
-	CALL	video_spi_transmit_A
-	JP	video_end_transfer
+	LD	DE, RAM_SPR
+	; mutiply x by 3
+	LD	A, B
+	ADD	A, B
+	ADD	A, B
+	LD	B, A
+	JP	sprite_move
 	; RET optimized away by JP above
 
 .cursor_image

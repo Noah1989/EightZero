@@ -1,8 +1,11 @@
 sources = main.asm ioutil.asm keyboard.asm video.asm \
           hexdigits.asm linechars.asm symbolchars.asm \
-          uitools.asm cursor.asm monitor.asm
+          uitools.asm sprite.asm cursor.asm icons.asm \
+          monitor.asm
 
-main.bin: $(sources)
+sprites = icons0.spr
+
+main.bin: $(sources) $(sprites)
 	z80asm -v -l -a $(sources)
 
 .PHONY: program
