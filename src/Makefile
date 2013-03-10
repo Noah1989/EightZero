@@ -1,13 +1,24 @@
-sources = main.asm ioutil.asm keyboard.asm video.asm \
+SOURCES = main.asm ioutil.asm keyboard.asm video.asm \
           hexdigits.asm linechars.asm symbolchars.asm \
           uitools.asm sprite.asm cursor.asm icons.asm \
           monitor.asm
 
-sprites = icons0.spr
+SPRITES = icons0.spr
 
-main.bin: $(sources) $(sprites)
-	z80asm -v -l -a $(sources)
+DEFS = ${SOURCES:.asm=.def}
 
-.PHONY: program
-program: main.bin
+.PHONY: all program clean
+
+all: main.bin $(DEFS)
+
+main.bin main.def: $(SOURCES) $(SPRITES)
+	z80asm -l -g -b $(SOURCES)
+
+%.def: main.def
+	sed -n "/; Module $*/Is/;.*//p" $< > $@
+
+program: all
 	../tool/bin2ram/bin2ram.py main.bin /dev/ttyUSB0
+
+clean:
+	rm -r *.obj *.bin *.def *.lst *.map
