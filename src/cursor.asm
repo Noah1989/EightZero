@@ -1,16 +1,10 @@
 ; cursor - a cursor for the machine code monitor
 
+INCLUDE "cursor.inc"
+INCLUDE "video.inc"
+
 XREF video_copy
 XREF sprite_move
-
-XREF PALETTE4A
-XREF RAM_SPR
-XREF RAM_SPRIMG
-
-XREF COLOR_A
-XREF COLOR_R
-XREF COLOR_G
-XREF COLOR_B
 
 XDEF cursor_init
 XDEF cursor_move

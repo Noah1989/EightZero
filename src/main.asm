@@ -1,8 +1,8 @@
 ; main - startup code
 
-ORG $E000
+INCLUDE "main.inc"
 
-XREF RAM_PIC
+ORG $E000
 
 XREF keyboard_init
 
@@ -15,12 +15,6 @@ XREF icons_load
 XREF cursor_init
 
 XREF monitor
-
-XDEF INTERRUPT_TABLE
-
-; interrupt vector table address
-; must be at 512 byte boundary
-DEFC INTERRUPT_TABLE = $FE00
 
 .main
 	LD	A, INTERRUPT_TABLE/$100

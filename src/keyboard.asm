@@ -1,21 +1,12 @@
 ; keyboard - a keyboard input driver
 
-XREF output_sequence
+INCLUDE "keyboard.inc"
+INCLUDE "main.inc"
 
-XREF INTERRUPT_TABLE
+XREF output_sequence
 
 XDEF keyboard_init
 XDEF keyboard_getchar
-
-XDEF K_ESC
-XDEF K_F1
-XDEF K_F5
-XDEF K_UPA
-XDEF K_LFA
-XDEF K_DNA
-XDEF K_RTA
-XDEF K_PGU
-XDEF K_PGD
 
 DEFC INT_PORT_A1 = $84
 ; Only the lower two bytes of the interrupt vector table entry are used,
@@ -44,36 +35,6 @@ DEFC KEYBOARD_CONTROL = 7
 DEFC KEYBOARD_SHIFT = 6
 DEFC KEYBOARD_KEYUP = 5
 DEFC KEYBOARD_EXTENDED = 4
-
-; special key characters
-DEFC K_ESC = 0x1B
-DEFC K_CPL = 0x80 ; caps lock
-DEFC K_F1 = 0x81
-DEFC K_F2 = 0x82
-DEFC K_F3 = 0x83
-DEFC K_F4 = 0x84
-DEFC K_F5 = 0x85
-DEFC K_F6 = 0x86
-DEFC K_F7 = 0x87
-DEFC K_F8 = 0x88
-DEFC K_F9 = 0x89
-DEFC K_F10 = 0x8A
-DEFC K_F11 = 0x8B
-DEFC K_F12 = 0x8C
-DEFC K_UPA = 0x8D ; up arrow
-DEFC K_LFA = 0x8E ; left arrow
-DEFC K_DNA = 0x8F ; down arrow
-DEFC K_RTA = 0x90 ; right arrow
-DEFC K_INS = 0x91 ; insert
-DEFC K_DEL = 0x92 ; delete
-DEFC K_HOM = 0x93 ; home
-DEFC K_END = 0x94 ; end
-DEFC K_PGU = 0x95 ; page up
-DEFC K_PGD = 0x96 ; page down
-DEFC K_NML = 0x97 ; num lock
-DEFC K_SCL = 0x98 ; scroll lock
-DEFC K_PRS = 0x99 ; print screen
-DEFC K_BRK = 0x9A ; break
 
 .keyboard_init
 	; set interrupt vector

@@ -5,17 +5,23 @@ SOURCES = main.asm ioutil.asm keyboard.asm video.asm \
 
 SPRITES = icons0.spr
 
+INCS = ${SOURCES:.asm=.inc}
 DEFS = ${SOURCES:.asm=.def}
 
 .PHONY: all program clean
 
 all: main.bin $(DEFS)
 
-main.bin main.def: $(SOURCES) $(SPRITES)
+main.bin all.def: $(SOURCES) $(SPRITES) $(INCS)
 	z80asm -l -g -b $(SOURCES)
+	@mv main.def all.def
 
-%.def: main.def
-	sed -n "/; Module $*/Is/;.*//p" $< > $@
+%.def: all.def
+	@echo generating $@ ...
+	@echo "; functions" > $@
+	@sed -n "/; Module $*/Is/;.*//p" $< >> $@
+	@echo "\n; constants" >> $@
+	@cat $*.inc >> $@
 
 program: all
 	../tool/bin2ram/bin2ram.py main.bin /dev/ttyUSB0

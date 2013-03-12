@@ -1,5 +1,7 @@
 ; ioutil - i/o utility functions
 
+INCLUDE "ioutil.inc"
+
 XDEF output_sequence
 
 ; write sequence to i/o registers on page 0

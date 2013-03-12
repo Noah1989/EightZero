@@ -1,5 +1,7 @@
 ; sprite - functions for sprite manipulation
 
+INCLUDE "sprite.inc"
+
 XREF video_start_write
 XREF video_spi_transmit_A
 XREF video_end_transfer

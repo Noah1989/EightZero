@@ -1,5 +1,7 @@
 ; uitools - user interface tools
 
+INCLUDE "uitools.inc"
+
 XREF video_start_write
 XREF video_spi_transmit
 XREF video_spi_transmit_A

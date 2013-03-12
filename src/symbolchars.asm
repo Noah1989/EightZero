@@ -1,10 +1,10 @@
 ; smbolchars - symbol and arrow characters
 
+INCLUDE "symbolchars.inc"
+INCLUDE "video.inc"
+
 XREF video_copy
 XREF video_write_32
-
-XREF RAM_CHR
-XREF RAM_PAL
 
 XDEF symbolchars_load
 

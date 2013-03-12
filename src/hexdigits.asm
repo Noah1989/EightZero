@@ -1,10 +1,7 @@
-XREF RAM_CHR
-XREF RAM_PAL
+; hexdigits - colored digits for hex display
 
-XREF COLOR_A
-XREF COLOR_R
-XREF COLOR_G
-XREF COLOR_B
+INCLUDE "hexdigits.inc"
+INCLUDE "video.inc"
 
 XREF video_copy
 

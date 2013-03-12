@@ -1,15 +1,10 @@
 ; linechars - line drawing and other misc. characters
 
+INCLUDE "linechars.inc"
+INCLUDE "video.inc"
+
 XREF video_fill
 XREF video_write_16
-
-XREF RAM_CHR
-XREF RAM_PAL
-
-XREF COLOR_A
-XREF COLOR_R
-XREF COLOR_G
-XREF COLOR_B
 
 XDEF linechars_load
 

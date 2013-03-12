@@ -1,5 +1,9 @@
 ; monitor - a machine code monitor program
 
+INCLUDE "monitor.inc"
+INCLUDE "video.inc"
+INCLUDE "keyboard.inc"
+
 XREF video_fill
 XREF video_copy
 XREF video_start_write
@@ -18,20 +22,6 @@ XREF icon_hide
 
 XREF cursor_hide
 XREF cursor_move
-
-XREF SCROLL_X
-
-XREF RAM_PIC
-
-XREF K_ESC
-XREF K_F1
-XREF K_F5
-XREF K_UPA
-XREF K_LFA
-XREF K_DNA
-XREF K_RTA
-XREF K_PGD
-XREF K_PGU
 
 XDEF monitor
 

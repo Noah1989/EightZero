@@ -1,15 +1,14 @@
 ; icons - some pretty 16x16 graphics for menus and dialogs
 
+INCLUDE "icons.inc"
+INCLUDE "video.inc"
+
 XDEF icons_load
 XDEF icon_show
 XDEF icon_hide
 
 XREF video_copy
 XREF sprite_move
-
-XREF PALETTE16A
-XREF RAM_SPRIMG
-XREF RAM_SPR
 
 .icon_default
 	; X=4, ROT=0, PAL=$4, Y=0, IMAGE=1, C=0

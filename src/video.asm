@@ -1,8 +1,11 @@
 ; video - low level code for the gameduino video interface
 
+INCLUDE "video.inc"
+
 XREF output_sequence
 
 XDEF video_init
+XDEF video_reset
 XDEF video_copy
 XDEF video_fill
 XDEF video_start_write
@@ -14,24 +17,6 @@ XDEF video_write_C
 XDEF video_write_16
 XDEF video_write_32
 
-XDEF BG_COLOR
-XDEF SCROLL_X
-XDEF SCROLL_Y
-XDEF PALETTE16A
-XDEF PALETTE4A
-
-XDEF RAM_PIC
-XDEF RAM_CHR
-XDEF RAM_PAL
-
-XDEF RAM_SPR
-XDEF RAM_SPRIMG
-
-XDEF COLOR_A
-XDEF COLOR_R
-XDEF COLOR_G
-XDEF COLOR_B
-
 DEFC PB_DR = $9A
 DEFC PB_DDR = $9B
 DEFC PB_ALT2 = $9D
@@ -39,24 +24,6 @@ DEFC SPI_BRG_L = $B8
 DEFC SPI_CTL = $BA
 DEFC SPI_SR = $BB
 DEFC SPI_TSR = $BC
-
-DEFC BG_COLOR = $280E
-DEFC SCROLL_X = $2804
-DEFC SCROLL_Y = $2806
-DEFC PALETTE16A = $2840
-DEFC PALETTE4A = $2880
-
-DEFC RAM_PIC = $0000
-DEFC RAM_CHR = $1000
-DEFC RAM_PAL = $2000
-
-DEFC RAM_SPR = $3000
-DEFC RAM_SPRIMG = $4000
-
-DEFC COLOR_A = 2^15
-DEFC COLOR_R = 2^10
-DEFC COLOR_G = 2^5
-DEFC COLOR_B = 2^0
 
 ; initialize PORTB and SPI
 ; pin usage:
