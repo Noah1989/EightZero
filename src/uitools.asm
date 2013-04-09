@@ -7,16 +7,25 @@ XREF video_spi_transmit
 XREF video_spi_transmit_A
 XREF video_end_transfer
 
-XDEF screen_locate
+XDEF dialog_style
 XDEF draw_box
 XDEF print_string
 
-; draw a fancy box with border and shadow
-; B = inner width, C = inner height
-; IY contains screen RAM address
-; HL points to fill character,
-;    followed by border character,
-;    followed by shadow character
+	; default dialog style
+.dialog_style
+.dialog_fill_character
+	DEFB	' '
+.dialog_border_character
+	DEFB	$07 ; <- white square
+.dialog_shadow_character
+	DEFB	$00 ; <- black square
+
+	; draw a fancy box with border and shadow
+	; B = inner width, C = inner height
+	; IY contains screen RAM address
+	; HL points to fill character,
+	;    followed by border character,
+	;    followed by shadow character
 .draw_box
 	;upper border
 	INC	HL
@@ -97,9 +106,9 @@ XDEF print_string
 	CALL	video_end_transfer
 	; eZ80 instruction: LEA IY, IY + 64
 	DEFB	$ED, $33, 64
-; print a null-terminated string on screen, handling newlines
-; IY contains screen RAM address
-; HL points to string
+	; print a null-terminated string on screen, handling newlines
+	; IY contains screen RAM address
+	; HL points to string
 .print_string
 	; eZ80 instruction: LEA DE, IY
 	DEFB	$ED, $13, 0

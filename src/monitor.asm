@@ -15,6 +15,7 @@ XREF video_write_C
 
 XREF keyboard_getchar
 
+XREF dialog_style
 XREF draw_box
 XREF print_string
 XREF icon_show
@@ -22,6 +23,8 @@ XREF icon_hide
 
 XREF cursor_hide
 XREF cursor_move
+
+XREF loader_open
 
 XDEF monitor
 
@@ -44,13 +47,6 @@ DEFC SPACE_CHARACTER = $00 ; <- black square
 ; default listing start address
 DEFC LISTING_START = $E000
 
-.dialog_style
-.dialog_fill_character
-	DEFB	' '
-.dialog_border_character
-	DEFB	$07 ; <- white square
-.dialog_shadow_character
-	DEFB	$00 ; <- black square
 .border_character
 	DEFB	$08 ; <- gray square
 .menu_string
@@ -232,7 +228,10 @@ DEFC LISTING_START = $E000
 .monitor_main_loop_function_keys
 	LD	A, K_F1
 	CP	A, C
-	JR	Z, monitor_help
+	JP	Z, monitor_help
+	LD	A, K_F3
+	CP	A, C
+	JR	Z, monitor_load
 	LD	A, K_F5
 	CP	A, C
 	JR	Z, monitor_call
@@ -256,7 +255,7 @@ DEFC LISTING_START = $E000
 	; ignore if above $F
 	; eZ80 instruction: TST A, $F0
 	DEFB	$ED, $64, $F0
-	JR	NZ, monitor_main_loop_listing
+	JP	NZ, monitor_main_loop_listing
 .monitor_hex_input_write
 	; calculate IX = HL + IX (and save original HL value in DE)
 	; note that L is zero here, so IXL does not change
@@ -311,26 +310,45 @@ DEFC LISTING_START = $E000
 	JP	monitor_main_loop
 
 .monitor_call
+	; save HL and IX
+	PUSH	HL
+	PUSH	IX
+	; calculate selected address into IX
 	EX	DE, HL
 	ADD	IX, DE
 	LD	HL, monitor_call_return
-	; save DE (original HL value) and IX
-	PUSH	DE
-	PUSH	IX
-	; return address for called function
+	; return address for called code
 	PUSH	HL
+	; hide cursor (trashes registers, but not IX)
+	CALL	cursor_hide
+	; call into selected code
 	JP	(IX)
 .monitor_call_return
 	; redraw monitor user interface
 	CALL	monitor_redraw
-	; restore IX and original HL
+	; restore IX and HL
 	POP	IX
 	POP	HL
-	LD	A, IXH
-	AND	A, 1
-	LD	IXH, A
 	; always reposition cursor
 	JP	monitor_cursor_update
+
+.monitor_load
+	; save HL and IX
+	PUSH	HL
+	PUSH	IX
+	; calculate selected address into IX
+	EX	DE, HL
+	ADD	IX, DE
+	; hide cursor (trashes registers, but not IX)
+	CALL	cursor_hide
+	; loader screen
+	CALL	loader_open
+	; restore IX and HL
+	POP	IX
+	POP	HL
+	; always reposition cursor
+	JP	monitor_cursor_update
+
 
 DEFC HELP_WIDTH = 37
 DEFC HELP_HEIGHT = 13
@@ -344,6 +362,7 @@ DEFC HELP_LEFT = 7
 	LD	HL, dialog_style
 	CALL	draw_box
 	LD	BC, [HELP_LEFT + 1]*256 + [HELP_TOP + 1]
+	XOR	A, A ; icon 0
 	CALL	icon_show
 	LD	HL, monitor_help_string
 	LD	IY, [HELP_TOP + 1]*64 + [HELP_LEFT + 4]

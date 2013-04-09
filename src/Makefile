@@ -1,7 +1,9 @@
-SOURCES = main.asm ioutil.asm keyboard.asm video.asm \
-          hexdigits.asm linechars.asm symbolchars.asm \
-          uitools.asm sprite.asm cursor.asm icons.asm \
-          monitor.asm
+SOURCES = \
+	main.asm ioutil.asm \
+	serial.asm keyboard.asm video.asm \
+	hexdigits.asm linechars.asm symbolchars.asm \
+	uitools.asm sprite.asm cursor.asm icons.asm \
+	loader.asm monitor.asm
 
 SPRITES = icons0.spr
 
