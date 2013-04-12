@@ -4,6 +4,9 @@ INCLUDE "loader.inc"
 INCLUDE "keyboard.inc"
 
 XREF keyboard_getchar
+XREF serial_transmit
+XREF serial_receive
+
 XREF dialog_style
 XREF draw_box
 XREF print_string
@@ -63,7 +66,7 @@ DEFC ADDRESS_CHAR_OFFSET = $B0 ; cyan hex chars
 	LD	B, IXL
 	CALL	loader_print_byte
 	CALL	video_end_transfer
-	JR	loader_input_loop
+	JR	loader_wait_data_start
 .loader_print_byte
 	LD	A, B
 	RRA
@@ -80,10 +83,29 @@ DEFC ADDRESS_CHAR_OFFSET = $B0 ; cyan hex chars
 	JP	video_spi_transmit_A
 	; RET optimized away by JP above
 
+.loader_wait_data_start
+	CALL	loader_input_loop
+	RET	NC ; cancelled by user
+	CP	A, '!'
+	JR	NZ, loader_wait_data_start
+	LD	A, '?'
+	CALL	serial_transmit
+
+	CALL	icon_hide
+	RET
+
+	; wait for input
+	; returns with C flag set if a byte was received
+	; received byte is in A
+	; returns with C flag cleared if ESC was pressed
+	; this also hides the icon
 .loader_input_loop
+	CALL	serial_receive
+	RET	C ; byte received
 	CALL	keyboard_getchar
 	LD	A, K_ESC
 	CP	A, C
-	JR	NZ, loader_input_loop
+	JR	NZ, loader_input_loop ; ESC not pressed
 	CALL	icon_hide
+	OR	A, A ; clear carry flag
 	RET
