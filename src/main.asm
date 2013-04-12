@@ -4,8 +4,8 @@ INCLUDE "main.inc"
 
 ORG $E000
 
+XREF serial_init
 XREF keyboard_init
-
 XREF video_init
 
 XREF hexdigits_load
@@ -22,6 +22,7 @@ XREF monitor
 	; stack below interrupt table
 	LD	SP, INTERRUPT_TABLE
 
+	CALL	serial_init
 	CALL	keyboard_init
 	CALL	video_init
 	CALL	hexdigits_load
