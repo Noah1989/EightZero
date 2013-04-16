@@ -84,12 +84,36 @@ DEFC ADDRESS_CHAR_OFFSET = $B0 ; cyan hex chars
 	; RET optimized away by JP above
 
 .loader_wait_data_start
+	; wait for '!', respond with '?'
 	CALL	loader_input_loop
 	RET	NC ; cancelled by user
 	CP	A, '!'
 	JR	NZ, loader_wait_data_start
 	LD	A, '?'
 	CALL	serial_transmit
+
+	; get number of bytes to receive into DE
+	; (unsigned 16 bit int, little endian)
+	CALL	loader_input_loop
+	RET	NC ; cancelled by user
+	LD	E, A ; low byte
+	CALL	loader_input_loop
+	RET	NC ; cancelled by user
+	LD	D, A ; high byte
+
+	; ready to receive data
+	LD	A, '!'
+	CALL	serial_transmit
+
+.loader_transfer_loop
+	CALL	loader_input_loop
+	RET	NC ; cancelled by user
+	LD	(IX), A
+	INC	IX
+	DEC	DE
+	LD	A, D
+	OR	A, E
+	JR	NZ, loader_transfer_loop
 
 	CALL	icon_hide
 	RET
