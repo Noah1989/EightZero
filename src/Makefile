@@ -1,9 +1,8 @@
 SOURCES = \
-	main.asm ioutil.asm \
-	serial.asm keyboard.asm video.asm \
+	main.asm loader.asm monitor.asm \
+	ioutil.asm serial.asm keyboard.asm video.asm \
 	hexdigits.asm linechars.asm symbolchars.asm \
-	uitools.asm sprite.asm cursor.asm icons.asm \
-	loader.asm monitor.asm
+	uitools.asm sprite.asm cursor.asm icons.asm
 
 SPRITES = icons0.spr
 
@@ -26,7 +25,8 @@ main.bin all.def: $(SOURCES) $(SPRITES) $(INCS)
 	@cat $*.inc >> $@
 
 program: all
-	../tool/bin2ram/bin2ram.py main.bin /dev/ttyUSB0
+	@../tool/bin2ram/bin2ram.py loader main.bin /dev/ttyUSB1 || \
+	../tool/bin2ram/bin2ram.py debugger main.bin /dev/ttyUSB0
 
 clean:
 	rm -r *.obj *.bin *.def *.lst *.map
