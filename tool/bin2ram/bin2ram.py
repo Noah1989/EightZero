@@ -103,6 +103,7 @@ tty = fdpexpect.fdspawn(tty_file, timeout=3)
 
 try:
     programmer()
+    os.close(tty_file)
     print 'Done!'
 except pexpect.TIMEOUT:
     print "Timeout."
