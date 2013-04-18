@@ -1,5 +1,5 @@
 SOURCES = \
-	main.asm loader.asm monitor.asm \
+	main.asm loader.asm monitor.asm math.asm \
 	ioutil.asm serial.asm keyboard.asm video.asm \
 	hexdigits.asm linechars.asm symbolchars.asm \
 	uitools.asm sprite.asm cursor.asm icons.asm
