@@ -50,7 +50,7 @@ DEFC LISTING_START = $E000
 .border_character
 	DEFB	$08 ; <- gray square
 .menu_string
-	DEFM	"F1:Help  F2:GoTo  F3:Load  F4:Copy  F5:Call"
+	DEFM	"F1:Help F2:GoTo F3:Load F4:Copy F5:Call F6:File"
 .end_menu_string
 
 .monitor_redraw

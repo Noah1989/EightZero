@@ -59,7 +59,7 @@ DEFC SPI_TSR = $BC
 	JR	video_fill_16
 	;RET optimized away by JR above
 .bg_color_default
-	DEFW	@00000*COLOR_R | @00000*COLOR_G | @10000*COLOR_B
+	DEFW	@00000*COLOR_R | @01100*COLOR_G | @01000*COLOR_B
 .clear_character
 	DEFB	' '
 .sprite_offscreen_position
