@@ -10,6 +10,7 @@ XREF serial_receive
 XREF dialog_style
 XREF draw_box
 XREF print_string
+XREF print_uint16
 XREF icon_show
 XREF icon_hide
 
@@ -37,6 +38,9 @@ DEFC ADDRESS_CHAR_OFFSET = $B0 ; cyan hex chars
 	DEFM	"Waiting for data...", 10, 10, 10
 	DEFM	"Press ESC to cancel.", 0
 
+.loader_progress_string
+	DEFM	"      bytes remaining", 0
+
 .loader_done_string
 	DEFM	"Data transfer complete.", 10, 10, 10
 	DEFM	"Press ESC to close. ", 0
@@ -60,10 +64,9 @@ DEFC ADDRESS_CHAR_OFFSET = $B0 ; cyan hex chars
 	LD	HL, loader_help_string
 	LD	IY, [LOADER_TOP + 1]*64 + [LOADER_LEFT + 4]
 	CALL	print_string
-	; progress bar (location in IY is for later updates)
+	; progress bar
 	LD	HL, progress_chars
 	LD	DE, [LOADER_TOP + 6]*64 + [LOADER_LEFT + 4]
-	LD	IY, [LOADER_TOP + 6]*64 + [LOADER_LEFT + 4]
 	LD	BC, LOADER_WIDTH - 5
 	CALL	video_fill
 	; target address
@@ -109,22 +112,46 @@ DEFC ADDRESS_CHAR_OFFSET = $B0 ; cyan hex chars
 	RET	NC ; cancelled by user
 	LD	D, A ; high byte
 
-	; calculate bytes per progress bar step into HL
-	; BC is used as a counter towards the next step
-	LD	H, D
-	LD	L, E
-	LD	C, LOADER_WIDTH - 5
-	CALL	div_16_8
-	LD	B, H
-	LD	C, L
+	; safety check for zero size
+	OR	A, E
+	JR	Z, loader_wait_data_start
 
 	; ready to receive data
 	LD	A, '!'
 	CALL	serial_transmit
 
+	; save DE
+	PUSH	DE
+	; status line
+	LD	HL, loader_progress_string
+	LD	IY, [LOADER_TOP + 8]*64 + [LOADER_LEFT + 4]
+	CALL	print_string
+	; restore DE
+	POP	DE
+
+	; progress bar location
+	LD	IY, [LOADER_TOP + 6]*64 + [LOADER_LEFT + 4]
+
+	; calculate bytes per progress bar step into HL
+	LD	H, D
+	LD	L, E
+	LD	C, LOADER_WIDTH - 5
+	CALL	div_16_8 ; HL /= C (remainder in A)
+	; BC is used as a counter towards the next step
+	LD	B, 0
+	INC	A
+	LD	C, A
 
 .loader_transfer_loop
 	PUSH	BC
+	PUSH	DE
+	PUSH	HL
+	; status line
+	EX	DE, HL
+	LD	DE, [LOADER_TOP + 8]*64 + [LOADER_LEFT + 4]
+	CALL	print_uint16
+	POP	HL
+	POP	DE
 	CALL	loader_input_loop
 	POP	BC
 	RET	NC ; cancelled by user

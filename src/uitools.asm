@@ -10,6 +10,7 @@ XREF video_end_transfer
 XDEF dialog_style
 XDEF draw_box
 XDEF print_string
+XDEF print_uint16
 
 	; default dialog style
 .dialog_style
@@ -124,3 +125,27 @@ XDEF print_string
 	JR	Z, print_string_newline
 	CALL	video_spi_transmit_A
 	JR	print_string_loop
+
+.print_uint16
+	CALL	video_start_write
+	LD	BC, -10000
+	CALL	print_uint16_digit
+	LD	BC, -1000
+	CALL	print_uint16_digit
+	LD	BC, -100 ; sets B to $FF
+	CALL	print_uint16_digit
+	LD	C, -10 ; no need to change B
+	CALL	print_uint16_digit
+	LD	C, B ; BC becomes $FFFF (-1)
+	CALL	print_uint16_digit
+	JP	video_end_transfer
+	;RET optimized away by JP above
+.print_uint16_digit
+	LD	A, '0' - 1
+.print_uint16_digit_loop
+	INC	A
+	ADD	HL, BC
+	JR	C, print_uint16_digit_loop
+	SBC	HL, BC
+	JP	video_spi_transmit_A
+	;RET optimized away by JP above
