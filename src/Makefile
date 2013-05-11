@@ -1,8 +1,9 @@
 SOURCES = \
 	main.asm loader.asm monitor.asm math.asm \
-	ioutil.asm serial.asm keyboard.asm video.asm \
-	uitools.asm sprite.asm cursor.asm icons.asm \
-	hexdigits.asm linechars.asm symbolchars.asm \
+	ioutil.asm spi.asm serial.asm keyboard.asm \
+	video.asm uitools.asm sdhc.asm fat32.asm \
+	sprite.asm cursor.asm icons.asm \
+	hexdigits.asm linechars.asm symbolchars.asm
 
 
 SPRITES = icons0.spr

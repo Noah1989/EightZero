@@ -7,9 +7,9 @@ INCLUDE "keyboard.inc"
 XREF video_fill
 XREF video_copy
 XREF video_start_write
-XREF video_spi_transmit
-XREF video_spi_transmit_A
-XREF video_end_transfer
+XREF spi_transmit
+XREF spi_transmit_A
+XREF spi_deselect
 XREF video_write
 XREF video_write_C
 
@@ -81,20 +81,20 @@ DEFC LISTING_START = $E000
 	; top border address labels
 	LD	DE, ORIGIN_X + ADDRESS_Y*64
 	CALL	video_start_write
-	CALL	video_spi_transmit
+	CALL	spi_transmit
 	LD	B, 16
 	JR	monitor_top_address_labels_loop_start
 .monitor_top_address_labels_loop
 	LD	A, SPACE_CHARACTER
-	CALL	video_spi_transmit_A
-	CALL	video_spi_transmit_A
+	CALL	spi_transmit_A
+	CALL	spi_transmit_A
 .monitor_top_address_labels_loop_start
 	LD	A, ADDRESS_CHAR_OFFSET + 16
 	SUB	A, B
-	CALL	video_spi_transmit_A
+	CALL	spi_transmit_A
 	DJNZ	monitor_top_address_labels_loop
-	CALL	video_spi_transmit
-	CALL	video_end_transfer
+	CALL	spi_transmit
+	CALL	spi_deselect
 	; left border address labels
 	LD	IY, ORIGIN_X - 3 + ORIGIN_Y*64
 	LD	B, 32
@@ -105,14 +105,14 @@ DEFC LISTING_START = $E000
 	; eZ80 instruction: LEA IY, IY + 64
 	DEFB	$ED, $33, 64
 	CALL	video_start_write
-	CALL	video_spi_transmit
+	CALL	spi_transmit
 	XOR	A, A
 	SUB	A, B
 	OR	A, $F0
 	ADD	A, ADDRESS_CHAR_OFFSET + 16
-	CALL	video_spi_transmit_A
-	CALL	video_spi_transmit
-	CALL	video_end_transfer
+	CALL	spi_transmit_A
+	CALL	spi_transmit
+	CALL	spi_deselect
 	DJNZ	monitor_left_address_labels_loop
 	; right vertical border
 	LD	IY, ORIGIN_X + 47 + ORIGIN_Y*64
@@ -146,13 +146,13 @@ DEFC LISTING_START = $E000
 	RRA
 	AND	A, $0F
 	OR	A, ADDRESS_CHAR_OFFSET
-	CALL	video_spi_transmit_A
+	CALL	spi_transmit_A
 	; low nibble
 	LD	A, H
 	AND	A, $0F
 	OR	A, ADDRESS_CHAR_OFFSET
-	CALL	video_spi_transmit_A
-	CALL	video_end_transfer
+	CALL	spi_transmit_A
+	CALL	spi_deselect
 
 	; main display loop without address indicator
 .monitor_main_loop_listing
@@ -171,7 +171,7 @@ DEFC LISTING_START = $E000
 .monitor_line_loop
 	; space
 	LD	A, SPACE_CHARACTER
-	CALL	video_spi_transmit_A
+	CALL	spi_transmit_A
 .monitor_line_loop_start
 	; high nibble
 	LD	A, (HL)
@@ -181,15 +181,15 @@ DEFC LISTING_START = $E000
 	RRA
 	AND	A, $0F
 	OR	A, LISTING_CHAR_OFFSET
-	CALL	video_spi_transmit_A
+	CALL	spi_transmit_A
 	; low nibble
 	LD	A, (HL)
 	AND	A, $0F
 	OR	A, LISTING_CHAR_OFFSET
-	CALL	video_spi_transmit_A
+	CALL	spi_transmit_A
 	INC	HL
 	DJNZ	monitor_line_loop
-	CALL	video_end_transfer
+	CALL	spi_deselect
 	DEC	C
 	JR	NZ, monitor_outer_loop
 	; page up/down
