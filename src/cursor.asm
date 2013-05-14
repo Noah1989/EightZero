@@ -1,4 +1,4 @@
-; cursor - a cursor for the machine code monitor
+; eZ80 ASM file: cursor - a cursor for the machine code monitor
 
 INCLUDE "cursor.inc"
 INCLUDE "video.inc"

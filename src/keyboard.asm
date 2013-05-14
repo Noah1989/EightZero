@@ -1,4 +1,4 @@
-; keyboard - a keyboard input driver
+; eZ80 ASM file: keyboard - a keyboard input driver
 
 INCLUDE "keyboard.inc"
 INCLUDE "main.inc"
@@ -56,9 +56,9 @@ DEFC KEYBOARD_EXTENDED = 4
 	DEFB	PA_DDR, $FF
 .end_keyboard_init_sequence
 
-	; returns a decoded character from the keyboard in C
-	; returns 0 when there are no characters to get
-	; trashes A and B
+; returns a decoded character from the keyboard in C
+; returns 0 when there are no characters to get
+; trashes A and B
 .keyboard_getchar
 	LD	BC, (INTERRUPT_TABLE + KEYBOARD_ISR_DATA)
 	; check 6 least significant bits against $09
@@ -75,7 +75,7 @@ DEFC KEYBOARD_EXTENDED = 4
 	LD	C, 0
 	RET
 
-	; this routine is called on every incoming bit from the keyboard
+; this routine is called on every incoming bit from the keyboard
 .keyboard_isr
 	; save registers
 	PUSH	AF

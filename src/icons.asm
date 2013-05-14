@@ -1,4 +1,4 @@
-; icons - some pretty 16x16 graphics for menus and dialogs
+; eZ80 ASM file: icons - some pretty 16x16 graphics for menus and dialogs
 
 INCLUDE "icons.inc"
 INCLUDE "video.inc"
@@ -17,6 +17,7 @@ XREF sprite_move
 	; X=4, ROT=0, PAL=$6, Y=0, IMAGE=1, C=0
 	DEFB	4, $60, 0, 1*2
 
+; load icon sprites
 .icons_load
 	; load sprite image
 	; load colors (16-color palette A)
@@ -32,12 +33,14 @@ XREF sprite_move
 	JP	video_copy
 	; RET optimized away by JP above
 
+; hide icon from screen
+; A contains icon number
 .icon_hide
 	LD	BC, 51*256
-	; show icon on screen
-	; A contains icon number
-	; B contains x location in characters
-	; C contains y location in characters
+; show icon on screen
+; A contains icon number
+; B contains x location in characters
+; C contains y location in characters
 .icon_show
 	LD	DE, RAM_SPR + 4 ; sprite 1
 	; check icon number
@@ -53,6 +56,6 @@ XREF sprite_move
 	JP	sprite_move
 	; RET optimized away by JP above
 
-	; 16-color "help" and "load" icons (1 sprite image)
 .icons0
+	; 16-color "help" and "load" icons (1 sprite image)
 	BINARY	"icons0.spr"

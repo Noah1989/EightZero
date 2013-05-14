@@ -1,4 +1,4 @@
-; linechars - line drawing and other misc. characters
+; eZ80 ASM file: linechars - line drawing and other misc. characters
 
 INCLUDE "linechars.inc"
 INCLUDE "video.inc"
@@ -35,37 +35,37 @@ DEFC SQUARE_SHADE_3 = @11100
 	RET
 
 .square_colors
-; black
+	; black
 	DEFW	SQUARE_SHADE_1 * (0*COLOR_R + 0*COLOR_G + 0*COLOR_B)
-; blue
+	; blue
 	DEFW	SQUARE_SHADE_1 * (0*COLOR_R + 0*COLOR_G + 1*COLOR_B)
-; green
+	; green
 	DEFW	SQUARE_SHADE_1 * (0*COLOR_R + 1*COLOR_G + 0*COLOR_B)
-; cyan
+	; cyan
 	DEFW	SQUARE_SHADE_1 * (0*COLOR_R + 1*COLOR_G + 1*COLOR_B)
-; red
+	; red
 	DEFW	SQUARE_SHADE_1 * (1*COLOR_R + 0*COLOR_G + 0*COLOR_B)
-; purple
+	; purple
 	DEFW	SQUARE_SHADE_1 * (1*COLOR_R + 0*COLOR_G + 1*COLOR_B)
-; yellow
+	; yellow
 	DEFW	SQUARE_SHADE_1 * (1*COLOR_R + 1*COLOR_G + 0*COLOR_B)
-; white
+	; white
 	DEFW	SQUARE_SHADE_2 * (1*COLOR_R + 1*COLOR_G + 1*COLOR_B)
-; gray
+	; gray
 	DEFW	SQUARE_SHADE_1 * (1*COLOR_R + 1*COLOR_G + 1*COLOR_B)
-; light blue
+	; light blue
 	DEFW	SQUARE_SHADE_3 * (0*COLOR_R + 0*COLOR_G + 1*COLOR_B)
-; light green
+	; light green
 	DEFW	SQUARE_SHADE_3 * (0*COLOR_R + 1*COLOR_G + 0*COLOR_B)
-; light cyan
+	; light cyan
 	DEFW	SQUARE_SHADE_3 * (0*COLOR_R + 1*COLOR_G + 1*COLOR_B)
-; light red
+	; light red
 	DEFW	SQUARE_SHADE_3 * (1*COLOR_R + 0*COLOR_G + 0*COLOR_B)
-; light purple
+	; light purple
 	DEFW	SQUARE_SHADE_3 * (1*COLOR_R + 0*COLOR_G + 1*COLOR_B)
-; light yellow
+	; light yellow
 	DEFW	SQUARE_SHADE_3 * (1*COLOR_R + 1*COLOR_G + 0*COLOR_B)
-; bright white
+	; bright white
 	DEFW	SQUARE_SHADE_3 * (1*COLOR_R + 1*COLOR_G + 1*COLOR_B)
 
 .zerobyte

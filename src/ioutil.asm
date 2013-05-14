@@ -1,4 +1,4 @@
-; ioutil - i/o utility functions
+; eZ80 ASM file: ioutil - i/o utility functions
 
 INCLUDE "ioutil.inc"
 
