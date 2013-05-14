@@ -1,4 +1,4 @@
-; hexdigits - colored digits for hex display
+; eZ80 ASM file: hexdigits - colored digits for hex display
 
 INCLUDE "hexdigits.inc"
 INCLUDE "video.inc"
