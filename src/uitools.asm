@@ -1,4 +1,4 @@
-; uitools - user interface tools
+; eZ80 ASM file: uitools - user interface tools
 
 INCLUDE "uitools.inc"
 

@@ -1,4 +1,4 @@
-; loader - load data into ram from the serial interface
+; eZ80 ASM file: loader - load data into ram from the serial interface
 
 INCLUDE "loader.inc"
 INCLUDE "keyboard.inc"

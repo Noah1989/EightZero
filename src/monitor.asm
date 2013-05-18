@@ -1,4 +1,4 @@
-; monitor - a machine code monitor program
+; eZ80 ASM file: monitor - a machine code monitor program
 
 INCLUDE "monitor.inc"
 INCLUDE "video.inc"

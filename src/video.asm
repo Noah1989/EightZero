@@ -1,4 +1,4 @@
-; video - low level code for the gameduino video interface
+; eZ80 ASM file: video - low level code for the gameduino video interface
 
 INCLUDE "video.inc"
 INCLUDE "spi.inc"
@@ -63,7 +63,7 @@ XDEF video_write_32
 	LD	A, SPI_CS_VIDEO
 	CALL	spi_select
 	LD	A, D
-	CALL	spi_transmit_A_nowait
+	CALL	spi_transmit_A
 	LD	A, E
 	JP	spi_transmit_A
 	; RET optimized away by JP above

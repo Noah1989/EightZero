@@ -1,4 +1,4 @@
-; main - startup code
+; eZ80 ASM file: main - startup code
 
 INCLUDE "main.inc"
 
@@ -24,14 +24,15 @@ XREF monitor
 	CALL	serial_init
 	CALL	keyboard_init
 	CALL	spi_init
+
+	EI
+
 	CALL	video_reset
 	CALL	hexdigits_load
 	CALL	linechars_load
 	CALL	symbolchars_load
 	CALL	icons_load
 	CALL	cursor_init
-
-	EI
 
 	JP	monitor
 
