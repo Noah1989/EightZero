@@ -18,7 +18,12 @@ XREF print_string
 DEFC PB_DR = $9A
 
 DEFC SD_GO_IDLE_STATE = 0
+DEFC SD_READ_SINGLE_BLOCK = 17
+DEFC SD_APP_CMD = 55
+DEFC SD_APP_SEND_OP_COND = 41
 
+; initialize SDHC card
+; returns with carry flag cleared on success
 .sdhc_init
 	; detect card in slot (pulls PIN 0 high)
 	LD	C, PB_DR
@@ -35,29 +40,107 @@ DEFC SD_GO_IDLE_STATE = 0
 	; 80 dummy clock pulses
 	LD	B, 10
 	LD	A, $FF
-.sdhc_dummy_clock_loop
+.sdhc_init_dummy_clock_loop
 	CALL	spi_transmit_A
-	DJNZ	sdhc_dummy_clock_loop
+	DJNZ	sdhc_init_dummy_clock_loop
 	; send go idle command
 	LD	C, SD_GO_IDLE_STATE
 	LD	DE, 0
 	LD	HL, 0
 	EXX
 	LD	B, 0
-.sdhc_go_idle_loop
+.sdhc_init_go_idle_loop
 	EXX
 	CALL	sdhc_command
 	; check if B == $01
 	DEC	B
 	JR	Z, sdhc_init_card_idle
 	EXX
-	DJNZ	sdhc_go_idle_loop
+	DJNZ	sdhc_init_go_idle_loop
 	EXX
 	CALL	sdhc_error
 	DEFM	"Card not responding.", 0
 .sdhc_init_card_idle
+	; initialize card
+	EXX
+	LD	B, 0
+.sdhc_init_send_op_cond_loop
+	EXX
+	LD	C, SD_APP_CMD
+	LD	DE, 0
+	LD	HL, 0
+	CALL	sdhc_command
+	LD	C, SD_APP_SEND_OP_COND
+	LD	DE, $4000 ; HCS bit set
+	LD	HL, $0000
+	CALL	sdhc_command
+	; check if B == $00
+	INC	B
+	DEC	B
+	JR	Z, sdhc_init_card_ready
+	EXX
+	DJNZ	sdhc_init_sent_op_cond_loop
+	EXX
 	CALL	sdhc_error
-	DEFM	"Not implemented.", 0
+	DEFM	"Could not initialize card.", 0
+.sdhc_init_card_ready
+	; SD card can now operate at full speed
+	CALL	spi_fast
+	; clear carry flag to indicate success
+	XOR	A, A
+	RET
+
+; read block from SDHC card
+; DEHL contains block address
+.sdhc_read_block
+	LD	C, SD_READ_SINGLE_BLOCK
+	CALL	sdhc_command
+	; check if B == 0 (success)
+	INC	B
+	DEC	B
+	JR	Z, sdhc_read_block_ready
+	CALL	sdhc_error
+	DEFM	"Cannot read block.", 0
+.sdhc_read_block_ready
+	; wait for start block token ($FE)
+	LD	A, SPI_CD_SDHC
+	CALL	spi_select
+	LD	BC, 0
+.sdhc_read_block_wait_loop
+	CALL	spi_receive
+	CP	A, $FE
+	JR	Z, sdhc_read_block_receive
+	DEC	BC
+	LD	A, B
+	OR	A, C
+	JR	NZ, sdhc_read_block_wait_loop
+	; timout
+	CALL	spi_deselect
+	; extra 8 clock cycles
+	CALL	spi_receive
+	CALL	sdhc_error
+	DEFM	"Timeout reading block", 0
+.sdhc_read_block_receive
+	LD	HL, SDHC_BLOCK_BUFFER
+	LD	BC, 512
+.sdhc_read_block_receive_loop
+	CALL	spi_receive
+	LD	(HL), A
+	INC	HL
+	DEC	BC
+	LD	A, B
+	OR	A, C
+	JR	NZ, sdhc_read_block_receive_loop
+	; ignore CRC (16 bit)
+	CALL	spi_receive
+	CALL	spi_receive
+	; deselect card
+	CALL	spi_deselect
+	; extra 8 clock cycles
+	CALL	spi_receive
+	; clear carry flag to indicate success
+	XOR	A, A
+	RET
 
 ; send command to SDHC card
 ; C contains command
@@ -110,9 +193,11 @@ DEFC SD_GO_IDLE_STATE = 0
 	; message is given inline
 	POP	HL
 	LD	IY, 1*64 + 1
-	JP	print_string
+	CALL	print_string
+	; carry flag indicates error
+	SCF
 	; exit to caller, note that we don't PUSH HL
-	;RET optimized away by JP above
+	RET
 
 .space_char
 	DEFB	$20

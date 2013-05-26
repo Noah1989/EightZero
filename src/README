@@ -4,3 +4,11 @@ I have many plans for this but I'm not ready to write it all down yet.
 For now I'm still bootstrapping a standalone system.
 
 Use the tools from Z88dk to compile/assemble.
+
+Memory Map:
+
+$0000..$DFFF unused
+$E000..$FDFF code
+$FC00..$FCFF interrupt vectors
+$FD00..$FEFF sdhc sector buffer
+$FF00..$FFFF stack

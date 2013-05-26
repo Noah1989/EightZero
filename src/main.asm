@@ -18,8 +18,9 @@ XREF monitor
 .main
 	LD	A, INTERRUPT_TABLE/$100
 	LD	I, A
-	; stack below interrupt table
-	LD	SP, INTERRUPT_TABLE
+
+	; set up stack
+	LD	SP, $FFFF + 1
 
 	CALL	serial_init
 	CALL	keyboard_init
