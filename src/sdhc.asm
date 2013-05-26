@@ -79,7 +79,7 @@ DEFC SD_APP_SEND_OP_COND = 41
 	DEC	B
 	JR	Z, sdhc_init_card_ready
 	EXX
-	DJNZ	sdhc_init_sent_op_cond_loop
+	DJNZ	sdhc_init_send_op_cond_loop
 	EXX
 	CALL	sdhc_error
 	DEFM	"Could not initialize card.", 0
@@ -103,7 +103,7 @@ DEFC SD_APP_SEND_OP_COND = 41
 	DEFM	"Cannot read block.", 0
 .sdhc_read_block_ready
 	; wait for start block token ($FE)
-	LD	A, SPI_CD_SDHC
+	LD	A, SPI_CS_SDHC
 	CALL	spi_select
 	LD	BC, 0
 .sdhc_read_block_wait_loop

@@ -20,7 +20,7 @@ XREF monitor
 	LD	I, A
 
 	; set up stack
-	LD	SP, $FFFF + 1
+	LD	SP, 0
 
 	CALL	serial_init
 	CALL	keyboard_init
