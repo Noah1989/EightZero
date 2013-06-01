@@ -18,6 +18,7 @@ XREF print_string
 DEFC PB_DR = $9A
 
 DEFC SD_GO_IDLE_STATE = 0
+DEFC SD_SEND_IF_COND = 8
 DEFC SD_READ_SINGLE_BLOCK = 17
 DEFC SD_APP_CMD = 55
 DEFC SD_APP_SEND_OP_COND = 41
@@ -43,7 +44,7 @@ DEFC SD_APP_SEND_OP_COND = 41
 .sdhc_init_dummy_clock_loop
 	CALL	spi_transmit_A
 	DJNZ	sdhc_init_dummy_clock_loop
-	; send go idle command
+	; send CMD0 (GO_IDLE_STATE)
 	LD	C, SD_GO_IDLE_STATE
 	LD	DE, 0
 	LD	HL, 0
@@ -61,19 +62,33 @@ DEFC SD_APP_SEND_OP_COND = 41
 	CALL	sdhc_error
 	DEFM	"Card not responding.", 0
 .sdhc_init_card_idle
-	; initialize card
+	; send CMD8 (SEND_IF_COND)
+	LD	C, SD_SEND_IF_COND
+	LD	DE, $0000
+	LD	HL, $01AA
+	EXX
+	LD	B, 0
+.sdhc_init_send_if_cond_loop
+	EXX
+	CALL	sdhc_command
+	; check if B == $01
+	DEC	B
+	JR	Z, sdhc_init_send_op_cond
+	EXX
+	DJNZ	sdhc_init_send_if_cond_loop
+	EXX
+	CALL	sdhc_error
+	DEFM	"Not an SDHC 2.0 card.", 0
+.sdhc_init_send_op_cond
+	; send ACMD 41 (SEND_OP_COND)
+	LD	C, SD_APP_SEND_OP_COND
+	LD	DE, $4000 ; HCS bit set
+	LD	HL, $0000
 	EXX
 	LD	B, 0
 .sdhc_init_send_op_cond_loop
 	EXX
-	LD	C, SD_APP_CMD
-	LD	DE, 0
-	LD	HL, 0
-	CALL	sdhc_command
-	LD	C, SD_APP_SEND_OP_COND
-	LD	DE, $4000 ; HCS bit set
-	LD	HL, $0000
-	CALL	sdhc_command
+	CALL	sdhc_app_command
 	; check if B == $00
 	INC	B
 	DEC	B
@@ -142,6 +157,41 @@ DEFC SD_APP_SEND_OP_COND = 41
 	XOR	A, A
 	RET
 
+; send app command to SDHC
+; sends CMD55, then falls through to sdhc_command
+.sdhc_app_command
+	; select card
+	LD	A, SPI_CS_SDHC
+	CALL	spi_select
+	; send command
+	LD	A, 55 | $40 ; <- first to bits are always '01'
+	CALL	spi_transmit_A
+	; send argument (0)
+	XOR	A, A
+	CALL	spi_transmit_A
+	CALL	spi_transmit_A
+	CALL	spi_transmit_A
+	CALL	spi_transmit_A
+	; send CRC
+	CALL	spi_transmit_A
+	; wait for response
+	LD	B, 0
+.sdhc_app_command_wait_response
+	CALL	spi_receive
+	; check if A != $FF
+	INC	A
+	JR	NZ, sdhc_app_command_response_received
+	DJNZ	sdhc_app_command_wait_response
+	; timeout...
+	DEC	A
+	LD	B, A
+	RET
+.sdhc_app_command_response_received
+	; response is not used
+	CALL	spi_deselect
+	; extra 8 clock cycles
+	CALL	spi_receive
+	; fall through
 ; send command to SDHC card
 ; C contains command
 ; DEHL contains argument
@@ -164,6 +214,13 @@ DEFC SD_APP_SEND_OP_COND = 41
 	LD	A, L
 	CALL	spi_transmit_A
 	; send CRC
+	LD	A, C
+	CP	A, SD_SEND_IF_COND
+	JR	NZ, sdhc_command_crc0
+.sdhc_connand_crc8
+	LD	A, $87 ; <- CRC for CMD8
+	DEFB	$C2 ; <- JP NZ, xxxx skips the next two bytes
+.sdhc_command_crc0
 	LD	A, $95 ; <- CRC for CMD0 (others ignore CRC)
 	CALL	spi_transmit_A
 	; wait for response
@@ -174,6 +231,7 @@ DEFC SD_APP_SEND_OP_COND = 41
 	INC	A
 	JR	NZ, sdhc_command_response_received
 	DJNZ	sdhc_command_wait_response
+	; falling through here will return $FF (timeout)
 .sdhc_command_response_received
 	DEC	A
 	LD	B, A
