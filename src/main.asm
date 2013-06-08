@@ -2,7 +2,7 @@
 
 INCLUDE "main.inc"
 
-ORG $E000
+ORG $0000
 
 XREF serial_init
 XREF keyboard_init
@@ -17,6 +17,11 @@ XREF cursor_init
 XREF monitor
 
 .main
+	; initialize internal RAM
+	XOR	A, A
+	; eZ80 instruction: OUT0 (RAM_ADDR_U), A
+	DEFB	$ED, $39, $B5
+
 	LD	A, INTERRUPT_TABLE/$100
 	LD	I, A
 	; stack below interrupt table
