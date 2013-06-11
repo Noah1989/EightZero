@@ -16,7 +16,7 @@
 \begin{document}
 \maketitle
 
-\chapter{Schneller Einstig}
+\chapter{Schneller Einstieg}
 
 Das erste Kapitel soll dir einen ersten Einblick
 in die Bedienung, die Funktionsweise
@@ -27,13 +27,14 @@ Bevor du den Mikrocomputer anschließen und einschalten
 kannst, solltest du überprüfen, ob du auch alle Dinge
 hast, die du zum Arbeiten mit dem Mikrocomputer brauchst.
 
-Checkliste
-
-Mikrocomputer
-Bildschirm mit VGA-Anschluss
-5V-Netzteil
-PS/2-Tastatur oder USB-Tastatur
-mit Adapter für PS/2-Schnittstelle
+%Checkliste
+\begin{itemize}
+\item Mikrocomputer
+\item Bildschirm mit VGA-Anschluss
+\item Netzteil
+\item PS/2-Tastatur oder USB-Tastatur
+mit Adapter für PS/2-Schnitt\-stelle
+\end{itemize}
 
 Allerdings unterstützt nicht jede USB-Tastatur
 einen Adapter für die PS/2-Schnittstelle.
@@ -53,20 +54,36 @@ ohne weiteres Bedenken in die Buchse schieben.
 In die lilane Buchse kommt der PS/2-Stecker,
 schau dir den Stecker genau an und stecke ihn
 ohne Gewalt richtig herum rein.
-Zur Orientierung schaue Abildung X an.
+Zur Orientierung schaue
+Abildung \ref{fig:ps2connector} an.
 Den schmalen Bildschirmstecker nun noch
 in die Buchse rechts stecken
 und nun kann der Anschaltkopf
 auf der linken Seite betätigt werden.
-Auf dem Bilschirm musste der
-Maschienencode-Monitor erscheinen.
+Auf dem Bilschirm müsste der
+Maschinencode-Monitor erscheinen.
 
-Nun gib das Probrprogramm ein.
-Wenn du es fertig abgetippt hast sollte
-"Hello World" auf dem Bildschirm erscheinen.
+\section{Hello World}
+Nun gib das Programm aus
+Tabelle \ref{tab:helloworld} ein.
+Wenn du es fertig abgetippt hast,
+sollte ``Hello World'' auf dem Bildschirm erscheinen.
 Fange oben links in der ersten Zeile an
 und benutze einfach die Pfeiltasten zum Weiterspringen.
 
-CD 11 07 21 16 E0 FD 21 41 00 CD E8 04 3E 1B B9 20 F8 C9 48 65 6C 6C 6F 72 6C 64 21 00
+\begin{table}
+\setlength{\tabcolsep}{3pt}
+\texttt{
+\begin{tabular}{ r | rrrrrrrrrrrrrrrr }
+E0 &  0& 1& 2& 3& 4& 5& 6& 7& 8& 9& A& B& C& D& E& F \\
+\hline
+ 0 & CD&11&07&21&16&E0&FD&21&41&00&CD&32&08&CD&E8&04 \\
+ 1 & 3E&1B&B9&20&F8&C9&48&65&6C&6C&6F&2C&20&77&6F&72 \\
+ 2 & 6C&64&21&00 \\
+\end{tabular}
+}
+\caption{``Hello World'' in Maschinencode}
+\label{tab:helloworld}
+\end{table}
 
 \end{document}
