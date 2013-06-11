@@ -4,3 +4,15 @@
 *.obj
 *.map
 *.def
+
+*.aux
+
+doc/.DS_Store
+
+.DS_Store
+
+*.pdf
+
+*.gz
+
+*.log
