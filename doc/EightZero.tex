@@ -63,15 +63,16 @@ auf der linken Seite betätigt werden.
 Auf dem Bilschirm müsste der
 Maschinencode-Monitor erscheinen.
 
-\section{Hello World}
+\section{Hello, world!}
 Nun gib das Programm aus
 Tabelle \ref{tab:helloworld} ein.
 Wenn du es fertig abgetippt hast,
-sollte ``Hello World'' auf dem Bildschirm erscheinen.
+sollte ``Hello, world!'' auf dem Bildschirm erscheinen.
 Fange oben links in der ersten Zeile an
 und benutze einfach die Pfeiltasten zum Weiterspringen.
 
 \begin{table}
+\centering
 \setlength{\tabcolsep}{3pt}
 \texttt{
 \begin{tabular}{ r | rrrrrrrrrrrrrrrr }
@@ -82,8 +83,52 @@ E0 &  0& 1& 2& 3& 4& 5& 6& 7& 8& 9& A& B& C& D& E& F \\
  2 & 6C&64&21&00 \\
 \end{tabular}
 }
-\caption{``Hello World'' in Maschinencode}
+\caption{``Hello, world!'' in Maschinencode}
 \label{tab:helloworld}
+\end{table}
+
+\begin{table}
+\centering
+\newcommand{\bs}{\textbackslash}
+\begin{tabular}{ | rc | rc | rc | rc | rc | rc |}
+\hline
+\texttt{20} & ~    & \texttt{30} & 0    & \texttt{40} & @ &
+\texttt{50} & P    & \texttt{60} & \`{} & \texttt{70} & p \\
+\texttt{21} & !    & \texttt{31} & 1    & \texttt{41} & A &
+\texttt{51} & Q    & \texttt{61} & a    & \texttt{71} & q \\
+\texttt{22} & "    & \texttt{32} & 2    & \texttt{42} & B &
+\texttt{52} & R    & \texttt{62} & b    & \texttt{72} & r \\
+\texttt{23} & \#   & \texttt{33} & 3    & \texttt{43} & C &
+\texttt{53} & S    & \texttt{63} & c    & \texttt{73} & s \\
+\texttt{24} & \$   & \texttt{34} & 4    & \texttt{44} & D &
+\texttt{54} & T    & \texttt{64} & d    & \texttt{74} & t \\
+\texttt{25} & \%   & \texttt{35} & 5    & \texttt{45} & E &
+\texttt{55} & U    & \texttt{65} & e    & \texttt{75} & u \\
+\texttt{26} & \&   & \texttt{36} & 6    & \texttt{46} & F &
+\texttt{56} & V    & \texttt{66} & f    & \texttt{76} & v \\
+\texttt{27} & '    & \texttt{37} & 7    & \texttt{47} & G &
+\texttt{57} & W    & \texttt{67} & g    & \texttt{77} & w \\
+\texttt{28} & (    & \texttt{38} & 8    & \texttt{48} & H &
+\texttt{58} & X    & \texttt{68} & h    & \texttt{78} & x \\
+\texttt{29} & )    & \texttt{39} & 9    & \texttt{49} & I &
+\texttt{59} & Y    & \texttt{69} & i    & \texttt{79} & y \\
+\texttt{2A} & *    & \texttt{3A} & :    & \texttt{4A} & J &
+\texttt{5A} & Z    & \texttt{6A} & j    & \texttt{7A} & z \\
+\texttt{2B} & +    & \texttt{3B} & ;    & \texttt{4B} & K &
+\texttt{5B} & [    & \texttt{6B} & k    & \texttt{7B} & \{ \\
+\texttt{2C} & ,    & \texttt{3C} & $<$  & \texttt{4C} & L &
+\texttt{5C} & \bs  & \texttt{6C} & l    & \texttt{7C} & $|$ \\
+\texttt{2D} & -    & \texttt{3D} & =    & \texttt{4D} & M &
+\texttt{5D} & ]    & \texttt{6D} & m    & \texttt{7D} & \} \\
+\texttt{2E} & .    & \texttt{3E} & $>$  & \texttt{4E} & N &
+\texttt{5E} & \^{} & \texttt{6E} & n    & \texttt{7E} & \textasciitilde \\
+\texttt{2F} & /    & \texttt{3F} & ?    & \texttt{4F} & O &
+\texttt{5F} & \_{} & \texttt{6F} & o    & \texttt{7F} & $\blacksquare$ \\
+\hline
+
+\end{tabular}
+\caption{ASCII-Zeichensatz}
+\label{tab:ascii}
 \end{table}
 
 \end{document}
