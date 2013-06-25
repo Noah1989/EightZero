@@ -6,13 +6,9 @@
 *.def
 
 *.aux
-
+*.toc
 doc/.DS_Store
-
 .DS_Store
-
 *.pdf
-
 *.gz
-
 *.log

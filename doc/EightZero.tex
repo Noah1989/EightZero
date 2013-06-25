@@ -8,6 +8,8 @@
 \usepackage[parfill]{parskip}
 \usepackage{graphicx}
 \usepackage{amssymb}
+\usepackage{multirow}
+\usepackage[lastexercise]{exercise}
 
 \title{Mikrocomputer}
 \author{Katrin Spahn}
@@ -15,6 +17,8 @@
 
 \begin{document}
 \maketitle
+
+\tableofcontents
 
 \chapter{Schneller Einstieg}
 
@@ -35,8 +39,9 @@ hast, die du zum Arbeiten mit dem Mikrocomputer brauchst.
 \item PS/2-Tastatur 
 
 \end{itemize}
-Du kannst auch eine USB-Tastatur und dazu einen Adapter für die 
-Ps/2 Schnittstelle nehmen.
+Du kannst auch eine USB-Tastatur
+und dazu einen Adapter für die
+PS/2 Schnittstelle nehmen.
 Allerdings unterstützt nicht jede USB-Tastatur
 einen Adapter für die PS/2-Schnittstelle.
 Benutze also am besten eine USB-Tastatur,
@@ -65,7 +70,7 @@ Maschinencode-Monitor erscheinen.
 
 \section{Hello, world!}
 Nun gib das Programm aus
-Tabelle \ref{tab:helloworld} ein.
+Tabelle \ref{tab:helloworldcode} ein.
 Wenn du es fertig abgetippt hast,
 sollte ``Hello, world!'' auf dem Bildschirm erscheinen.
 Fange oben links in der ersten Zeile an
@@ -88,29 +93,43 @@ E0 &  0& 1& 2& 3& 4& 5& 6& 7& 8& 9& A& B& C& D& E& F \\
 \end{tabular}
 }
 \caption{``Hello, world!'' in Maschinencode}
-\label{tab:helloworld}
+\label{tab:helloworldcode}
 \end{table}
 
-Doch wenn es nun geklappt hat willst du bestimmt wissen, wie diesen
-Programm funktioniert. Die Zahlen bustaben kominationen,
-die du gerade abgetippt hast sind Byts in Hexadezimal geschrieben.
+Doch wenn es nun geklappt hat,
+willst du bestimmt wissen,
+wie dieses Programm funktioniert.
+Die Zahlen- und Buchstabenkominationen,
+die du gerade abgetippt hast,
+sind Bytes in Hexadezimal geschrieben.
 In der Hexadezimalschreibweise gibt es 16 Ziffern.
-ZU ihnen gehören die Ziffern 0-9 und die Bustaben A-F müssen
-hier auch als Ziffern herhalten, so das wir ingesamt 16 Ziffern haben.
-Jedes Byte hat in der Hexadezimalschreibweise zwei dieser Ziffern.
-Manche Kominationen sind widerum bestimmte Zeichen zugeordnet.
-Um das näher zu Verstehnen löse folgende Aufgabe:
+Zu ihnen gehören die Ziffern 0-9
+und die Bustaben A-F müssen hier
+auch als Ziffern herhalten,
+sodass wir ingesamt 16 Ziffern haben.
+Jedes Byte hat in der Hexadezimalschreibweise
+zwei dieser Ziffern.
+Manche Kominationen sind widerum
+bestimmten Zeichen zugeordnet.
+Um das näher zu Verstehnen, löse folgende Aufgaben.
+Die Lösungen findest du am Ende des Kapitels
+auf Seite \pageref{sec:solutions1}.
 
-Aufgabe 
-
-In der Tabelle 1.2 sind in der Hexadezimalschreibweise Byte aufgeführt
-die wiederum bestimmten Zeichen zugeordnet sind. Auch das Hello World
-Programm besteht in der Hexadezimalschreibweise geschriebenen Bytes.
-Mansche Bytes im Hello World Programm sind bestimmten Zeichen zugeordnet
+\begin{Exercise}[label=ex:asciidecode]
+In der Tabelle 1.2 sind
+in der Hexadezimalschreibweise Bytes aufgeführt,
+die wiederum bestimmten Zeichen zugeordnet sind.
+Auch das Hello-World-Programm besteht aus
+in der Hexadezimalschreibweise geschriebenen Bytes.
+Manche Bytes im Programm sind
+bestimmten Zeichen zugeordnet
 und andere Bytes aus dem Programm nicht.
-Finde mit Hilfe der Tabelle heraus welche Bytes bestimmte Symbole haben
+Finde mit Hilfe der Tabelle \ref{tab:ascii} heraus,
+welche Bytes bestimmte Symbole haben
 und schreibe diese auf.
-Findest du heraus wo der Hello, World! Text sich im Programm verbirgt?
+Findest du heraus wo der Text ``Hello, World!''
+sich im Programm verbirgt?
+\end{Exercise}
 
 \begin{table}
 \centering
@@ -155,46 +174,18 @@ Findest du heraus wo der Hello, World! Text sich im Programm verbirgt?
 \label{tab:ascii}
 \end{table}
 
-Lösung zu Aufgabe 1
-
-Wenn du die Aufgabe richtig gelöst hast solltest du tatsächlich
-in den Programm den Test Hello World! gefunden 
-haben. Diese sind ganz am Ende es Programmes versteckt und zwar 
-in den folgenden Byts: 48 H; 65 e; 6C l; 6C l; 6F o; 2C ,; 20 ;
-77 W; 6F o; 72 r; 6C l; 64 d; 21 !
-
-
-
-Aufgabe 2
-
-Der Text aus dem Hello Wolrd! Programm kann natürlich auch
-geändert weden. Und zwar in den du die oben aufgeführten Bytes durch
-Bytes ersetzt die andere Symbole haben.
-Denke dir also deinen eigenen Text aus. Dieser Text kann alles
-Mögliche sein, vieleicht dein Lieblingsessen oder dein Hobby
-der Name deines Haustieres oder Irgenetwas anders was dir gerade einfällt.
-
-Lösung zur Aufgabe 2
-
-In der Beispiellösung wurde der Text Hello World durch den Text
-APFELKUCHEN SCHMECKT GUT ersetzt. Hierbei wurden nur Bytes verwendet
-die als Symbole Großbuchstaben haben, du kannst aber natürlich auch
-nomal Groß - und Kleinbuchstaben verwenden.
-\begin{table}
-\centering
-\setlength{\tabcolsep}{3pt}
-\texttt{
-\begin{tabular}{ r | rrrrrrrrrrrrrrrr }
-E0 &  0& 1& 2& 3& 4& 5& 6& 7& 8& 9& A& B& C& D& E& F \\
-\hline
- 0 & CD&11&07&21&16&E0&FD&21&41&00&CD&32&08&CD&E8&04 \\
- 1 & 3E&1B&B9&20&F8&C9&41&50&46&45&4C&4B&55&43&48&45 \\
- 2 & 4E&20&53&43&48&4D&45&43&4B&54&20&47&55&54&21&00 \\
-\end{tabular}
-}
-\caption{``APFELKUCHEN SCHMECKT GUT!'' in Maschinencode}
-\label{tab:apfelkuchen}
-\end{table}
+\begin{Exercise}[label=ex:asciiencode]
+Der Text aus dem Hello-Wolrd-Programm
+kann natürlich auch ge\-än\-dert werden.
+Und zwar indem du die Bytes,
+die du in Übung \ref{ex:asciidecode} gefunden hast,
+durch Bytes ersetzt, die andere Symbole haben.
+Denke dir also deinen eigenen Text aus.
+Dieser Text kann alles Mögliche sein,
+vieleicht dein Lieblingsessen oder dein Hobby,
+der Name deines Haustieres
+oder irgendetwas anders was dir gerade einfällt.
+\end{Exercise}
 
 Nun weist du was die Bytes nach C9 zu bedeuten haben,
 denn da befindet sich ja unser Text der auf denn Bildschirm ausgegeben wird.
@@ -217,16 +208,70 @@ Aber was bezweken die Bytes davor? Die Bytes davor haben natürlich auch ihre Au
 8. C9			Programmende
 
 
-Diese Bytes die du in Hexadezimalschreibweise eingegenben hast das ist direckt der Maschienencode. Der Maschienencode sagt also den Computer was er zu tun hat.
-Alles in Maschienencode zu schreiben hat den Nachteil das es sehr aufwendig ist, deswegen lohnt eine Programmiersprache zu benutzen. IN dieser Dukumentation weden wir Assembler benutzen.
-In Assembler gibt es Buchstaben Abkürzungen anstelle des Maschiencodes, die dannn in Maschiencode übersetzt werden. Doch diese Buchstaben Abkürzungen in Assembler sind zwar Befehle aber lösen keine komplexen Probleme. Dies bedeutet um etwas Bestimmtes zu erreischen muss man verstehen wie die Komponenten mit den Rechner zusammen arbeiten.
+Diese Bytes die du in Hexadezimalschreibweise
+eingegenben hast, das ist direkt der Maschienencode.
+Der Maschienencode sagt also dem Computer,
+was er zu tun hat. Alles in Maschienencode zu schreiben
+hat den Nachteil, das es sehr aufwendig ist,
+deswegen lohnt eine Programmiersprache zu benutzen.
+In dieser Dokumentation weden wir Assembler benutzen.
+In Assembler gibt es Abkürzungen
+anstelle des Maschiencodes,
+die dannn in Maschiencode übersetzt werden.
+Doch diese Buchstaben Abkürzungen in Assembler
+sind zwar Befehle aber lösen keine komplexen Probleme.
+Dies bedeutet um etwas Bestimmtes zu erreichen,
+muss man verstehen wie die Komponenten
+des Rechners miteinander zusammen arbeiten.
+Mehr dazu im nächsten Kapitel.
 
+\clearpage\section*{Lösungen zu den Aufgaben im Text}
+\label{sec:solutions1}
+\begin{Answer}[ref=ex:asciidecode]
+Wenn du die Aufgabe richtig gelöst hast,
+solltest du tatsächlich in dem Programm
+den Text ``Hello World!'' gefunden haben.
+Dieser ist ganz am Ende des Programmes versteckt
+und zwar in den folgenden Bytes:
+\begin{center}
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{ c | ccccccccccccc | c }
+\hline
+\multirow{2}{*}{\dots} &
+\texttt{48} & \texttt{65} &\texttt{6C} &
+\texttt{6C} & \texttt{6F} &\texttt{2C} &
+\texttt{20} & \texttt{77} &\texttt{6F} &
+\texttt{72} & \texttt{6C} &\texttt{64} &
+\texttt{21} &
+\multirow{2}{*}{\dots} \\
+&H&e&l&l&o&,& &W&o&r&l&d&!& \\
+\hline
+\end{tabular}
+\end{center}
+\end{Answer}
 
+\begin{Answer}[ref=ex:asciiencode]
+In der Beispiellösung wurde der Text
+``Hello, World!'' durch den Text
+``APFELKUCHEN SCHMECKT GUT!'' ersetzt.
+Hierbei wurden nur Bytes verwendet,
+die als Symbole Großbuchstaben haben.
+Du kannst aber natürlich auch
+normal Groß- und Kleinbuchstaben verwenden.
+\begin{center}
+\setlength{\tabcolsep}{3pt}
+\texttt{
+\begin{tabular}{ r | rrrrrrrrrrrrrrrr }
+E0 &  0& 1& 2& 3& 4& 5& 6& 7& 8& 9& A& B& C& D& E& F \\
+\hline
+ 0 & CD&11&07&21&16&E0&FD&21&41&00&CD&32&08&CD&E8&04 \\
+ 1 & 3E&1B&B9&20&F8&C9&41&50&46&45&4C&4B&55&43&48&45 \\
+ 2 & 4E&20&53&43&48&4D&45&43&4B&54&20&47&55&54&21&00 \\
+\end{tabular}
+}
+\end{center}
+\end{Answer}
 
-
-
-
-
-
+\chapter{Hier Titel einfügen}
 
 \end{document}
