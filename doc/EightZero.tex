@@ -10,6 +10,8 @@
 \usepackage{amssymb}
 \usepackage{multirow}
 \usepackage[lastexercise]{exercise}
+\usepackage{tikz}
+\usetikzlibrary{positioning,fit}
 
 \title{Mikrocomputer}
 \author{Katrin Spahn}
@@ -223,7 +225,34 @@ sind zwar Befehle aber lösen keine komplexen Probleme.
 Dies bedeutet um etwas Bestimmtes zu erreichen,
 muss man verstehen wie die Komponenten
 des Rechners miteinander zusammen arbeiten.
-Mehr dazu im nächsten Kapitel.
+
+\section{Bitte Überschrift einsetzen}
+
+Ziel: Hintergrundfarbe ändern (eigenes Programm)
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[align=center,
+	conn/.style={line width=2pt,stealth-stealth},
+	box/.style={rectangle,draw,text width=2cm,minimum size=1.5cm}]
+\node[box](cpu){eZ80 CPU};
+\node[box](bus)[below=of cpu]{Bus \\ Controller};
+\node[box](ram)[below=of bus]{RAM};
+\node[box](rom)[below right=of bus]{Flash \\ Memory};
+\node[box](spi)[below left=of bus]{Serial \\ Peripheral \\ Interface};
+\node[rectangle,draw,fit=(cpu)(bus)(ram)(rom)(spi),label={eZ80 Mikrocontroller}](mcu){};
+\node[box](gpu)[below=of spi]{Grafikchip};
+\node(mon)[right=of gpu]{Monitor};
+\draw[conn](cpu) to (bus);
+\draw[conn](bus) to [out=-90,in=90] (ram);
+\draw[conn](bus) to [out=-90,in=90] (rom);
+\draw[conn](bus) to [out=-90,in=90] (spi);
+\draw[conn](spi) to (gpu);
+\draw[->](gpu) to (mon);
+\end{tikzpicture}
+\caption{Komponenten des Mikrocomputers (Ausschnitt)}
+\label{fig:componentssimple}
+\end{figure}
 
 \clearpage\section*{Lösungen zu den Aufgaben im Text}
 \label{sec:solutions1}
