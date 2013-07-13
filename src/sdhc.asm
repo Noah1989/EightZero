@@ -15,6 +15,9 @@ XREF spi_receive
 XREF video_fill
 XREF print_string
 
+XDEF sdhc_init
+XDEF sdhc_read_block
+
 DEFC PB_DR = $9A
 
 DEFC SD_GO_IDLE_STATE = 0
