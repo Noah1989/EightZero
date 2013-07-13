@@ -41,22 +41,22 @@ DEFC SPI_TSR = $BC
 	LD	B, #end_video_init_sequence-video_init_sequence
 	CALL	output_sequence
 .video_reset
-	; background color
-	LD	HL, bg_color_default
-	LD	DE, BG_COLOR
-	CALL	video_write_16
-	; clear character RAM (64*64)
-	LD	HL, clear_character
-	LD	DE, RAM_PIC
-	LD	BC, 64*64
-	CALL	video_fill
 	; hide all 256 sprites (on both pages) off screen
 	; upper sprite control bits are set to zero
 	LD	HL, sprite_offscreen_position
 	LD	DE, RAM_SPR
 	; 2 words per sprite, 256 sprites per page, 2 pages
 	LD	BC, 2*256*2
-	JR	video_fill_16
+	CALL	video_fill_16
+	; clear character RAM (64*64)
+	LD	HL, clear_character
+	LD	DE, RAM_PIC
+	LD	BC, 64*64
+	CALL	video_fill
+	; background color
+	LD	HL, bg_color_default
+	LD	DE, BG_COLOR
+	JR	video_write_16
 	;RET optimized away by JR above
 .bg_color_default
 	DEFW	@00000*COLOR_R | @01100*COLOR_G | @01000*COLOR_B

@@ -23,7 +23,8 @@ main.bin all.def: $(SOURCES) $(SPRITES) $(INCS)
 	@echo generating $@ ...
 	@echo "; functions" > $@
 	@sed -n "/; Module $*/Is/;.*//p" $< >> $@
-	@echo "\n; constants" >> $@
+	@echo "" >> $@
+	@echo "; constants" >> $@
 	@cat $*.inc >> $@
 
 program: all
