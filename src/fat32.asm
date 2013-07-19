@@ -5,18 +5,28 @@ INCLUDE "sdhc.inc"
 
 XREF sdhc_read_block
 
-; locations for global variables
-DEFC VBR_SECTOR   = $FB00 ; 4 bytes
-DEFC FAT_SECTOR   = $FB04 ; 4 bytes
-DEFC DATA_SECTOR  = $FB08 ; 4 bytes
-DEFC FAT_SIZE     = $FB0C ; 4 bytes
-DEFC CLUSTER_SIZE = $FB10 ; 1 byte
+XDEF fat32_init
+XDEF fat32_dir
 
-DEFC MBR_OFFSET_PARTITION1_LBA = $1C6
+DEFC MBR_OFFSET_PARTITION1_LBA        = $1C6
+
 DEFC VBR_OFFSET_RESERVED_SECTOR_COUNT = $0E
-DEFC VBR_OFFSET_FAT_COUNT = $10
-DEFC VBR_OFFSET_FAT_SIZE = $24
-DEFC VBR_OFFSET_CLUSTER_SIZE = $0D
+DEFC VBR_OFFSET_FAT_COUNT             = $10
+DEFC VBR_OFFSET_FAT_SIZE              = $24
+DEFC VBR_OFFSET_CLUSTER_SIZE          = $0D
+
+DEFC DIR_OFFSET_ATTRIBUTES = $0B
+DEFC DIR_ATTRIBUTE_BIT_READONLY     = 0
+DEFC DIR_ATTRIBUTE_BIT_HIDDEN       = 1
+DEFC DIR_ATTRIBUTE_BIT_SYSTEM       = 2
+DEFC DIR_ATTRIBUTE_BIT_VOLUME_LABEL = 3
+DEFC DIR_ATTRIBUTE_BIT_SUBDIRECTORY = 4
+DEFC DIR_ATTRIBUTE_BIT_ARCHIVE      = 5
+DEFC DIR_ATTRIBUTE_BIT_DEVICE       = 6
+DEFC DIR_ATTRIBUTE_BIT_RESERVED     = 7
+
+DEFC DIR_ENTRY_DELETED_MARKER = $E5
+DEFC DIR_LFN_END_BIT = 6
 
 ; initialize FAT32 file system
 ; requires an initialized SDHC card
@@ -85,6 +95,67 @@ DEFC VBR_OFFSET_CLUSTER_SIZE = $0D
 	JR	NZ, fat32_init_calc_data_sector_loop
 	LD	(DATA_SECTOR), HL
 	LD	(DATA_SECTOR + 2), DE
-	; read some data (test)
-	CALL	sdhc_read_block
 	RET
+
+; scan directory entries
+; DEHL contains directory LBA
+; IY contains callback address
+; callback:
+; file name in FILE_NAME_BUFFER
+; IX points to directory entry
+; DE points to end of file name
+; callback must retain IX and IY
+.fat32_dir
+	CALL	sdhc_read_block
+	LD	IX, SDHC_BLOCK_BUFFER - 32
+.fat32_dir_loop
+	; eZ80: LEA IX, IX + 32
+	DEFB	$ED, $32, 32
+	; ignore volume labels (and LFN entries)
+	BIT	DIR_ATTRIBUTE_BIT_VOLUME_LABEL, (IX + DIR_OFFSET_ATTRIBUTES)
+	JR	NZ, fat32_dir_loop
+	; check for deleted file
+	LD	A, (IX + 0)
+	CP	A, DIR_ENTRY_DELETED_MARKER
+	JR	Z, fat32_dir_loop
+	; check for end of list
+	AND	A, A
+	RET	Z
+	PUSH	IX
+	; get long file name (ASCII only)
+	LD	DE, FILE_NAME_BUFFER
+.fat32_dir_lfn_loop
+	; eZ80: LEA IX, IX - 32
+	DEFB	$ED, $32, -32
+	; eZ80: LEA HL, IX + 1
+	DEFB	$ED, $22, 1
+	LD	C, $FF ; <- keeps LDI from decrementing B
+	LD	B, 5
+.fat32_dir_lfn_loop1
+	LDI
+	INC	HL ; ignore upper byte
+	DJNZ	fat32_dir_lfn_loop1
+	INC	HL ; skip 3 bytes
+	INC	HL
+	INC	HL
+	LD	B, 6
+.fat32_dir_lfn_loop2
+	LDI
+	INC	HL ; ignore upper byte
+	DJNZ	fat32_dir_lfn_loop2
+	INC	HL ; skip 2 bytes
+	INC	HL
+	; last two characters
+	LDI
+	INC	HL; ignore upper byte
+	LDI
+	; check for last LFN entry
+	BIT	DIR_LFN_END_BIT, (IX + 0)
+	JR	Z, fat32_dir_lfn_loop
+	POP	IX
+	XOR	A, A
+	LD	(DE), A
+	; callback
+	LD	HL, fat32_dir_loop
+	PUSH	HL
+	JP	(IY)

@@ -26,6 +26,8 @@ XREF cursor_move
 
 XREF loader_open
 
+XREF fileman_start
+
 XDEF monitor
 
 ; top-left screen coordinates of the main hex listing
@@ -235,6 +237,9 @@ DEFC LISTING_START = $E000
 	LD	A, K_F5
 	CP	A, C
 	JR	Z, monitor_call
+	LD	A, K_F6
+	CP	A, C
+	JP	Z, monitor_file
 	; handle hex input
 .monitor_main_loop_hex_input
 	LD	A, C
@@ -251,7 +256,7 @@ DEFC LISTING_START = $E000
 	SUB	A, 'a' - ('9' + 1)
 	; ignore if below $A
 	CP	A, $A
-	JR	C, monitor_main_loop_listing
+	JP	C, monitor_main_loop_listing
 	; ignore if above $F
 	; eZ80 instruction: TST A, $F0
 	DEFB	$ED, $64, $F0
@@ -349,6 +354,14 @@ DEFC LISTING_START = $E000
 	; always reposition cursor
 	JP	monitor_cursor_update
 
+.monitor_file
+	PUSH	HL
+	PUSH	IX
+	CALL	fileman_start
+	CALL	monitor_redraw
+	POP	IX
+	POP	HL
+	JP	monitor_cursor_update
 
 DEFC HELP_WIDTH = 37
 DEFC HELP_HEIGHT = 13

@@ -8,7 +8,8 @@ Use the tools from Z88dk to compile/assemble.
 Memory Map:
 
 $0000..$DFFF unused
-$E000..$FAFF code
+$E000..$F9FF code
+$FA00..$FAFF string buffer
 $FB00..$FBFF global system variables
 $FC00..$FCFF interrupt vectors
 $FD00..$FEFF sdhc sector buffer
