@@ -14,10 +14,10 @@ XREF keyboard_getchar
 XDEF fileman_start
 
 .fileman_start
-	CALL	video_reset
 	CALL	sdhc_init
 	RET	C
 	CALL	fat32_init
+	CALL	video_reset
 	EXX
 	LD	DE, 64 + 1
 	EXX
