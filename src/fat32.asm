@@ -103,7 +103,6 @@ DEFC DIR_LFN_END_BIT = 6
 ; callback:
 ; file name in FILE_NAME_BUFFER
 ; IX points to directory entry
-; DE points to end of file name
 ; callback must retain IX and IY
 .fat32_dir
 	CALL	sdhc_read_block
@@ -153,8 +152,6 @@ DEFC DIR_LFN_END_BIT = 6
 	BIT	DIR_LFN_END_BIT, (IX + 0)
 	JR	Z, fat32_dir_lfn_loop
 	POP	IX
-	XOR	A, A
-	LD	(DE), A
 	; callback
 	LD	HL, fat32_dir_loop
 	PUSH	HL
