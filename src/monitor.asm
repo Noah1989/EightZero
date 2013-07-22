@@ -52,7 +52,7 @@ DEFC LISTING_START = $E000
 .border_character
 	DEFB	$08 ; <- gray square
 .menu_string
-	DEFM	"F1:Help F2:GoTo F3:Load F4:Copy F5:Call F6:File"
+	DEFM	"F1:Help F2:GoTo F3:Load F4:Send F5:Call F6:File"
 .end_menu_string
 
 .monitor_redraw
@@ -357,6 +357,7 @@ DEFC LISTING_START = $E000
 .monitor_file
 	PUSH	HL
 	PUSH	IX
+	CALL	cursor_hide
 	CALL	fileman_start
 	CALL	monitor_redraw
 	POP	IX
