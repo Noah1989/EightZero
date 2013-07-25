@@ -1,0 +1,15 @@
+EESchema-LIBRARY Version 2.3  Date: Tue 23 Jul 2013 07:56:23 PM CEST
+#encoding utf-8
+#
+# GD_CORE
+#
+DEF GD_CORE U 0 40 Y Y 1 F N
+F0 "U" 0 1400 60 H V C CNN
+F1 "GD_CORE" 0 -1350 60 H V C CNN
+F2 "~" 0 0 60 H V C CNN
+F3 "~" 0 0 60 H V C CNN
+DRAW
+ENDDRAW
+ENDDEF
+#
+#End Library
