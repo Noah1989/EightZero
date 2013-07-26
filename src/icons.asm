@@ -58,4 +58,4 @@ XREF sprite_move
 
 .icons0
 	; 16-color "help" and "load" icons (1 sprite image)
-	BINARY	"icons0.spr"
+	BINARY	"sprites.bin"
