@@ -17,7 +17,31 @@ XDEF charmap_load
 	CALL	video_copy
 	LD	DE, RAM_PAL
 	CALL	video_start_write
-	LD	C, 0
+.charmap_load_palette_loop
+	; get number of characters
+	; with the same palette
+	LD	C, (HL)
+	INC	HL
+.charmap_load_palette_repeat
+	; copy palette (4 words)
+	LD	B, 4*2
+.charmap_load_palette_copy
+	CALL	spi_transmit
+	INC	HL
+	DJNZ	charmap_load_palette_copy
+	; set back HL
+	LD	DE, -4*2
+	ADD	HL, DE
+	DEC	C
+	JR	NZ, charmap_load_palette_repeat
+	; set HL to next entry
+	LD	DE, 4*2
+	ADD	HL, DE
+	; check for end marker
+	LD	A, (HL)
+	AND	A, A
+	JR	NZ, charmap_load_palette_loop
 
 .charmap_data
 	BINARY "charmap.bin"
+	DEFB	0

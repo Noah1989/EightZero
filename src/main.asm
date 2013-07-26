@@ -27,6 +27,7 @@ XREF monitor
 	EI
 
 	CALL	video_reset
+	CALL	charmap_load
 	CALL	icons_load
 	CALL	cursor_init
 

@@ -3,8 +3,7 @@ SOURCES = \
 	ioutil.asm spi.asm serial.asm keyboard.asm \
 	video.asm uitools.asm sdhc.asm fat32.asm \
 	fileman.asm \
-	sprite.asm cursor.asm icons.asm \
-	hexdigits.asm linechars.asm symbolchars.asm
+	charmap.asm sprite.asm icons.asm cursor.asm
 
 
 SPRITES = sprites.bin
