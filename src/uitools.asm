@@ -1,11 +1,11 @@
-; uitools - user interface tools
+; eZ80 ASM file: uitools - user interface tools
 
 INCLUDE "uitools.inc"
 
 XREF video_start_write
-XREF video_spi_transmit
-XREF video_spi_transmit_A
-XREF video_end_transfer
+XREF spi_transmit
+XREF spi_transmit_A
+XREF spi_deselect
 
 XDEF dialog_style
 XDEF draw_box
@@ -39,9 +39,9 @@ XDEF print_uint16
 	INC	B
 	INC	B
 .draw_box_upper_border_loop
-	CALL	video_spi_transmit
+	CALL	spi_transmit
 	DJNZ	draw_box_upper_border_loop
-	CALL	video_end_transfer
+	CALL	spi_deselect
 	; restore B
 	LD	B, D
 
@@ -55,21 +55,21 @@ XDEF print_uint16
 	; save B (DE is not needed anymore)
 	LD	D, B
 	; left border
-	CALL	video_spi_transmit
+	CALL	spi_transmit
 	; inner fill
 	DEC	HL
 .draw_box_body_inner_loop
-	CALL	video_spi_transmit
+	CALL	spi_transmit
 	DJNZ	draw_box_body_inner_loop
 	; restore B
 	LD	B, D
 	INC	HL
 	; right border and shadow
-	CALL	video_spi_transmit
+	CALL	spi_transmit
 	INC	HL
-	CALL	video_spi_transmit
+	CALL	spi_transmit
 	DEC	HL
-	CALL	video_end_transfer
+	CALL	spi_deselect
 	DEC	C
 	JR	NZ, draw_box_body_line_loop
 
@@ -83,12 +83,12 @@ XDEF print_uint16
 	INC	B
 	INC	B
 .draw_box_bottom_border_loop
-	CALL	video_spi_transmit
+	CALL	spi_transmit
 	DJNZ	draw_box_bottom_border_loop
 	; shadow
 	INC	HL
-	CALL	video_spi_transmit
-	CALL	video_end_transfer
+	CALL	spi_transmit
+	CALL	spi_deselect
 	; restore B
 	LD	B, D
 	; bottom shadow
@@ -98,13 +98,13 @@ XDEF print_uint16
 	INC	B
 	INC	B
 .draw_box_bottom_shadow_loop
-	CALL	video_spi_transmit
+	CALL	spi_transmit
 	DJNZ	draw_box_bottom_shadow_loop
-	JP	video_end_transfer
+	JP	spi_deselect
 	;RET optimized away by JP above
 
 .print_string_newline
-	CALL	video_end_transfer
+	CALL	spi_deselect
 	; eZ80 instruction: LEA IY, IY + 64
 	DEFB	$ED, $33, 64
 	; print a null-terminated string on screen, handling newlines
@@ -120,10 +120,10 @@ XDEF print_uint16
 	; check for terminator
 	OR	A, A
 	; jump instead of call because we want to return after that
-	JP	Z, video_end_transfer
+	JP	Z, spi_deselect
 	CP	A, 10 ; <- line feed
 	JR	Z, print_string_newline
-	CALL	video_spi_transmit_A
+	CALL	spi_transmit_A
 	JR	print_string_loop
 
 .print_uint16
@@ -138,7 +138,7 @@ XDEF print_uint16
 	CALL	print_uint16_digit
 	LD	C, B ; BC becomes $FFFF (-1)
 	CALL	print_uint16_digit
-	JP	video_end_transfer
+	JP	spi_deselect
 	;RET optimized away by JP above
 .print_uint16_digit
 	LD	A, '0' - 1
@@ -147,5 +147,5 @@ XDEF print_uint16
 	ADD	HL, BC
 	JR	C, print_uint16_digit_loop
 	SBC	HL, BC
-	JP	video_spi_transmit_A
+	JP	spi_transmit_A
 	;RET optimized away by JP above

@@ -1,4 +1,4 @@
-; monitor - a machine code monitor program
+; eZ80 ASM file: monitor - a machine code monitor program
 
 INCLUDE "monitor.inc"
 INCLUDE "video.inc"
@@ -7,9 +7,9 @@ INCLUDE "keyboard.inc"
 XREF video_fill
 XREF video_copy
 XREF video_start_write
-XREF video_spi_transmit
-XREF video_spi_transmit_A
-XREF video_end_transfer
+XREF spi_transmit
+XREF spi_transmit_A
+XREF spi_deselect
 XREF video_write
 XREF video_write_C
 
@@ -25,6 +25,8 @@ XREF cursor_hide
 XREF cursor_move
 
 XREF loader_open
+
+XREF fileman_start
 
 XDEF monitor
 
@@ -50,7 +52,7 @@ DEFC LISTING_START = $E000
 .border_character
 	DEFB	$08 ; <- gray square
 .menu_string
-	DEFM	"F1:Help F2:GoTo F3:Load F4:Copy F5:Call F6:File"
+	DEFM	"F1:Help F2:GoTo F3:Load F4:Send F5:Call F6:File"
 .end_menu_string
 
 .monitor_redraw
@@ -81,20 +83,20 @@ DEFC LISTING_START = $E000
 	; top border address labels
 	LD	DE, ORIGIN_X + ADDRESS_Y*64
 	CALL	video_start_write
-	CALL	video_spi_transmit
+	CALL	spi_transmit
 	LD	B, 16
 	JR	monitor_top_address_labels_loop_start
 .monitor_top_address_labels_loop
 	LD	A, SPACE_CHARACTER
-	CALL	video_spi_transmit_A
-	CALL	video_spi_transmit_A
+	CALL	spi_transmit_A
+	CALL	spi_transmit_A
 .monitor_top_address_labels_loop_start
 	LD	A, ADDRESS_CHAR_OFFSET + 16
 	SUB	A, B
-	CALL	video_spi_transmit_A
+	CALL	spi_transmit_A
 	DJNZ	monitor_top_address_labels_loop
-	CALL	video_spi_transmit
-	CALL	video_end_transfer
+	CALL	spi_transmit
+	CALL	spi_deselect
 	; left border address labels
 	LD	IY, ORIGIN_X - 3 + ORIGIN_Y*64
 	LD	B, 32
@@ -105,14 +107,14 @@ DEFC LISTING_START = $E000
 	; eZ80 instruction: LEA IY, IY + 64
 	DEFB	$ED, $33, 64
 	CALL	video_start_write
-	CALL	video_spi_transmit
+	CALL	spi_transmit
 	XOR	A, A
 	SUB	A, B
 	OR	A, $F0
 	ADD	A, ADDRESS_CHAR_OFFSET + 16
-	CALL	video_spi_transmit_A
-	CALL	video_spi_transmit
-	CALL	video_end_transfer
+	CALL	spi_transmit_A
+	CALL	spi_transmit
+	CALL	spi_deselect
 	DJNZ	monitor_left_address_labels_loop
 	; right vertical border
 	LD	IY, ORIGIN_X + 47 + ORIGIN_Y*64
@@ -146,13 +148,13 @@ DEFC LISTING_START = $E000
 	RRA
 	AND	A, $0F
 	OR	A, ADDRESS_CHAR_OFFSET
-	CALL	video_spi_transmit_A
+	CALL	spi_transmit_A
 	; low nibble
 	LD	A, H
 	AND	A, $0F
 	OR	A, ADDRESS_CHAR_OFFSET
-	CALL	video_spi_transmit_A
-	CALL	video_end_transfer
+	CALL	spi_transmit_A
+	CALL	spi_deselect
 
 	; main display loop without address indicator
 .monitor_main_loop_listing
@@ -171,7 +173,7 @@ DEFC LISTING_START = $E000
 .monitor_line_loop
 	; space
 	LD	A, SPACE_CHARACTER
-	CALL	video_spi_transmit_A
+	CALL	spi_transmit_A
 .monitor_line_loop_start
 	; high nibble
 	LD	A, (HL)
@@ -181,15 +183,15 @@ DEFC LISTING_START = $E000
 	RRA
 	AND	A, $0F
 	OR	A, LISTING_CHAR_OFFSET
-	CALL	video_spi_transmit_A
+	CALL	spi_transmit_A
 	; low nibble
 	LD	A, (HL)
 	AND	A, $0F
 	OR	A, LISTING_CHAR_OFFSET
-	CALL	video_spi_transmit_A
+	CALL	spi_transmit_A
 	INC	HL
 	DJNZ	monitor_line_loop
-	CALL	video_end_transfer
+	CALL	spi_deselect
 	DEC	C
 	JR	NZ, monitor_outer_loop
 	; page up/down
@@ -235,6 +237,9 @@ DEFC LISTING_START = $E000
 	LD	A, K_F5
 	CP	A, C
 	JR	Z, monitor_call
+	LD	A, K_F6
+	CP	A, C
+	JP	Z, monitor_file
 	; handle hex input
 .monitor_main_loop_hex_input
 	LD	A, C
@@ -251,7 +256,7 @@ DEFC LISTING_START = $E000
 	SUB	A, 'a' - ('9' + 1)
 	; ignore if below $A
 	CP	A, $A
-	JR	C, monitor_main_loop_listing
+	JP	C, monitor_main_loop_listing
 	; ignore if above $F
 	; eZ80 instruction: TST A, $F0
 	DEFB	$ED, $64, $F0
@@ -349,6 +354,15 @@ DEFC LISTING_START = $E000
 	; always reposition cursor
 	JP	monitor_cursor_update
 
+.monitor_file
+	PUSH	HL
+	PUSH	IX
+	CALL	cursor_hide
+	CALL	fileman_start
+	CALL	monitor_redraw
+	POP	IX
+	POP	HL
+	JP	monitor_cursor_update
 
 DEFC HELP_WIDTH = 37
 DEFC HELP_HEIGHT = 13

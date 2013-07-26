@@ -1,4 +1,4 @@
-; loader - load data into ram from the serial interface
+; eZ80 ASM file: loader - load data into ram from the serial interface
 
 INCLUDE "loader.inc"
 INCLUDE "keyboard.inc"
@@ -15,8 +15,8 @@ XREF icon_show
 XREF icon_hide
 
 XREF video_start_write
-XREF video_spi_transmit_A
-XREF video_end_transfer
+XREF spi_transmit_A
+XREF spi_deselect
 XREF video_write
 XREF video_fill
 
@@ -76,7 +76,7 @@ DEFC ADDRESS_CHAR_OFFSET = $B0 ; cyan hex chars
 	CALL	loader_print_byte
 	LD	B, IXL
 	CALL	loader_print_byte
-	CALL	video_end_transfer
+	CALL	spi_deselect
 	JR	loader_wait_data_start
 .loader_print_byte
 	LD	A, B
@@ -86,12 +86,12 @@ DEFC ADDRESS_CHAR_OFFSET = $B0 ; cyan hex chars
 	RRA
 	AND	A, $0F
 	OR	A, ADDRESS_CHAR_OFFSET
-	CALL	video_spi_transmit_A
+	CALL	spi_transmit_A
 	; low nibble
 	LD	A, B
 	AND	A, $0F
 	OR	A, ADDRESS_CHAR_OFFSET
-	JP	video_spi_transmit_A
+	JP	spi_transmit_A
 	; RET optimized away by JP above
 
 .loader_wait_data_start
