@@ -2,7 +2,7 @@
 
 INCLUDE "main.inc"
 
-ORG $E000
+ORG $C000
 
 XREF serial_init
 XREF keyboard_init

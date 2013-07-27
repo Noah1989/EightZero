@@ -38,19 +38,20 @@ XDEF video_write_32
 	LD	DE, BG_COLOR
 	CALL	video_write_16
 	; reset scroll position
-	LD	HL, zerobyte
+	LD	HL, scroll_default
 	LD	DE, SCROLL_X
 	LD	BC, 2*2 ; 2 words
-	JR	video_fill
+	JR	video_copy
 	;RET optimized away by JR above
 .bg_color_default
-	DEFW	@00000*COLOR_R | @01100*COLOR_G | @01000*COLOR_B
+	DEFW	@00000*COLOR_R | @00000*COLOR_G | @00000*COLOR_B
 .clear_character
 	DEFB	' '
 .sprite_offscreen_position
 	DEFW	400
-.zerobyte
-	DEFB	0
+.scroll_default
+	DEFW	-4
+	DEFW	-6
 
 ; start data write to video device
 ; DE contains the target address

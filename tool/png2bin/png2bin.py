@@ -81,6 +81,10 @@ def make_charmap():
         outfile.write(struct.pack("B", palette['num_chars']%256))
         outfile.write("".join(struct.pack("<H", color) for color in palette['colors']))
 
+    outfile.write(struct.pack("B", 0))
+    outfile.write(struct.pack("<H", to_argb1555(*characters[0].getpixel((0, 0)))))
+    outfile.write(struct.pack("<H", to_argb1555(*characters[255].getpixel((0, 0)))))
+
     print outfile.tell(), "bytes written."
     outfile.close()
     print "Done."

@@ -4,6 +4,7 @@ INCLUDE "charmap.inc"
 INCLUDE "video.inc"
 
 XREF video_copy
+XREF video_write_16
 XREF video_start_write
 XREF spi_transmit
 XREF spi_deselect
@@ -41,6 +42,12 @@ XDEF charmap_load
 	LD	A, (HL)
 	AND	A, A
 	JR	NZ, charmap_load_palette_loop
+	CALL	spi_deselect
+	; background color
+	INC	HL
+	LD	DE, BG_COLOR
+	JP	video_write_16
+	; RET optimized away by JP above
 
 .charmap_data
 	BINARY "charmap.bin"

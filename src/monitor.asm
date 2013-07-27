@@ -31,35 +31,35 @@ XREF fileman_start
 XDEF monitor
 
 ; top-left screen coordinates of the main hex listing
-DEFC ORIGIN_X = 3
-DEFC ORIGIN_Y = 5
+DEFC ORIGIN_X = 2
+DEFC ORIGIN_Y = 4
 
 ; screen coordinates of the address indicator
-DEFC ADDRESS_X = 1
-DEFC ADDRESS_Y = 3
+DEFC ADDRESS_X = 0
+DEFC ADDRESS_Y = 2
 
 ; screen coordinate of the menu
 DEFC MENU_X = 1
 DEFC MENU_Y = 0
 
-DEFC LISTING_CHAR_OFFSET = $F0 ; <- white hex digits
-DEFC ADDRESS_CHAR_OFFSET = $B0 ; <- cyan hex digits
-DEFC SPACE_CHARACTER = $00 ; <- black square
-
 ; default listing start address
 DEFC LISTING_START = $E000
 
 .border_character
-	DEFB	$08 ; <- gray square
+	DEFB	$C4, $B3
 .menu_string
 	DEFM	"F1:Help F2:GoTo F3:Load F4:Send F5:Call F6:File"
 .end_menu_string
 
+.put_hex
+	OR	A, $F0
+	DAA
+	ADD	A, $A0
+	ADC	A, $40
+	JP	spi_transmit_A
+	;RET optimized away by JP above
+
 .monitor_redraw
-	; scroll 4px to the left
-	LD	C, 4
-	LD	DE, SCROLL_X
-	CALL	video_write_C
 	; print menu
 	LD	HL, menu_string
 	LD	DE, MENU_X + MENU_Y*64
@@ -68,18 +68,67 @@ DEFC LISTING_START = $E000
 	; draw some borders and static labels
 	LD	HL, border_character
 	; horizontal borders
+	LD	DE, 63*64
+	LD	BC, 49
+	CALL	video_fill
 	LD	DE, [ADDRESS_Y - 1]*64
-	LD	BC, 51
+	LD	BC, 49
 	CALL	video_fill
 	LD	DE, [ADDRESS_Y + 1]*64
-	LD	BC, 51
+	LD	BC, 49
 	CALL	video_fill
 	LD	DE, [ORIGIN_Y + 32]*64
-	LD	BC, 51
+	LD	BC, 49
 	CALL	video_fill
-	; small border left of address
-	LD	DE, ADDRESS_X - 1 + ADDRESS_Y*64
+	; switch to vertical border character
+	INC	HL
+	; vertical borders
+	LD	IY, ORIGIN_X + 47 + MENU_Y*64
+	LD	B, 36
+.monitor_vertical_border_loop
+	; eZ80 instruction: LEA DE, IY + 0
+	DEFB	$ED, $13, 0
 	CALL	video_write
+	; eZ80 instruction: LEA DE, IY + 63 - 47 - 2
+	DEFB	$ED, $13, 63 - 47 - 2
+	CALL	video_write
+	; next line
+	; eZ80 instruction: LEA IY, IY + 64
+	DEFB	$ED, $33, 64
+	DJNZ	monitor_vertical_border_loop
+	; corners and T-pieces
+	LD	C, $C1 ; <- _|_
+	LD	DE, [ORIGIN_X - 1] + [ORIGIN_Y + 32]*64
+	CALL	video_write_C
+	LD	DE, [ORIGIN_X] + [ADDRESS_Y + 1]*64
+	CALL	video_write_C
+	INC	C ; <- $C2 T
+	DEC	DE
+	CALL	video_write_C
+	LD	DE, ORIGIN_X + [ADDRESS_Y - 1]*64
+	CALL	video_write_C
+	INC	C ; <- $C3 |-
+	LD	DE, 63 + [ADDRESS_Y - 1]*64
+	CALL	video_write_C
+	LD	DE, 63 + [ADDRESS_Y + 1]*64
+	CALL	video_write_C
+	LD	C, $BF ; <- top-right corner
+	LD	DE, 49 + 63*64
+	CALL	video_write_C
+	INC	C ; <- bottom-left corner
+	LD	DE, 63 + [ORIGIN_Y + 32]*64
+	CALL	video_write_C
+	LD	C, $B4 ; <- -|
+	LD	DE, 49 + [ADDRESS_Y - 1]*64
+	CALL	video_write_C
+	LD	DE, 49 + [ADDRESS_Y + 1]*64
+	CALL	video_write_C
+	LD	C, $D9 ; <- bottom-right corner
+	LD	DE, 49 + [ORIGIN_Y + 32]*64
+	CALL	video_write_C
+	INC	C ; <- $DA top-left corner
+	LD	DE, 63 + 63*64
+	CALL	video_write_C
 	; top border address labels
 	LD	DE, ORIGIN_X + ADDRESS_Y*64
 	CALL	video_start_write
@@ -87,18 +136,18 @@ DEFC LISTING_START = $E000
 	LD	B, 16
 	JR	monitor_top_address_labels_loop_start
 .monitor_top_address_labels_loop
-	LD	A, SPACE_CHARACTER
+	LD	A, ' '
 	CALL	spi_transmit_A
 	CALL	spi_transmit_A
 .monitor_top_address_labels_loop_start
-	LD	A, ADDRESS_CHAR_OFFSET + 16
+	LD	A, 16
 	SUB	A, B
-	CALL	spi_transmit_A
+	CALL	put_hex
 	DJNZ	monitor_top_address_labels_loop
 	CALL	spi_transmit
 	CALL	spi_deselect
 	; left border address labels
-	LD	IY, ORIGIN_X - 3 + ORIGIN_Y*64
+	LD	IY, ORIGIN_X - 2 + ORIGIN_Y*64
 	LD	B, 32
 .monitor_left_address_labels_loop
 	; eZ80 instruction: LEA DE, IY + 0
@@ -107,26 +156,12 @@ DEFC LISTING_START = $E000
 	; eZ80 instruction: LEA IY, IY + 64
 	DEFB	$ED, $33, 64
 	CALL	video_start_write
-	CALL	spi_transmit
 	XOR	A, A
 	SUB	A, B
-	OR	A, $F0
-	ADD	A, ADDRESS_CHAR_OFFSET + 16
-	CALL	spi_transmit_A
+	CALL	put_hex
 	CALL	spi_transmit
 	CALL	spi_deselect
 	DJNZ	monitor_left_address_labels_loop
-	; right vertical border
-	LD	IY, ORIGIN_X + 47 + ORIGIN_Y*64
-	LD	B, 32
-.monitor_right_border_loop
-	; eZ80 instruction: LEA DE, IY + 0
-	DEFB	$ED, $13, 0
-	; next line
-	; eZ80 instruction: LEA IY, IY + 64
-	DEFB	$ED, $33, 64
-	CALL	video_write
-	DJNZ	monitor_right_border_loop
 	RET
 
 .monitor
@@ -146,14 +181,10 @@ DEFC LISTING_START = $E000
 	RRA
 	RRA
 	RRA
-	AND	A, $0F
-	OR	A, ADDRESS_CHAR_OFFSET
-	CALL	spi_transmit_A
+	CALL	put_hex
 	; low nibble
 	LD	A, H
-	AND	A, $0F
-	OR	A, ADDRESS_CHAR_OFFSET
-	CALL	spi_transmit_A
+	CALL	put_hex
 	CALL	spi_deselect
 
 	; main display loop without address indicator
@@ -172,7 +203,7 @@ DEFC LISTING_START = $E000
 	JR	monitor_line_loop_start
 .monitor_line_loop
 	; space
-	LD	A, SPACE_CHARACTER
+	LD	A, ' '
 	CALL	spi_transmit_A
 .monitor_line_loop_start
 	; high nibble
@@ -181,14 +212,10 @@ DEFC LISTING_START = $E000
 	RRA
 	RRA
 	RRA
-	AND	A, $0F
-	OR	A, LISTING_CHAR_OFFSET
-	CALL	spi_transmit_A
+	CALL	put_hex
 	; low nibble
 	LD	A, (HL)
-	AND	A, $0F
-	OR	A, LISTING_CHAR_OFFSET
-	CALL	spi_transmit_A
+	CALL	put_hex
 	INC	HL
 	DJNZ	monitor_line_loop
 	CALL	spi_deselect
@@ -394,7 +421,7 @@ DEFC HELP_LEFT = 7
 .monitor_help_string
 	DEFM	"This program can view and change", 10
 	DEFM	"memory locations on the machine.", 10, 10
-	DEFM	$10, " ", $11, " ", $12, " ", $13, "    move cursor", 10, 10
+	DEFM	$18, " ", $19, " ", $1A, " ", $1B, "    move cursor", 10, 10
 	DEFM	"PgUp PgDn  scroll 256 bytes", 10, 10
 	DEFM	"0..9 A..F  modify selected byte", 10, 10, 10
 	DEFM	"Press ESC to close this window.", 0

@@ -11,8 +11,8 @@ XDEF cursor_move
 XDEF cursor_hide
 
 .cursor_default
-	; X=20, ROT=0, PAL=$E, Y=36, IMAGE=0, C=0
-	DEFB	20, $E0, 36, 0*2
+	; X=20, ROT=0, PAL=$E, Y=34, IMAGE=0, C=0
+	DEFB	20, $E0, 34, 0*2
 
 .cursor_init
 	; load sprite image
