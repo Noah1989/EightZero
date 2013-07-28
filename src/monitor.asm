@@ -15,7 +15,6 @@ XREF video_write_C
 
 XREF keyboard_getchar
 
-XREF dialog_style
 XREF draw_box
 XREF print_string
 XREF icon_show
@@ -400,7 +399,6 @@ DEFC HELP_LEFT = 7
 	CALL	cursor_hide
 	LD	BC, HELP_WIDTH*256 + HELP_HEIGHT
 	LD	IY, HELP_TOP*64 + HELP_LEFT
-	LD	HL, dialog_style
 	CALL	draw_box
 	LD	BC, [HELP_LEFT + 1]*256 + [HELP_TOP + 1]
 	XOR	A, A ; icon 0

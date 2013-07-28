@@ -7,7 +7,6 @@ XREF keyboard_getchar
 XREF serial_transmit
 XREF serial_receive
 
-XREF dialog_style
 XREF draw_box
 XREF print_string
 XREF print_uint16
@@ -54,7 +53,6 @@ DEFC ADDRESS_CHAR_OFFSET = $B0 ; cyan hex chars
 	; box
 	LD	BC, LOADER_WIDTH*256 + LOADER_HEIGHT
 	LD	IY, LOADER_TOP*64 + LOADER_LEFT
-	LD	HL, dialog_style
 	CALL	draw_box
 	; icon
 	LD	BC, [LOADER_LEFT + 1]*256 + [LOADER_TOP + 1]
