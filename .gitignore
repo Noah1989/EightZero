@@ -4,3 +4,5 @@ main.bin
 *.obj
 *.map
 *.def
+
+.DS_Store
