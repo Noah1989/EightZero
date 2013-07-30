@@ -55,7 +55,7 @@ def make_charmap():
         palette = palettes[-1]
         if len(palette['colors'] | colors) > 4:
             palette = {'num_chars': 1, 'colors': colors}
-            palettes.add(palette)
+            palettes.append(palette)
         else:
             palette['num_chars'] += 1
             palette['colors'] |= colors
