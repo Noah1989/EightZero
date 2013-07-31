@@ -1,12 +1,14 @@
 SOURCES = \
 	main.asm loader.asm monitor.asm math.asm \
 	unlock.asm \
-	ioutil.asm serial.asm keyboard.asm video.asm \
-	uitools.asm sprite.asm cursor.asm icons.asm \
-	hexdigits.asm linechars.asm symbolchars.asm \
+	ioutil.asm spi.asm serial.asm keyboard.asm \
+	video.asm uitools.asm sdhc.asm fat32.asm \
+	fileman.asm \
+	charmap.asm sprite.asm icons.asm cursor.asm
 
 
-SPRITES = icons0.spr
+SPRITES = sprites.bin
+CHARMAP = charmap.bin
 
 INCS = ${SOURCES:.asm=.inc}
 DEFS = ${SOURCES:.asm=.def}
@@ -15,7 +17,7 @@ DEFS = ${SOURCES:.asm=.def}
 
 all: main.bin $(DEFS)
 
-main.bin all.def: $(SOURCES) $(SPRITES) $(INCS)
+main.bin all.def: $(SOURCES) $(SPRITES) $(CHARMAP) $(INCS)
 	z80asm -l -g -b $(SOURCES)
 	@mv main.def all.def
 
@@ -32,4 +34,4 @@ program: all
 	../tool/bin2ram/bin2ram.py debugger main.bin /dev/ttyUSB0
 
 clean:
-	rm -r *.obj *.bin *.def *.lst *.map
+	rm -r main.bin *.obj *.def *.lst *.map

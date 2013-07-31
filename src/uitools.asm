@@ -1,51 +1,41 @@
-; uitools - user interface tools
+; eZ80 ASM file: uitools - user interface tools
 
 INCLUDE "uitools.inc"
 
 XREF video_start_write
-XREF video_spi_transmit
-XREF video_spi_transmit_A
-XREF video_end_transfer
+XREF spi_transmit
+XREF spi_transmit_A
+XREF spi_deselect
 
-XDEF dialog_style
 XDEF draw_box
 XDEF print_string
 XDEF print_uint16
-
-	; default dialog style
-.dialog_style
-.dialog_fill_character
-	DEFB	' '
-.dialog_border_character
-	DEFB	$07 ; <- white square
-.dialog_shadow_character
-	DEFB	$00 ; <- black square
+XDEF put_hex
 
 	; draw a fancy box with border and shadow
 	; B = inner width, C = inner height
 	; IY contains screen RAM address
-	; HL points to fill character,
-	;    followed by border character,
-	;    followed by shadow character
+	;    of inner top left corner
 .draw_box
-	;upper border
-	INC	HL
 	; eZ80 instruction: LEA DE, IY - 65
 	DEFB	$ED, $13, -65
 	CALL	video_start_write
 	; save B (DE is not needed anymore)
 	LD	D, B
-	; add 2 to B to calculate full width
-	INC	B
-	INC	B
+	LD	A, $C9
+	CALL	spi_transmit_A
+	LD	A, $CD
 .draw_box_upper_border_loop
-	CALL	video_spi_transmit
+	CALL	spi_transmit_A
 	DJNZ	draw_box_upper_border_loop
-	CALL	video_end_transfer
+	LD	A, $BB
+	CALL	spi_transmit_A
+	CALL	spi_deselect
 	; restore B
 	LD	B, D
 
 	; body
+	LD	HL, $C7BF
 .draw_box_body_line_loop
 	; eZ80 instruction: LEA DE, IY - 1
 	DEFB	$ED, $13, -1
@@ -55,21 +45,22 @@ XDEF print_uint16
 	; save B (DE is not needed anymore)
 	LD	D, B
 	; left border
-	CALL	video_spi_transmit
+	LD	A, $BA
+	CALL	spi_transmit_A
 	; inner fill
-	DEC	HL
+	LD	A, ' '
 .draw_box_body_inner_loop
-	CALL	video_spi_transmit
+	CALL	spi_transmit_A
 	DJNZ	draw_box_body_inner_loop
 	; restore B
 	LD	B, D
-	INC	HL
 	; right border and shadow
-	CALL	video_spi_transmit
-	INC	HL
-	CALL	video_spi_transmit
-	DEC	HL
-	CALL	video_end_transfer
+	LD	A, H
+	CALL	spi_transmit_A
+	LD	A, L
+	CALL	spi_transmit_A
+	LD	HL, $BAB3
+	CALL	spi_deselect
 	DEC	C
 	JR	NZ, draw_box_body_line_loop
 
@@ -79,32 +70,40 @@ XDEF print_uint16
 	CALL	video_start_write
 	; save B (DE is not needed anymore)
 	LD	D, B
-	; add 2 to B to calculate full width
-	INC	B
-	INC	B
+	LD	A, $C8
+	CALL	spi_transmit_A
+	LD	A, $D1
+	CALL	spi_transmit_A
+	DEC	B
+	LD	A, $CD
 .draw_box_bottom_border_loop
-	CALL	video_spi_transmit
+	CALL	spi_transmit_A
 	DJNZ	draw_box_bottom_border_loop
+	LD	A, $BC
+	CALL	spi_transmit_A
 	; shadow
-	INC	HL
-	CALL	video_spi_transmit
-	CALL	video_end_transfer
+	LD	A, $B3
+	CALL	spi_transmit_A
+	CALL	spi_deselect
 	; restore B
 	LD	B, D
 	; bottom shadow
 	; eZ80 instruction: LEA DE, IY + 64
 	DEFB	$ED, $13, 64
 	CALL	video_start_write
-	INC	B
-	INC	B
+	LD	A, $C0
+	CALL	spi_transmit_A
+	LD	A, $C4
 .draw_box_bottom_shadow_loop
-	CALL	video_spi_transmit
+	CALL	spi_transmit_A
 	DJNZ	draw_box_bottom_shadow_loop
-	JP	video_end_transfer
+	LD	A, $D9
+	CALL	spi_transmit_A
+	JP	spi_deselect
 	;RET optimized away by JP above
 
 .print_string_newline
-	CALL	video_end_transfer
+	CALL	spi_deselect
 	; eZ80 instruction: LEA IY, IY + 64
 	DEFB	$ED, $33, 64
 	; print a null-terminated string on screen, handling newlines
@@ -120,10 +119,10 @@ XDEF print_uint16
 	; check for terminator
 	OR	A, A
 	; jump instead of call because we want to return after that
-	JP	Z, video_end_transfer
+	JP	Z, spi_deselect
 	CP	A, 10 ; <- line feed
 	JR	Z, print_string_newline
-	CALL	video_spi_transmit_A
+	CALL	spi_transmit_A
 	JR	print_string_loop
 
 .print_uint16
@@ -138,7 +137,7 @@ XDEF print_uint16
 	CALL	print_uint16_digit
 	LD	C, B ; BC becomes $FFFF (-1)
 	CALL	print_uint16_digit
-	JP	video_end_transfer
+	JP	spi_deselect
 	;RET optimized away by JP above
 .print_uint16_digit
 	LD	A, '0' - 1
@@ -147,5 +146,14 @@ XDEF print_uint16
 	ADD	HL, BC
 	JR	C, print_uint16_digit_loop
 	SBC	HL, BC
-	JP	video_spi_transmit_A
+	JP	spi_transmit_A
 	;RET optimized away by JP above
+
+.put_hex
+        OR      A, $F0
+        DAA
+        ADD     A, $A0
+        ADC     A, $40
+        JP      spi_transmit_A
+        ;RET optimized away by JP above
+
