@@ -17,6 +17,8 @@ XREF keyboard_getchar
 
 XREF draw_box
 XREF print_string
+XREF put_hex
+
 XREF icon_show
 XREF icon_hide
 
@@ -49,14 +51,6 @@ DEFC LISTING_START = $E000
 .menu_string
 	DEFM	"F1:Help F2:GoTo F3:Load F4:Send F5:Call F6:File"
 .end_menu_string
-
-.put_hex
-	OR	A, $F0
-	DAA
-	ADD	A, $A0
-	ADC	A, $40
-	JP	spi_transmit_A
-	;RET optimized away by JP above
 
 .monitor_redraw
 	; print menu

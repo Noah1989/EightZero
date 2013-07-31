@@ -10,6 +10,7 @@ XREF spi_deselect
 XDEF draw_box
 XDEF print_string
 XDEF print_uint16
+XDEF put_hex
 
 	; draw a fancy box with border and shadow
 	; B = inner width, C = inner height
@@ -147,3 +148,12 @@ XDEF print_uint16
 	SBC	HL, BC
 	JP	spi_transmit_A
 	;RET optimized away by JP above
+
+.put_hex
+        OR      A, $F0
+        DAA
+        ADD     A, $A0
+        ADC     A, $40
+        JP      spi_transmit_A
+        ;RET optimized away by JP above
+
