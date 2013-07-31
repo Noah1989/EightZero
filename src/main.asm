@@ -14,6 +14,8 @@ XREF cursor_init
 XREF monitor
 
 .main
+	DI
+
 	; initialize internal RAM
 	XOR	A, A
 	; eZ80 instruction: OUT0 (RAM_ADDR_U), A
@@ -26,13 +28,13 @@ XREF monitor
 	LD	A, H
 	OR	A, L
 	JR	NZ, clear
-
 	; set up interrupt table
 	LD	A, INTERRUPT_TABLE/$100
 	LD	I, A
 
 	; set up stack
 	LD	SP, 0
+
 	; wait for peripherals to get ready
 	LD	B, 16
 	LD	DE, 0
@@ -56,6 +58,7 @@ XREF monitor
 
 	JP	monitor
 
+;XREF output_sequence
 ;.debug
 ;	DI
 ;	LD	HL, debug_sequence
