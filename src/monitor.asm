@@ -15,6 +15,7 @@ XREF video_write_C
 
 XREF keyboard_getchar
 
+XREF decompress
 XREF draw_box
 XREF print_string
 XREF put_hex
@@ -46,116 +47,100 @@ DEFC MENU_Y = 0
 ; default listing start address
 DEFC LISTING_START = $E000
 
-.border_character
-	DEFB	$C4, $B3
-.menu_string
-	DEFM	"F1:Help F2:GoTo F3:Load F4:Send F5:Call F6:File"
-.end_menu_string
+.monitor_screen
+	; escape character
+	DEFB	-1
+	; line 0
+	DEFM	" F1:Help F2:GoTo F3:Load F4:Send F5:Call F6:File "
+	DEFM	$B3, -1, 13, " ", $B3
+	; line 1
+	DEFM	$C4, $C4, $C2, -1, 46, $C4, $B4, -1, 13, " ", $C3
+	; line 2
+	DEFM	"  ", $B3, "0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F", $B3, -1, 13, " ", $B3
+	; line 3
+	DEFM	$C4, $C2, $C1, -1, 46, $C4, $B4, -1, 13, " ", $C3
+	; line 4 - 19
+	DEFM 	"0", $B3, -1, 47, " ", $B3, -1, 13, " ", $B3
+	DEFM 	"1", $B3, -1, 47, " ", $B3, -1, 13, " ", $B3
+	DEFM 	"2", $B3, -1, 47, " ", $B3, -1, 13, " ", $B3
+	DEFM 	"3", $B3, -1, 47, " ", $B3, -1, 13, " ", $B3
+	DEFM 	"4", $B3, -1, 47, " ", $B3, -1, 13, " ", $B3
+	DEFM 	"5", $B3, -1, 47, " ", $B3, -1, 13, " ", $B3
+	DEFM 	"6", $B3, -1, 47, " ", $B3, -1, 13, " ", $B3
+	DEFM 	"7", $B3, -1, 47, " ", $B3, -1, 13, " ", $B3
+	DEFM 	"8", $B3, -1, 47, " ", $B3, -1, 13, " ", $B3
+	DEFM 	"9", $B3, -1, 47, " ", $B3, -1, 13, " ", $B3
+	DEFM 	"A", $B3, -1, 47, " ", $B3, -1, 13, " ", $B3
+	DEFM 	"B", $B3, -1, 47, " ", $B3, -1, 13, " ", $B3
+	DEFM 	"C", $B3, -1, 47, " ", $B3, -1, 13, " ", $B3
+	DEFM 	"D", $B3, -1, 47, " ", $B3, -1, 13, " ", $B3
+	DEFM 	"E", $B3, -1, 47, " ", $B3, -1, 13, " ", $B3
+	DEFM 	"F", $B3, -1, 47, " ", $B3, -1, 13, " ", $B3
+	; line 20
+	DEFM	$C4, $C1, -1, 36, $C4, $BF, -1, 10, " ", $B3, -1, 13, " ", $C3
+	; line 21
+	DEFM	-1, 38, " ", $B3, "  Memory  ", $B3, -1, 13, " ", $B3
+	; line 22
+	DEFM	-1, 4, " ", $DA, -1, 8, $C4, $BF, "   ", $DA, -1, 8, $C4, $BF, " "
+	DEFM	$DA, -1, 7, $C4, $BF, " ", $C3, -1, 10, $C4, $B4, -1, 13, " ", $B3
+	; line 23
+	DEFM	-1, 4, " ", $B3, "SZ H PNC", $B3, "   ", $B3, "SZ H PNC", $B3, " "
+	DEFM	$B3, "PC=", -1, 4, " ", $B3, " ", $B3, -1, 10, " ", $B3, -1, 13, " ", $B3
+	; line 24
+	DEFM	-1, 4, " ", $B3, -1, 8, " ", $B3, "   ", $B3, -1, 8, " ", $B3, " "
+	DEFM	$C3, -1, 7, $C4, $B4, " ", $B3, -1, 10, " ", $B3, -1, 13, " ", $B3
+	; line 25
+	DEFM	" ", $DA, $C4, $C4, $C1, $C4, $C4, $BF, -1, 5, " "
+	DEFM	$B3, $DA, $C4, $C4, $C1, $C4, $C4, $BF, -1, 5, " ", $B3, " "
+	DEFM	$B3, "SP=", -1, 4, " ", $B3, " ", $B3, -1, 10, " ", $B3, -1, 13, " ", $B3
+	; line 26
+	DEFM	" ", $B3, " A=  ", $B3, " F=  ", $B3, $B3, "A'=  ", $B3, "F'=  ", $B3, " "
+	DEFM	$C0, -1, 7, $C4, $D9, " ", $B3, " $", -1, 8, " ", $B3, -1, 13, " ", $B3
+	; line 27
+	DEFM	" ", $C3, -1, 5, $C4, $C5, -1, 5, $C4, $B4, $C3, -1, 5, $C4, $C5, -1, 5, $C4, $B4
+	DEFM	"  Control  ", $B3, -1, 10, " ", $B3, -1, 13, " ", $B3
+	; line 28
+	DEFM	" ", $B3, " B=  ", $B3, " C=  ", $B3, $B3, "B'=  ", $B3, "C'=  ", $B3
+	DEFM	-1, 11, " ", $B3, " ' '", -1, 6, " ", $B3, -1, 13, " ", $B3
+	; line 29
+	DEFM	" ", $C3, -1, 5, $C4, $C5, -1, 5, $C4, $B4, $C3, -1, 5, $C4, $C5, -1, 5, $C4, $B4
+	DEFM	" ", $DA, -1, 7, $C4, $BF, " ", $B3, -1, 10, " ", $B3, -1, 13, " ", $B3
+	; line 30
+	DEFM	" ", $B3, " D=  ", $B3, " E=  ", $B3, $B3, "D'=  ", $B3, "E'=  ", $B3
+	DEFM	" ", $B3, "IX=", -1, 4, " ", $B3, " ", $B3, "   Byte   ", $B3, -1, 13, " ", $B3
+	; line 31
+	DEFM	" ", $C3, -1, 5, $C4, $C5, -1, 5, $C4, $B4, $C3, -1, 5, $C4, $C5, -1, 5, $C4, $B4
+	DEFM	" ", $C3, -1, 7, $C4, $B4, " ", $B3, -1, 10, " ", $B3, -1, 13, " ", $B3
+	; line 32
+	DEFM	" ", $B3, " H=  ", $B3, " L=  ", $B3, $B3, "H'=  ", $B3, "L'=  ", $B3
+	DEFM	" ", $B3, "IY=", -1, 4, " ", $B3, " ", $C3, -1, 10, $C4, $B4, -1, 13, " ", $B3
+	; line 33
+	DEFM 	" ", $C0, -1, 5, $C4, $C1, -1, 5, $C4, $D9, $C0, -1, 5, $C4, $C1, -1, 5, $C4, $D9
+	DEFM	" ", $C0, -1, 7, $C4, $D9, " ", $B3, -1, 10, " ", $B3, -1, 13, " ", $B3
+	; line 34
+	DEFM	"   Registers", -1, 4, " ", "Alternate", -1, 5, " ", "Index   ", $B3
+	DEFM	-1, 10, " ", $B3, -1, 13, " ", $B3
+	; line 35
+	DEFM	-1, 38, " ", $B3, -1, 10, " ", $B3, -1, 13, " ", $B3
+	; line 36
+	DEFM	-1, 38, $C4, $C1, -1, 10, $C4, $D9, -1, 13, " ", $C0
+	; line 37-62 (26*64 = 6*255 + 134)
+	DEFM	-1, 255, " ", -1, 255, " ", -1, 255, " "
+	DEFM	-1, 255, " ", -1, 255, " ", -1, 255, " "
+	DEFM	-1, 134, " "
+	; line 63
+	DEFM	-1, 49, $C4, $BF, -1, 13, " ", $DA
+	; end
+	DEFM	-1, 0
 
 .monitor_redraw
-	; print menu
-	LD	HL, menu_string
-	LD	DE, MENU_X + MENU_Y*64
-	LD	BC, #end_menu_string-menu_string
-	CALL	video_copy
-	; draw some borders and static labels
-	LD	HL, border_character
-	; horizontal borders
-	LD	DE, 63*64
-	LD	BC, 49
-	CALL	video_fill
-	LD	DE, [ADDRESS_Y - 1]*64
-	LD	BC, 49
-	CALL	video_fill
-	LD	DE, [ADDRESS_Y + 1]*64
-	LD	BC, 49
-	CALL	video_fill
-	LD	DE, [ORIGIN_Y + 32]*64
-	LD	BC, 49
-	CALL	video_fill
-	; switch to vertical border character
-	INC	HL
-	; vertical borders
-	LD	IY, ORIGIN_X + 47 + MENU_Y*64
-	LD	B, 36
-.monitor_vertical_border_loop
-	; eZ80 instruction: LEA DE, IY + 0
-	DEFB	$ED, $13, 0
-	CALL	video_write
-	; eZ80 instruction: LEA DE, IY + 63 - 47 - 2
-	DEFB	$ED, $13, 63 - 47 - 2
-	CALL	video_write
-	; next line
-	; eZ80 instruction: LEA IY, IY + 64
-	DEFB	$ED, $33, 64
-	DJNZ	monitor_vertical_border_loop
-	; corners and T-pieces
-	LD	C, $C1 ; <- _|_
-	LD	DE, [ORIGIN_X - 1] + [ORIGIN_Y + 32]*64
-	CALL	video_write_C
-	LD	DE, [ORIGIN_X] + [ADDRESS_Y + 1]*64
-	CALL	video_write_C
-	INC	C ; <- $C2 T
-	DEC	DE
-	CALL	video_write_C
-	LD	DE, ORIGIN_X + [ADDRESS_Y - 1]*64
-	CALL	video_write_C
-	INC	C ; <- $C3 |-
-	LD	DE, 63 + [ADDRESS_Y - 1]*64
-	CALL	video_write_C
-	LD	DE, 63 + [ADDRESS_Y + 1]*64
-	CALL	video_write_C
-	LD	C, $BF ; <- top-right corner
-	LD	DE, 49 + 63*64
-	CALL	video_write_C
-	INC	C ; <- bottom-left corner
-	LD	DE, 63 + [ORIGIN_Y + 32]*64
-	CALL	video_write_C
-	LD	C, $B4 ; <- -|
-	LD	DE, 49 + [ADDRESS_Y - 1]*64
-	CALL	video_write_C
-	LD	DE, 49 + [ADDRESS_Y + 1]*64
-	CALL	video_write_C
-	LD	C, $D9 ; <- bottom-right corner
-	LD	DE, 49 + [ORIGIN_Y + 32]*64
-	CALL	video_write_C
-	INC	C ; <- $DA top-left corner
-	LD	DE, 63 + 63*64
-	CALL	video_write_C
-	; top border address labels
-	LD	DE, ORIGIN_X + ADDRESS_Y*64
+	LD	DE, RAM_PIC
 	CALL	video_start_write
-	CALL	spi_transmit
-	LD	B, 16
-	JR	monitor_top_address_labels_loop_start
-.monitor_top_address_labels_loop
-	LD	A, ' '
-	CALL	spi_transmit_A
-	CALL	spi_transmit_A
-.monitor_top_address_labels_loop_start
-	LD	A, 16
-	SUB	A, B
-	CALL	put_hex
-	DJNZ	monitor_top_address_labels_loop
-	CALL	spi_transmit
-	CALL	spi_deselect
-	; left border address labels
-	LD	IY, ORIGIN_X - 2 + ORIGIN_Y*64
-	LD	B, 32
-.monitor_left_address_labels_loop
-	; eZ80 instruction: LEA DE, IY + 0
-	DEFB	$ED, $13, 0
-	; next line
-	; eZ80 instruction: LEA IY, IY + 64
-	DEFB	$ED, $33, 64
-	CALL	video_start_write
-	XOR	A, A
-	SUB	A, B
-	CALL	put_hex
-	CALL	spi_transmit
-	CALL	spi_deselect
-	DJNZ	monitor_left_address_labels_loop
-	RET
+	LD	HL, monitor_screen
+	LD	IY, spi_transmit_A
+	CALL	decompress
+	JP	spi_deselect
+	;RET optimized away by JP above
 
 .monitor
 	CALL	monitor_redraw
@@ -183,9 +168,9 @@ DEFC LISTING_START = $E000
 	; main display loop without address indicator
 .monitor_main_loop_listing
 	LD	IY, RAM_PIC + ORIGIN_X + ORIGIN_Y*64
-	; write 32 lines
-	LD	C, 32
-.monitor_outer_loop
+	; write 16 lines
+	LD	C, 16
+.monitor_line_outer_loop
 	; eZ80 instruction: LEA DE, IY + 0
 	DEFB	$ED, $13, 0
 	; next line
@@ -213,17 +198,16 @@ DEFC LISTING_START = $E000
 	DJNZ	monitor_line_loop
 	CALL	spi_deselect
 	DEC	C
-	JR	NZ, monitor_outer_loop
+	JR	NZ, monitor_line_outer_loop
 	; page up/down
-	; note that H has been incremented by 2 because we printed 512 bytes
-	DEC	H
+	; note that H has been incremented by 1 because we printed 256 bytes
 	CALL	keyboard_getchar
 	; page down
 	LD	A, K_PGD
 	CP	A, C
 	; page down pressed, effective increment: 1
 	JR	Z, monitor_main_loop
-	DEC	H
+	DEC	H ; <- resets H to original
 	; page up
 	LD	A, K_PGU
 	CP	A, C

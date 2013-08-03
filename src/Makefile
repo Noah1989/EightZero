@@ -1,6 +1,7 @@
 SOURCES = \
 	main.asm loader.asm monitor.asm math.asm \
-	ioutil.asm spi.asm serial.asm keyboard.asm \
+	ioutil.asm decompress.asm \
+	spi.asm serial.asm keyboard.asm \
 	video.asm uitools.asm sdhc.asm fat32.asm \
 	fileman.asm \
 	charmap.asm sprite.asm icons.asm cursor.asm
