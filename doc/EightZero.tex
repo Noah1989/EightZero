@@ -68,10 +68,30 @@ auf der linken Seite betätigt werden.
 Auf dem Bilschirm müsste der
 Maschinencode-Monitor erscheinen.
 
-Der Maschinencode
+\section{Der Speicher des Computers}
 
-wenn du den Mikrocomputer angeschaltet hast siehst du erstmal sehr viele Nullen.
-Diese Nullen sind Speicherzellen 
+Der Computer arbeitet mit Bits.
+Ein Bit hat immer einen von zwei möglichen Zuständen.
+Es ist entweder ``an'' oder ``aus''.
+Man schreibt dafür auch ``1 oder ``0''.
+Andere Bezeichnungen wären ``Ja'' oder ``Nein''
+sowie ``High'' oder ``Low''.
+Wie man es nennt, ist nicht wichtig.
+Es geht nur darum, dass es außer diesen beiden Möglichkeiten
+keine weiteren gibt.
+Das ist ein 8 Bit Rechner.
+Das heißt das immer 8 Bit als Einheit verarbeitet werden.
+Diese Einheit nennt man Byte.
+Es gibt 256 Möglichkeiten wie ein Byte aussehnen kann.
+
+
+
+Es sind immer 8 Bit unter einer Speicheradresse.
+In der Hexadezimalschreibweise gibt es 16 Ziffern.
+Zu ihnen gehören die Ziffern 0-9
+und die Bustaben A-F müssen hier
+auch als Ziffern herhalten,
+sodass wir ingesamt 16 Ziffern haben.
 
 \section{Hello, world!}
 Nun gib das Programm aus
@@ -82,9 +102,7 @@ Fange oben links in der ersten Zeile an
 und benutze einfach die Pfeiltasten zum Weiterspringen.
 Zum Ausführen des Programmes gehe an den Anfang der ersten Zeile und drücke F5.
 Jetzt sollte auf dunkelgrünen Hintergrund in weißen Buchstaben
-Hello World! stehen. Wenn es nicht geklappt hat dann schauhe dein Programm
-noch einmal genau an, warscheinlich hast du dich vertippt.
-
+Hello World! stehen. Um das Programm wieder zu Beenden drücke die ESC-Taste.
 \begin{table}
 \centering
 \setlength{\tabcolsep}{3pt}
@@ -104,14 +122,8 @@ E0 &  0& 1& 2& 3& 4& 5& 6& 7& 8& 9& A& B& C& D& E& F \\
 Doch wenn es nun geklappt hat,
 willst du bestimmt wissen,
 wie dieses Programm funktioniert.
-Die Zahlen- und Buchstabenkominationen,
-die du gerade abgetippt hast,
-sind Bytes in Hexadezimal geschrieben.
-In der Hexadezimalschreibweise gibt es 16 Ziffern.
-Zu ihnen gehören die Ziffern 0-9
-und die Bustaben A-F müssen hier
-auch als Ziffern herhalten,
-sodass wir ingesamt 16 Ziffern haben.
+
+
 Jedes Byte hat in der Hexadezimalschreibweise
 zwei dieser Ziffern.
 Manche Kominationen sind widerum
@@ -126,9 +138,7 @@ in der Hexadezimalschreibweise Bytes aufgeführt,
 die wiederum bestimmten Zeichen zugeordnet sind.
 Auch das Hello-World-Programm besteht aus
 in der Hexadezimalschreibweise geschriebenen Bytes.
-Manche Bytes im Programm sind
-bestimmten Zeichen zugeordnet
-und andere Bytes aus dem Programm nicht.
+Mansche Bytes im Programm sind bestimmten Zeichen zugeordnet.
 Finde mit Hilfe der Tabelle \ref{tab:ascii} heraus,
 welche Bytes bestimmte Symbole haben
 und schreibe diese auf.
