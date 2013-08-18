@@ -108,10 +108,10 @@ DEFC MENU_Y = 0
 	DEFM	" ", $B3, "IX=", -1, 4, " ", $B3, " ", $B3, "   Byte   ", $B3, -1, 13, " ", $B3
 	; line 31
 	DEFM	" ", $C3, -1, 5, $C4, $C5, -1, 5, $C4, $B4, $C3, -1, 5, $C4, $C5, -1, 5, $C4, $B4
-	DEFM	" ", $C3, -1, 7, $C4, $B4, " ", $B3, -1, 10, " ", $B3, -1, 13, " ", $B3
+	DEFM	" ", $C3, -1, 7, $C4, $B4, " ", $C3, -1, 10, $C4, $B4, -1, 13, " ", $B3
 	; line 32
 	DEFM	" ", $B3, " H=  ", $B3, " L=  ", $B3, $B3, "H'=  ", $B3, "L'=  ", $B3
-	DEFM	" ", $B3, "IY=", -1, 4, " ", $B3, " ", $C3, -1, 10, $C4, $B4, -1, 13, " ", $B3
+	DEFM	" ", $B3, "IY=", -1, 4, " ", $B3, " ", $B3, -1, 10, " ", $B3, -1, 13, " ", $B3
 	; line 33
 	DEFM 	" ", $C0, -1, 5, $C4, $C1, -1, 5, $C4, $D9, $C0, -1, 5, $C4, $C1, -1, 5, $C4, $D9
 	DEFM	" ", $C0, -1, 7, $C4, $D9, " ", $B3, -1, 10, " ", $B3, -1, 13, " ", $B3
@@ -166,8 +166,9 @@ DEFC MENU_Y = 0
 .monitor
 	CALL	monitor_redraw
 	LD	HL, USER_CODE
-	; IX tracks the cursor address relative to HL
-	LD	IX, 0
+	; IXL tracks the cursor address relative to HL
+	; note that L is always 0 between iterations
+	LD	IXL, 0
 	; main display loop
 .monitor_main_loop
 	; address indicator
@@ -184,9 +185,26 @@ DEFC MENU_Y = 0
 	LD	A, H
 	CALL	put_hex
 	CALL	spi_deselect
-
-	; main display loop without address indicator
-.monitor_main_loop_listing
+	; byte inspector
+	LD	A, H
+	LD	IXH, A
+	LD	C, (IX)
+	LD	DE, RAM_PIC + 40 + 24*64
+	CALL	video_start_write
+	LD	B, 8
+.monitor_byte_bits_loop
+	RL	C
+	LD	A, $07
+	JR	C, monitor_byte_bits_print
+	LD	A, $09
+.monitor_byte_bits_print
+	CALL	spi_transmit_A
+	DJNZ	monitor_byte_bits_loop
+	CALL	spi_deselect
+	LD	C, (IX)
+	LD	DE, RAM_PIC + 41 + 28*64
+	CALL	video_write_C
+	; memory listing
 	LD	IY, RAM_PIC + ORIGIN_X + ORIGIN_Y*64
 	; write 16 lines
 	LD	C, 16
@@ -270,7 +288,7 @@ DEFC MENU_Y = 0
 	; decode ascii
 	SUB	A, '0'
 	; ignore if below '0'
-	JR	C, monitor_main_loop_listing
+	JP	C, monitor_main_loop
 	; handle 0..9
 	CP	A, $A
 	JR	C, monitor_hex_input_write
@@ -280,33 +298,24 @@ DEFC MENU_Y = 0
 	SUB	A, 'a' - ('9' + 1)
 	; ignore if below $A
 	CP	A, $A
-	JP	C, monitor_main_loop_listing
+	JP	C, monitor_main_loop
 	; ignore if above $F
 	; eZ80 instruction: TST A, $F0
 	DEFB	$ED, $64, $F0
-	JP	NZ, monitor_main_loop_listing
+	JP	NZ, monitor_main_loop
 .monitor_hex_input_write
-	; calculate IX = HL + IX (and save original HL value in DE)
-	; note that L is zero here, so IXL does not change
-	EX	DE, HL
-	ADD	IX, DE
-	; eZ80 instruction: LEA HL, IX
-	DEFB	$ED, $22, $00
+	LD	C, IXL
+	LD	L, C
 	; insert halfbyte
 	RLD
-	; restore HL from DE
-	EX	DE, HL
-	; restore IXH
-	LD	A, IXH
-	SUB	A, H
-	LD	IXH, A
-	JP	monitor_main_loop_listing
+	LD	L, 0
+	JP	monitor_main_loop
 
 .monitor_cursor_left
-	DEC	IX
+	DEC	IXL
 	JR	monitor_cursor_update
 .monitor_cursor_right
-	INC	IX
+	INC	IXL
 	JR	monitor_cursor_update
 .monitor_cursor_up
 	; eZ80 instruction: LEA IX, IX - 16
@@ -316,10 +325,6 @@ DEFC MENU_Y = 0
 	; eZ80 instruction: LEA IX, IX + 16
 	DEFB	$ED, $32, 16
 .monitor_cursor_update
-	; clamp IX to $01FF
-	LD	A, IXH
-	AND	A, 1
-	LD	IXH, A
 	; x location for cursor
 	LD	A, IXL
 	AND	A, $0F
@@ -327,7 +332,6 @@ DEFC MENU_Y = 0
 	; y location for cursor
 	LD	A, IXL
 	AND	A, $F0
-	ADD	A, IXH
 	RLCA
 	RLCA
 	RLCA
@@ -343,8 +347,8 @@ DEFC MENU_Y = 0
 	PUSH	HL
 	PUSH	IX
 	; calculate selected address into IX
-	EX	DE, HL
-	ADD	IX, DE
+	LD	A, H
+	LD	IXH, A
 	LD	HL, monitor_call_return
 	; return address for called code
 	PUSH	HL
@@ -355,24 +359,25 @@ DEFC MENU_Y = 0
 .monitor_call_return
 	; redraw monitor user interface
 	CALL	monitor_redraw
-	; restore IX and HL
+	; restore IXL and HL
 	POP	IX
 	POP	HL
 	; always reposition cursor
 	JP	monitor_cursor_update
 
 .monitor_load
-	; save HL and IX
+	; save HL and IXL
 	PUSH	HL
 	PUSH	IX
 	; calculate selected address into IX
-	EX	DE, HL
-	ADD	IX, DE
+	LD	A, H
+	LD	IXH, A
 	; hide cursor (trashes registers, but not IX)
 	CALL	cursor_hide
 	; loader screen
 	CALL	loader_open
-	; restore IX and HL
+	CALL	monitor_redraw
+	; restore IXL and HL
 	POP	IX
 	POP	HL
 	; always reposition cursor
@@ -411,6 +416,7 @@ DEFC HELP_LEFT = 7
 	CP	A, C
 	JR	NZ, monitor_help_pause
 	CALL	icon_hide
+	CALL	monitor_redraw
 	POP	HL
 	; reposition cursor
 	JP	monitor_cursor_update
