@@ -50,5 +50,4 @@ XDEF charmap_load
 	; RET optimized away by JP above
 
 .charmap_data
-	BINARY "charmap.bin"
-	DEFB	0
+;	BINARY "charmap.bin"

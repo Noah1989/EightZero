@@ -1,5 +1,6 @@
 ; eZ80 ASM file: monitor - a machine code monitor program
 
+INCLUDE "main.inc"
 INCLUDE "monitor.inc"
 INCLUDE "video.inc"
 INCLUDE "keyboard.inc"
@@ -43,9 +44,6 @@ DEFC ADDRESS_Y = 2
 ; screen coordinate of the menu
 DEFC MENU_X = 1
 DEFC MENU_Y = 0
-
-; default listing start address
-DEFC LISTING_START = $E000
 
 .monitor_screen
 	; escape character
@@ -133,6 +131,29 @@ DEFC LISTING_START = $E000
 	; end
 	DEFM	-1, 0
 
+.monitor_trampoline_template
+	LD	HL, 0
+	PUSH	HL
+	POP	AF
+	LD	BC, 0
+	LD	DE, 0
+	LD	HL, 0
+	EX	AF, AF'
+	EXX
+	LD	HL, 0
+	PUSH	HL
+	POP	AF
+	LD	BC, 0
+	LD	DE, 0
+	LD	HL, 0
+	LD	IX, 0
+	LD	IY, 0
+	LD	SP, USER_STACK
+	CALL	USER_CODE
+	LD	SP, SYSTEM_STACK
+	JP	monitor
+.end_monitor_trampoline_template
+
 .monitor_redraw
 	LD	DE, RAM_PIC
 	CALL	video_start_write
@@ -144,8 +165,7 @@ DEFC LISTING_START = $E000
 
 .monitor
 	CALL	monitor_redraw
-	; reset HL to RAM start
-	LD	HL, LISTING_START
+	LD	HL, USER_CODE
 	; IX tracks the cursor address relative to HL
 	LD	IX, 0
 	; main display loop

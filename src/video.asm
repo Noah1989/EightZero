@@ -36,7 +36,7 @@ XDEF video_write_32
 	; background color
 	LD	HL, bg_color_default
 	LD	DE, BG_COLOR
-	CALL	video_write_16
+;	CALL	video_write_16
 	; reset scroll position
 	LD	HL, scroll_default
 	LD	DE, SCROLL_X

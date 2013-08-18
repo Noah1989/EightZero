@@ -2,7 +2,7 @@
 
 INCLUDE "main.inc"
 
-ORG $C000
+ORG $E000
 
 XREF serial_init
 XREF keyboard_init
@@ -18,7 +18,7 @@ XREF monitor
 	LD	I, A
 
 	; set up stack
-	LD	SP, 0
+	LD	SP, SYSTEM_STACK
 
 	CALL	serial_init
 	CALL	keyboard_init
@@ -27,7 +27,7 @@ XREF monitor
 	EI
 
 	CALL	video_reset
-	CALL	charmap_load
+;	CALL	charmap_load
 	CALL	icons_load
 	CALL	cursor_init
 
