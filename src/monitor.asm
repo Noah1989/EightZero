@@ -19,6 +19,8 @@ XREF keyboard_getchar
 XREF decompress
 XREF draw_box
 XREF print_string
+XREF print_uint8
+XREF print_sint8
 XREF put_hex
 
 XREF icon_show
@@ -188,6 +190,7 @@ DEFC MENU_Y = 0
 	; byte inspector
 	LD	A, H
 	LD	IXH, A
+	; bits
 	LD	C, (IX)
 	LD	DE, RAM_PIC + 40 + 24*64
 	CALL	video_start_write
@@ -201,9 +204,32 @@ DEFC MENU_Y = 0
 	CALL	spi_transmit_A
 	DJNZ	monitor_byte_bits_loop
 	CALL	spi_deselect
+	; hex
+	LD	DE, RAM_PIC + 41 + 26*64
+	CALL	video_start_write
+	; high nibble
+	LD	A, (IX)
+	RRA
+	RRA
+	RRA
+	RRA
+	CALL	put_hex
+	; low nibble
+	LD	A, (IX)
+	CALL	put_hex
+	CALL	spi_deselect
+	; decimal (unsigned)
+	LD	C, (IX)
+	LD	DE, RAM_PIC + 45 + 26*64
+	CALL	print_uint8
+	; char
 	LD	C, (IX)
 	LD	DE, RAM_PIC + 41 + 28*64
 	CALL	video_write_C
+	; decimal (signed)
+	LD	C, (IX)
+	LD	DE, RAM_PIC + 44 + 28*64
+	CALL	print_sint8
 	; memory listing
 	LD	IY, RAM_PIC + ORIGIN_X + ORIGIN_Y*64
 	; write 16 lines
@@ -244,7 +270,7 @@ DEFC MENU_Y = 0
 	LD	A, K_PGD
 	CP	A, C
 	; page down pressed, effective increment: 1
-	JR	Z, monitor_main_loop
+	JP	Z, monitor_main_loop
 	DEC	H ; <- resets H to original
 	; page up
 	LD	A, K_PGU
@@ -253,7 +279,7 @@ DEFC MENU_Y = 0
 	JR	NZ, monitor_main_loop_arrow_keys
 	; page up pressed, effective decrement: 1
 	DEC	H
-	JR	monitor_main_loop
+	JP	monitor_main_loop
 	; handle arrow keys
 .monitor_main_loop_arrow_keys
 	LD	A, K_LFA
@@ -275,13 +301,33 @@ DEFC MENU_Y = 0
 	JP	Z, monitor_help
 	LD	A, K_F3
 	CP	A, C
-	JR	Z, monitor_load
+	JP	Z, monitor_load
 	LD	A, K_F5
 	CP	A, C
 	JR	Z, monitor_call
 	LD	A, K_F6
 	CP	A, C
 	JP	Z, monitor_file
+	; + and -
+.monitor_main_loop_input_plusminus
+	LD	A, '+'
+	CP	A, C
+	JR	NZ, monitor_main_loop_input_noplus
+	LD	A, IXL
+	LD	L, A
+	INC	(HL)
+	LD	L, 0
+	JP	monitor_main_loop
+.monitor_main_loop_input_noplus
+	LD	A, '-'
+	CP	A, C
+	JR	NZ, monitor_main_loop_input_nominus
+	LD	A, IXL
+	LD	L, A
+	DEC	(HL)
+	LD	L, 0
+	JP	monitor_main_loop
+.monitor_main_loop_input_nominus
 	; handle hex input
 .monitor_main_loop_hex_input
 	LD	A, C
