@@ -21,6 +21,7 @@ XREF draw_box
 XREF print_string
 XREF print_uint8
 XREF print_sint8
+XREF print_hex_byte
 XREF put_hex
 
 XREF icon_show
@@ -34,6 +35,28 @@ XREF loader_open
 XREF fileman_start
 
 XDEF monitor
+
+DEFC MONITOR_TRAMPOLINE = $FB20
+DEFC MONITOR_REG_A = $FB22
+DEFC MONITOR_REG_F = $FB32
+DEFC MONITOR_REG_B = $FB27
+DEFC MONITOR_REG_C = $FB26
+DEFC MONITOR_REG_D = $FB2A
+DEFC MONITOR_REG_E = $FB29
+DEFC MONITOR_REG_H = $FB2D
+DEFC MONITOR_REG_L = $FB2C
+DEFC MONITOR_ALT_A = $FB32
+DEFC MONITOR_ALT_F = $FB32
+DEFC MONITOR_ALT_B = $FB37
+DEFC MONITOR_ALT_C = $FB36
+DEFC MONITOR_ALT_D = $FB3A
+DEFC MONITOR_ALT_E = $FB39
+DEFC MONITOR_ALT_H = $FB3D
+DEFC MONITOR_ALT_L = $FB3C
+DEFC MONITOR_PC = $FB4A
+DEFC MONITOR_SP = $FB47
+DEFC MONITOR_IX = $FB40
+DEFC MONITOR_IY = $FB44
 
 ; top-left screen coordinates of the main hex listing
 DEFC ORIGIN_X = 2
@@ -166,6 +189,10 @@ DEFC MENU_Y = 0
 	;RET optimized away by JP above
 
 .monitor
+	LD	DE, MONITOR_TRAMPOLINE
+	LD	HL, monitor_trampoline_template
+	LD	BC, #end_monitor_trampoline_template-monitor_trampoline_template
+	LDIR
 	CALL	monitor_redraw
 	LD	HL, USER_CODE
 	; IXL tracks the cursor address relative to HL
@@ -206,18 +233,10 @@ DEFC MENU_Y = 0
 	CALL	spi_deselect
 	; hex
 	LD	DE, RAM_PIC + 41 + 26*64
-	CALL	video_start_write
-	; high nibble
-	LD	A, (IX)
-	RRA
-	RRA
-	RRA
-	RRA
-	CALL	put_hex
-	; low nibble
-	LD	A, (IX)
-	CALL	put_hex
-	CALL	spi_deselect
+	LD	A, IXL
+	LD	L, A
+	CALL	print_hex_byte
+	LD	L, 0
 	; decimal (unsigned)
 	LD	C, (IX)
 	LD	DE, RAM_PIC + 45 + 26*64
@@ -230,6 +249,33 @@ DEFC MENU_Y = 0
 	LD	C, (IX)
 	LD	DE, RAM_PIC + 44 + 28*64
 	CALL	print_sint8
+	; registers
+	PUSH	HL
+	LD	DE, RAM_PIC + 5 + 26*64
+	LD	HL, MONITOR_REG_A
+	CALL	print_hex_byte
+	LD	DE, RAM_PIC + 11 + 26*64
+	DEC	HL; MONITOR_REG_F
+	CALL	print_hex_byte
+	LD	DE, RAM_PIC + 5 + 28*64
+	LD	HL, MONITOR_REG_B
+	CALL	print_hex_byte
+	LD	DE, RAM_PIC + 11 + 28*64
+	DEC	HL; MONITOR_REG_C
+	CALL	print_hex_byte
+	LD	DE, RAM_PIC + 5 + 30*64
+	LD	HL, MONITOR_REG_D
+	CALL	print_hex_byte
+	LD	DE, RAM_PIC + 11 + 30*64
+	DEC	HL; MONITOR_REG_E
+	CALL	print_hex_byte
+	LD	DE, RAM_PIC + 5 + 32*64
+	LD	HL, MONITOR_REG_H
+	CALL	print_hex_byte
+	LD	DE, RAM_PIC + 11 + 32*64
+	DEC	HL; MONITOR_REG_L
+	CALL	print_hex_byte
+	POP	HL
 	; memory listing
 	LD	IY, RAM_PIC + ORIGIN_X + ORIGIN_Y*64
 	; write 16 lines

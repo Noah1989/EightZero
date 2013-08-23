@@ -12,6 +12,7 @@ XDEF print_string
 XDEF print_uint16
 XDEF print_uint8
 XDEF print_sint8
+XDEF print_hex_byte
 XDEF put_hex
 
 	; draw a fancy box with border and shadow
@@ -193,6 +194,21 @@ XDEF put_hex
 	LD	C, B
 	JP	spi_transmit_A
 	;RET optimized away by JP above
+
+.print_hex_byte
+        CALL	video_start_write
+        ; high nibble
+        LD	A, (HL)
+        RRA
+        RRA
+        RRA
+        RRA
+        CALL	put_hex
+        ; low nibble
+        LD	A, (HL)
+        CALL	put_hex
+        JP	spi_deselect
+        ;RET optimized away by JP above
 
 .put_hex
         OR      A, $F0
