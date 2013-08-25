@@ -22,6 +22,7 @@ XREF print_string
 XREF print_uint8
 XREF print_sint8
 XREF print_hex_byte
+XREF print_hex_word
 XREF put_hex
 
 XREF icon_show
@@ -37,22 +38,22 @@ XREF fileman_start
 XDEF monitor
 
 DEFC MONITOR_TRAMPOLINE = $FB20
-DEFC MONITOR_REG_A = $FB22
-DEFC MONITOR_REG_F = $FB32
-DEFC MONITOR_REG_B = $FB27
-DEFC MONITOR_REG_C = $FB26
-DEFC MONITOR_REG_D = $FB2A
-DEFC MONITOR_REG_E = $FB29
-DEFC MONITOR_REG_H = $FB2D
-DEFC MONITOR_REG_L = $FB2C
-DEFC MONITOR_ALT_A = $FB32
-DEFC MONITOR_ALT_F = $FB32
-DEFC MONITOR_ALT_B = $FB37
-DEFC MONITOR_ALT_C = $FB36
-DEFC MONITOR_ALT_D = $FB3A
-DEFC MONITOR_ALT_E = $FB39
-DEFC MONITOR_ALT_H = $FB3D
-DEFC MONITOR_ALT_L = $FB3C
+DEFC MONITOR_REG_A = $FB32
+DEFC MONITOR_REG_F = $FB31
+DEFC MONITOR_REG_B = $FB37
+DEFC MONITOR_REG_C = $FB36
+DEFC MONITOR_REG_D = $FB3A
+DEFC MONITOR_REG_E = $FB39
+DEFC MONITOR_REG_H = $FB3D
+DEFC MONITOR_REG_L = $FB3C
+DEFC MONITOR_ALT_A = $FB22
+DEFC MONITOR_ALT_F = $FB21
+DEFC MONITOR_ALT_B = $FB27
+DEFC MONITOR_ALT_C = $FB26
+DEFC MONITOR_ALT_D = $FB2A
+DEFC MONITOR_ALT_E = $FB29
+DEFC MONITOR_ALT_H = $FB2D
+DEFC MONITOR_ALT_L = $FB2C
 DEFC MONITOR_PC = $FB4A
 DEFC MONITOR_SP = $FB47
 DEFC MONITOR_IX = $FB40
@@ -175,8 +176,9 @@ DEFC MENU_Y = 0
 	LD	IY, 0
 	LD	SP, USER_STACK
 	CALL	USER_CODE
+	LD	(MONITOR_SP), SP
 	LD	SP, SYSTEM_STACK
-	JP	monitor
+	JP	monitor_entry
 .end_monitor_trampoline_template
 
 .monitor_redraw
@@ -194,12 +196,28 @@ DEFC MENU_Y = 0
 	LD	BC, #end_monitor_trampoline_template-monitor_trampoline_template
 	LDIR
 	CALL	monitor_redraw
-	LD	HL, USER_CODE
-	; IXL tracks the cursor address relative to HL
-	; note that L is always 0 between iterations
-	LD	IXL, 0
-	; main display loop
+	JR	monitor_main_loop
+.monitor_entry
+	LD	(MONITOR_REG_L), HL
+	PUSH	AF
+	POP	HL
+	LD	(MONITOR_REG_F), HL
+	LD	(MONITOR_REG_C), BC
+	LD	(MONITOR_REG_E), DE
+	EX	AF, AF'
+	EXX
+	LD	(MONITOR_ALT_L), HL
+	PUSH	AF
+	POP	HL
+	LD	(MONITOR_ALT_F), HL
+	LD	(MONITOR_ALT_C), BC
+	LD	(MONITOR_ALT_E), DE
+	LD	(MONITOR_IX), IX
+	LD	(MONITOR_IY), IY
+	CALL	monitor_redraw
 .monitor_main_loop
+	; main display loop
+	LD	HL, (MONITOR_PC)
 	; address indicator
 	LD	DE, RAM_PIC + ADDRESS_X + ADDRESS_y*64
 	CALL	video_start_write
@@ -214,11 +232,8 @@ DEFC MENU_Y = 0
 	LD	A, H
 	CALL	put_hex
 	CALL	spi_deselect
-	; byte inspector
-	LD	A, H
-	LD	IXH, A
 	; bits
-	LD	C, (IX)
+	LD	C, (HL)
 	LD	DE, RAM_PIC + 40 + 24*64
 	CALL	video_start_write
 	LD	B, 8
@@ -233,24 +248,20 @@ DEFC MENU_Y = 0
 	CALL	spi_deselect
 	; hex
 	LD	DE, RAM_PIC + 41 + 26*64
-	LD	A, IXL
-	LD	L, A
 	CALL	print_hex_byte
-	LD	L, 0
 	; decimal (unsigned)
-	LD	C, (IX)
+	LD	C, (HL)
 	LD	DE, RAM_PIC + 45 + 26*64
 	CALL	print_uint8
 	; char
-	LD	C, (IX)
+	LD	C, (HL)
 	LD	DE, RAM_PIC + 41 + 28*64
 	CALL	video_write_C
 	; decimal (signed)
-	LD	C, (IX)
+	LD	C, (HL)
 	LD	DE, RAM_PIC + 44 + 28*64
 	CALL	print_sint8
 	; registers
-	PUSH	HL
 	LD	DE, RAM_PIC + 5 + 26*64
 	LD	HL, MONITOR_REG_A
 	CALL	print_hex_byte
@@ -275,10 +286,49 @@ DEFC MENU_Y = 0
 	LD	DE, RAM_PIC + 11 + 32*64
 	DEC	HL; MONITOR_REG_L
 	CALL	print_hex_byte
-	POP	HL
+	; alternate registers
+	LD	DE, RAM_PIC + 18 + 26*64
+	LD	HL, MONITOR_ALT_A
+	CALL	print_hex_byte
+	LD	DE, RAM_PIC + 24 + 26*64
+	DEC	HL; MONITOR_ALT_F
+	CALL	print_hex_byte
+	LD	DE, RAM_PIC + 18 + 28*64
+	LD	HL, MONITOR_ALT_B
+	CALL	print_hex_byte
+	LD	DE, RAM_PIC + 24 + 28*64
+	DEC	HL; MONITOR_ALT_C
+	CALL	print_hex_byte
+	LD	DE, RAM_PIC + 18 + 30*64
+	LD	HL, MONITOR_ALT_D
+	CALL	print_hex_byte
+	LD	DE, RAM_PIC + 24 + 30*64
+	DEC	HL; MONITOR_ALT_E
+	CALL	print_hex_byte
+	LD	DE, RAM_PIC + 18 + 32*64
+	LD	HL, MONITOR_ALT_H
+	CALL	print_hex_byte
+	LD	DE, RAM_PIC + 24 + 32*64
+	DEC	HL; MONITOR_ALT_L
+	CALL	print_hex_byte
+	; PC / SP
+	LD	DE, RAM_PIC + 32 + 23*64
+	LD	HL, MONITOR_PC
+	CALL	print_hex_word
+	LD	DE, RAM_PIC + 32 + 25*64
+	LD	HL, MONITOR_SP
+	CALL	print_hex_word
+	; IX / IY
+	LD	DE, RAM_PIC + 32 + 30*64
+	LD	HL, MONITOR_IX
+	CALL	print_hex_word
+	LD	DE, RAM_PIC + 32 + 32*64
+	LD	HL, MONITOR_IY
+	CALL	print_hex_word
 	; memory listing
 	LD	IY, RAM_PIC + ORIGIN_X + ORIGIN_Y*64
-	; write 16 lines
+	LD	HL, (MONITOR_PC)
+	LD	L, 0	; write 16 lines
 	LD	C, 16
 .monitor_line_outer_loop
 	; eZ80 instruction: LEA DE, IY + 0
@@ -309,22 +359,28 @@ DEFC MENU_Y = 0
 	CALL	spi_deselect
 	DEC	C
 	JR	NZ, monitor_line_outer_loop
+	; let HL point to PC (not indirect) to modify it
+	LD	HL, MONITOR_PC
 	; page up/down
-	; note that H has been incremented by 1 because we printed 256 bytes
 	CALL	keyboard_getchar
 	; page down
 	LD	A, K_PGD
 	CP	A, C
-	; page down pressed, effective increment: 1
-	JP	Z, monitor_main_loop
-	DEC	H ; <- resets H to original
+	JP	NZ, monitor_main_loop_page_up
+	; page down pressed - increment PC upper byte
+	INC	HL
+	INC	(HL)
+	DEC	HL
+	JP	monitor_main_loop
 	; page up
+.monitor_main_loop_page_up
 	LD	A, K_PGU
 	CP	A, C
-	; page up _not_ pressed, no effective change
 	JR	NZ, monitor_main_loop_arrow_keys
-	; page up pressed, effective decrement: 1
-	DEC	H
+	; page up pressed, decrement PC upper byte
+	INC	HL
+	DEC	(HL)
+	DEC	HL
 	JP	monitor_main_loop
 	; handle arrow keys
 .monitor_main_loop_arrow_keys
@@ -350,7 +406,7 @@ DEFC MENU_Y = 0
 	JP	Z, monitor_load
 	LD	A, K_F5
 	CP	A, C
-	JR	Z, monitor_call
+	JP	Z, MONITOR_TRAMPOLINE
 	LD	A, K_F6
 	CP	A, C
 	JP	Z, monitor_file
@@ -359,19 +415,13 @@ DEFC MENU_Y = 0
 	LD	A, '+'
 	CP	A, C
 	JR	NZ, monitor_main_loop_input_noplus
-	LD	A, IXL
-	LD	L, A
 	INC	(HL)
-	LD	L, 0
 	JP	monitor_main_loop
 .monitor_main_loop_input_noplus
 	LD	A, '-'
 	CP	A, C
 	JR	NZ, monitor_main_loop_input_nominus
-	LD	A, IXL
-	LD	L, A
 	DEC	(HL)
-	LD	L, 0
 	JP	monitor_main_loop
 .monitor_main_loop_input_nominus
 	; handle hex input
@@ -396,66 +446,42 @@ DEFC MENU_Y = 0
 	DEFB	$ED, $64, $F0
 	JP	NZ, monitor_main_loop
 .monitor_hex_input_write
-	LD	C, IXL
-	LD	L, C
+	; load monitor PC (indirect) to modify content
+	LD	HL, (MONITOR_PC)
 	; insert halfbyte
 	RLD
-	LD	L, 0
 	JP	monitor_main_loop
 
 .monitor_cursor_left
-	DEC	IXL
+	DEC	(HL)
 	JR	monitor_cursor_update
 .monitor_cursor_right
-	INC	IXL
+	INC	(HL)
 	JR	monitor_cursor_update
 .monitor_cursor_up
-	; eZ80 instruction: LEA IX, IX - 16
-	DEFB	$ED, $32, -16
+	LD	A, (HL)
+	SUB	A, 16
+	LD	(HL), A
 	JR	monitor_cursor_update
 .monitor_cursor_down
-	; eZ80 instruction: LEA IX, IX + 16
-	DEFB	$ED, $32, 16
+	LD	A, (HL)
+	ADD	A, 16
+	LD	(HL), A
 .monitor_cursor_update
 	; x location for cursor
-	LD	A, IXL
+	LD	A, (HL)
 	AND	A, $0F
 	LD	B, A
 	; y location for cursor
-	LD	A, IXL
+	LD	A, (HL)
 	AND	A, $F0
 	RLCA
 	RLCA
 	RLCA
 	RLCA
 	LD	C, A
-	PUSH	HL
 	CALL	cursor_move
-	POP	HL
 	JP	monitor_main_loop
-
-.monitor_call
-	; save HL and IX
-	PUSH	HL
-	PUSH	IX
-	; calculate selected address into IX
-	LD	A, H
-	LD	IXH, A
-	LD	HL, monitor_call_return
-	; return address for called code
-	PUSH	HL
-	; hide cursor (trashes registers, but not IX)
-	CALL	cursor_hide
-	; call into selected code
-	JP	(IX)
-.monitor_call_return
-	; redraw monitor user interface
-	CALL	monitor_redraw
-	; restore IXL and HL
-	POP	IX
-	POP	HL
-	; always reposition cursor
-	JP	monitor_cursor_update
 
 .monitor_load
 	; save HL and IXL

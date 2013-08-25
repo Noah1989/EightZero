@@ -12,6 +12,7 @@ XDEF print_string
 XDEF print_uint16
 XDEF print_uint8
 XDEF print_sint8
+XDEF print_hex_word
 XDEF print_hex_byte
 XDEF put_hex
 
@@ -195,6 +196,13 @@ XDEF put_hex
 	JP	spi_transmit_A
 	;RET optimized away by JP above
 
+.print_hex_word
+	INC	HL
+	CALL	print_hex_byte
+	DEC	HL
+	INC	DE
+	INC	DE
+	; fall through
 .print_hex_byte
         CALL	video_start_write
         ; high nibble
