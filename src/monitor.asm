@@ -359,7 +359,7 @@ DEFC MENU_Y = 0
 	CALL	spi_deselect
 	DEC	C
 	JR	NZ, monitor_line_outer_loop
-	; let HL point to PC (not indirect) to modify it
+	; let HL point to where PC is stored
 	LD	HL, MONITOR_PC
 	; page up/down
 	CALL	keyboard_getchar
@@ -415,12 +415,16 @@ DEFC MENU_Y = 0
 	LD	A, '+'
 	CP	A, C
 	JR	NZ, monitor_main_loop_input_noplus
+	; LD HL, (HL)
+	DEFB	$ED, $27
 	INC	(HL)
 	JP	monitor_main_loop
 .monitor_main_loop_input_noplus
 	LD	A, '-'
 	CP	A, C
 	JR	NZ, monitor_main_loop_input_nominus
+	; LD HL, (HL)
+	DEFB	$ED, $27
 	DEC	(HL)
 	JP	monitor_main_loop
 .monitor_main_loop_input_nominus
@@ -446,8 +450,9 @@ DEFC MENU_Y = 0
 	DEFB	$ED, $64, $F0
 	JP	NZ, monitor_main_loop
 .monitor_hex_input_write
-	; load monitor PC (indirect) to modify content
-	LD	HL, (MONITOR_PC)
+	; let HL point to data at PC
+	; LD HL, (HL)
+	DEFB	$ED, $27
 	; insert halfbyte
 	RLD
 	JP	monitor_main_loop
