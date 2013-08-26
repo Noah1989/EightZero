@@ -71,6 +71,20 @@ DEFC ADDRESS_Y = 2
 DEFC MENU_X = 1
 DEFC MENU_Y = 0
 
+.print_bits
+	CALL	video_start_write
+	LD	B, 8
+.monitor_byte_bits_loop
+	RL	C
+	LD	A, $07
+	JR	C, monitor_byte_bits_print
+	LD	A, $09
+.monitor_byte_bits_print
+	CALL	spi_transmit_A
+	DJNZ	monitor_byte_bits_loop
+	JP	spi_deselect
+
+
 .monitor_screen
 	; escape character
 	DEFB	-1
@@ -235,17 +249,7 @@ DEFC MENU_Y = 0
 	; bits
 	LD	C, (HL)
 	LD	DE, RAM_PIC + 40 + 24*64
-	CALL	video_start_write
-	LD	B, 8
-.monitor_byte_bits_loop
-	RL	C
-	LD	A, $07
-	JR	C, monitor_byte_bits_print
-	LD	A, $09
-.monitor_byte_bits_print
-	CALL	spi_transmit_A
-	DJNZ	monitor_byte_bits_loop
-	CALL	spi_deselect
+	CALL	print_bits
 	; hex
 	LD	DE, RAM_PIC + 41 + 26*64
 	CALL	print_hex_byte
@@ -268,6 +272,9 @@ DEFC MENU_Y = 0
 	LD	DE, RAM_PIC + 11 + 26*64
 	DEC	HL; MONITOR_REG_F
 	CALL	print_hex_byte
+	LD	C, (HL)
+	LD	DE, RAM_PIC + 5 + 24*64
+	CALL	print_bits
 	LD	DE, RAM_PIC + 5 + 28*64
 	LD	HL, MONITOR_REG_B
 	CALL	print_hex_byte
@@ -293,6 +300,9 @@ DEFC MENU_Y = 0
 	LD	DE, RAM_PIC + 24 + 26*64
 	DEC	HL; MONITOR_ALT_F
 	CALL	print_hex_byte
+	LD	C, (HL)
+	LD	DE, RAM_PIC + 18 + 24*64
+	CALL	print_bits
 	LD	DE, RAM_PIC + 18 + 28*64
 	LD	HL, MONITOR_ALT_B
 	CALL	print_hex_byte
