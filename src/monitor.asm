@@ -94,26 +94,26 @@ DEFC MENU_Y = 0
 	; line 1
 	DEFM	$C4, $C4, $C2, -1, 46, $C4, $B4, -1, 13, " ", $C3
 	; line 2
-	DEFM	"  ", $B3, "0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F", $B3, -1, 13, " ", $B3
+	DEFM	0, 0, $B3, "0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F", $B3, -1, 13, " ", $B3
 	; line 3
 	DEFM	$C4, $C2, $C1, -1, 46, $C4, $B4, -1, 13, " ", $C3
 	; line 4 - 19
-	DEFM 	"0", $B3, -1, 47, " ", $B3, -1, 13, " ", $B3
-	DEFM 	"1", $B3, -1, 47, " ", $B3, -1, 13, " ", $B3
-	DEFM 	"2", $B3, -1, 47, " ", $B3, -1, 13, " ", $B3
-	DEFM 	"3", $B3, -1, 47, " ", $B3, -1, 13, " ", $B3
-	DEFM 	"4", $B3, -1, 47, " ", $B3, -1, 13, " ", $B3
-	DEFM 	"5", $B3, -1, 47, " ", $B3, -1, 13, " ", $B3
-	DEFM 	"6", $B3, -1, 47, " ", $B3, -1, 13, " ", $B3
-	DEFM 	"7", $B3, -1, 47, " ", $B3, -1, 13, " ", $B3
-	DEFM 	"8", $B3, -1, 47, " ", $B3, -1, 13, " ", $B3
-	DEFM 	"9", $B3, -1, 47, " ", $B3, -1, 13, " ", $B3
-	DEFM 	"A", $B3, -1, 47, " ", $B3, -1, 13, " ", $B3
-	DEFM 	"B", $B3, -1, 47, " ", $B3, -1, 13, " ", $B3
-	DEFM 	"C", $B3, -1, 47, " ", $B3, -1, 13, " ", $B3
-	DEFM 	"D", $B3, -1, 47, " ", $B3, -1, 13, " ", $B3
-	DEFM 	"E", $B3, -1, 47, " ", $B3, -1, 13, " ", $B3
-	DEFM 	"F", $B3, -1, 47, " ", $B3, -1, 13, " ", $B3
+	DEFM 	"0", $B3, -1, 47, 0, $B3, -1, 13, " ", $B3
+	DEFM 	"1", $B3, -1, 47, 0, $B3, -1, 13, " ", $B3
+	DEFM 	"2", $B3, -1, 47, 0, $B3, -1, 13, " ", $B3
+	DEFM 	"3", $B3, -1, 47, 0, $B3, -1, 13, " ", $B3
+	DEFM 	"4", $B3, -1, 47, 0, $B3, -1, 13, " ", $B3
+	DEFM 	"5", $B3, -1, 47, 0, $B3, -1, 13, " ", $B3
+	DEFM 	"6", $B3, -1, 47, 0, $B3, -1, 13, " ", $B3
+	DEFM 	"7", $B3, -1, 47, 0, $B3, -1, 13, " ", $B3
+	DEFM 	"8", $B3, -1, 47, 0, $B3, -1, 13, " ", $B3
+	DEFM 	"9", $B3, -1, 47, 0, $B3, -1, 13, " ", $B3
+	DEFM 	"A", $B3, -1, 47, 0, $B3, -1, 13, " ", $B3
+	DEFM 	"B", $B3, -1, 47, 0, $B3, -1, 13, " ", $B3
+	DEFM 	"C", $B3, -1, 47, 0, $B3, -1, 13, " ", $B3
+	DEFM 	"D", $B3, -1, 47, 0, $B3, -1, 13, " ", $B3
+	DEFM 	"E", $B3, -1, 47, 0, $B3, -1, 13, " ", $B3
+	DEFM 	"F", $B3, -1, 47, 0, $B3, -1, 13, " ", $B3
 	; line 20
 	DEFM	$C4, $C1, -1, 36, $C4, $BF, -1, 10, " ", $B3, -1, 13, " ", $C3
 	; line 21
@@ -123,43 +123,43 @@ DEFC MENU_Y = 0
 	DEFM	$DA, -1, 7, $C4, $BF, " ", $C3, -1, 10, $C4, $B4, -1, 13, " ", $B3
 	; line 23
 	DEFM	-1, 4, " ", $B3, "SZ H PNC", $B3, "   ", $B3, "SZ H PNC", $B3, " "
-	DEFM	$B3, "PC=", -1, 4, " ", $B3, " ", $B3, -1, 10, " ", $B3, -1, 13, " ", $B3
+	DEFM	$B3, "PC=", -1, 4, 0, $B3, " ", $B3, -1, 10, " ", $B3, -1, 13, " ", $B3
 	; line 24
-	DEFM	-1, 4, " ", $B3, -1, 8, " ", $B3, "   ", $B3, -1, 8, " ", $B3, " "
-	DEFM	$C3, -1, 7, $C4, $B4, " ", $B3, -1, 10, " ", $B3, -1, 13, " ", $B3
+	DEFM	-1, 4, " ", $B3, -1, 8, 0, $B3, "   ", $B3, -1, 8, 0, $B3, " "
+	DEFM	$C3, -1, 7, $C4, $B4, " ", $B3, " ", -1, 8, 0, " ", $B3, -1, 13, " ", $B3
 	; line 25
 	DEFM	" ", $DA, $C4, $C4, $C1, $C4, $C4, $BF, -1, 5, " "
 	DEFM	$B3, $DA, $C4, $C4, $C1, $C4, $C4, $BF, -1, 5, " ", $B3, " "
-	DEFM	$B3, "SP=", -1, 4, " ", $B3, " ", $B3, -1, 10, " ", $B3, -1, 13, " ", $B3
+	DEFM	$B3, "SP=", -1, 4, 0, $B3, " ", $B3, -1, 10, " ", $B3, -1, 13, " ", $B3
 	; line 26
-	DEFM	" ", $B3, " A=  ", $B3, " F=  ", $B3, $B3, "A'=  ", $B3, "F'=  ", $B3, " "
-	DEFM	$C0, -1, 7, $C4, $D9, " ", $B3, " $", -1, 8, " ", $B3, -1, 13, " ", $B3
+	DEFM	" ", $B3, " A=", 0, 0, $B3, " F=", 0, 0, $B3, $B3, "A'=", 0, 0, $B3, "F'=", 0, 0, $B3, " "
+	DEFM	$C0, -1, 7, $C4, $D9, " ", $B3, " $", 0, 0, "  ", 0, 0, 0, " ", $B3, -1, 13, " ", $B3
 	; line 27
 	DEFM	" ", $C3, -1, 5, $C4, $C5, -1, 5, $C4, $B4, $C3, -1, 5, $C4, $C5, -1, 5, $C4, $B4
 	DEFM	"  Control  ", $B3, -1, 10, " ", $B3, -1, 13, " ", $B3
 	; line 28
-	DEFM	" ", $B3, " B=  ", $B3, " C=  ", $B3, $B3, "B'=  ", $B3, "C'=  ", $B3
-	DEFM	-1, 11, " ", $B3, " ' '", -1, 6, " ", $B3, -1, 13, " ", $B3
+	DEFM	" ", $B3, " B=", 0, 0, $B3, " C=", 0, 0, $B3, $B3, "B'=", 0, 0, $B3, "C'=", 0, 0, $B3
+	DEFM	-1, 11, " ", $B3, " '", 0, "' ", -1, 4, 0, " ", $B3, -1, 13, " ", $B3
 	; line 29
 	DEFM	" ", $C3, -1, 5, $C4, $C5, -1, 5, $C4, $B4, $C3, -1, 5, $C4, $C5, -1, 5, $C4, $B4
 	DEFM	" ", $DA, -1, 7, $C4, $BF, " ", $B3, -1, 10, " ", $B3, -1, 13, " ", $B3
 	; line 30
-	DEFM	" ", $B3, " D=  ", $B3, " E=  ", $B3, $B3, "D'=  ", $B3, "E'=  ", $B3
-	DEFM	" ", $B3, "IX=", -1, 4, " ", $B3, " ", $B3, "   Byte   ", $B3, -1, 13, " ", $B3
+	DEFM	" ", $B3, " D=", 0, 0, $B3, " E=", 0, 0, $B3, $B3, "D'=", 0, 0, $B3, "E'=", 0, 0, $B3
+	DEFM	" ", $B3, "IX=", -1, 4, 0, $B3, " ", $B3, "   Byte   ", $B3, -1, 13, " ", $B3
 	; line 31
 	DEFM	" ", $C3, -1, 5, $C4, $C5, -1, 5, $C4, $B4, $C3, -1, 5, $C4, $C5, -1, 5, $C4, $B4
 	DEFM	" ", $C3, -1, 7, $C4, $B4, " ", $C3, -1, 10, $C4, $B4, -1, 13, " ", $B3
 	; line 32
-	DEFM	" ", $B3, " H=  ", $B3, " L=  ", $B3, $B3, "H'=  ", $B3, "L'=  ", $B3
-	DEFM	" ", $B3, "IY=", -1, 4, " ", $B3, " ", $B3, -1, 10, " ", $B3, -1, 13, " ", $B3
+	DEFM	" ", $B3, " H=", 0, 0, $B3, " L=", 0, 0, $B3, $B3, "H'=", 0, 0, $B3, "L'=", 0, 0, $B3
+	DEFM	" ", $B3, "IY=", -1, 4, 0, $B3, " ", $B3, -1, 10, 0, $B3, -1, 13, " ", $B3
 	; line 33
 	DEFM 	" ", $C0, -1, 5, $C4, $C1, -1, 5, $C4, $D9, $C0, -1, 5, $C4, $C1, -1, 5, $C4, $D9
-	DEFM	" ", $C0, -1, 7, $C4, $D9, " ", $B3, -1, 10, " ", $B3, -1, 13, " ", $B3
+	DEFM	" ", $C0, -1, 7, $C4, $D9, " ", $B3, -1, 10, 0, $B3, -1, 13, " ", $B3
 	; line 34
 	DEFM	"   Registers", -1, 4, " ", "Alternate", -1, 5, " ", "Index   ", $B3
-	DEFM	-1, 10, " ", $B3, -1, 13, " ", $B3
+	DEFM	-1, 10, 0, $B3, -1, 13, " ", $B3
 	; line 35
-	DEFM	-1, 38, " ", $B3, -1, 10, " ", $B3, -1, 13, " ", $B3
+	DEFM	-1, 38, " ", $B3, -1, 10, 0, $B3, -1, 13, " ", $B3
 	; line 36
 	DEFM	-1, 38, $C4, $C1, -1, 10, $C4, $D9, -1, 13, " ", $C0
 	; line 37-62 (26*64 = 6*255 + 134)
@@ -196,12 +196,38 @@ DEFC MENU_Y = 0
 .end_monitor_trampoline_template
 
 .monitor_redraw
+	EXX
 	LD	DE, RAM_PIC
 	CALL	video_start_write
+	DEC	DE
+	EXX
 	LD	HL, monitor_screen
-	LD	IY, spi_transmit_A
+	LD	IY, monitor_redraw_callback
 	CALL	decompress
 	JP	spi_deselect
+	;RET optimized away by JP above
+.monitor_redraw_callback
+	EXX
+	INC	DE
+	EXX
+	AND	A, A
+	JP	NZ, spi_transmit_A
+	LD	IY, monitor_redraw_skip
+	JP	spi_deselect
+	;RET optimized away by JP above
+.monitor_redraw_skip
+	EXX
+	INC	DE
+	EXX
+	AND	A, A
+	RET	Z
+	LD	E, A
+	EXX
+	CALL	video_start_write
+	EXX
+	LD	A, E
+	LD	IY, monitor_redraw_callback
+	JP	spi_transmit_A
 	;RET optimized away by JP above
 
 .monitor
@@ -231,8 +257,22 @@ DEFC MENU_Y = 0
 	CALL	monitor_redraw
 .monitor_main_loop
 	; main display loop
+	; cursor
+	LD	A, (MONITOR_PC)
+	AND	A, $0F
+	LD	B, A
+	; y location for cursor
+	LD	A, (MONITOR_PC)
+	RRA
+	RRA
+	RRA
+	RRA
+	AND	A, $0F
+	LD	C, A
+	CALL	cursor_move
 	LD	HL, (MONITOR_PC)
 	; address indicator
+	LD	HL, (MONITOR_PC)
 	LD	DE, RAM_PIC + ADDRESS_X + ADDRESS_y*64
 	CALL	video_start_write
 	; high nibble
@@ -416,7 +456,7 @@ DEFC MENU_Y = 0
 	JP	Z, monitor_load
 	LD	A, K_F5
 	CP	A, C
-	JP	Z, MONITOR_TRAMPOLINE
+	JP	Z, monitor_call
 	LD	A, K_F6
 	CP	A, C
 	JP	Z, monitor_file
@@ -469,69 +509,43 @@ DEFC MENU_Y = 0
 
 .monitor_cursor_left
 	DEC	(HL)
-	JR	monitor_cursor_update
+	JP	monitor_main_loop
 .monitor_cursor_right
 	INC	(HL)
-	JR	monitor_cursor_update
+	JP	monitor_main_loop
 .monitor_cursor_up
 	LD	A, (HL)
 	SUB	A, 16
 	LD	(HL), A
-	JR	monitor_cursor_update
+	JP	monitor_main_loop
 .monitor_cursor_down
 	LD	A, (HL)
 	ADD	A, 16
 	LD	(HL), A
-.monitor_cursor_update
-	; x location for cursor
-	LD	A, (HL)
-	AND	A, $0F
-	LD	B, A
-	; y location for cursor
-	LD	A, (HL)
-	AND	A, $F0
-	RLCA
-	RLCA
-	RLCA
-	RLCA
-	LD	C, A
-	CALL	cursor_move
 	JP	monitor_main_loop
 
 .monitor_load
-	; save HL and IXL
-	PUSH	HL
-	PUSH	IX
-	; calculate selected address into IX
-	LD	A, H
-	LD	IXH, A
-	; hide cursor (trashes registers, but not IX)
 	CALL	cursor_hide
-	; loader screen
+	LD	IX, (MONITOR_PC)
 	CALL	loader_open
 	CALL	monitor_redraw
-	; restore IXL and HL
-	POP	IX
-	POP	HL
-	; always reposition cursor
-	JP	monitor_cursor_update
+	JP	monitor_main_loop
+
+.monitor_call
+	CALL	cursor_hide
+	JP	MONITOR_TRAMPOLINE
 
 .monitor_file
-	PUSH	HL
-	PUSH	IX
 	CALL	cursor_hide
 	CALL	fileman_start
 	CALL	monitor_redraw
-	POP	IX
-	POP	HL
-	JP	monitor_cursor_update
+	JP	monitor_main_loop
 
 DEFC HELP_WIDTH = 37
 DEFC HELP_HEIGHT = 13
 DEFC HELP_TOP = 12
 DEFC HELP_LEFT = 7
 .monitor_help
-	PUSH	HL
 	CALL	cursor_hide
 	LD	BC, HELP_WIDTH*256 + HELP_HEIGHT
 	LD	IY, HELP_TOP*64 + HELP_LEFT
@@ -550,9 +564,7 @@ DEFC HELP_LEFT = 7
 	JR	NZ, monitor_help_pause
 	CALL	icon_hide
 	CALL	monitor_redraw
-	POP	HL
-	; reposition cursor
-	JP	monitor_cursor_update
+	JP	monitor_main_loop
 .monitor_help_string
 	DEFM	"This program can view and change", 10
 	DEFM	"memory locations on the machine.", 10, 10

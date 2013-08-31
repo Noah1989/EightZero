@@ -34,8 +34,8 @@ XDEF decompress
 	OR	A, B
 	RET 	Z
 	INC	HL
-	LD	A, (HL)
 .decompress_repeat_loop
+	LD	A, (HL)
 	LD	DE, decompress_repeat_return
 	PUSH	DE
 	JP	(IY)
