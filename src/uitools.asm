@@ -10,6 +10,10 @@ XREF spi_deselect
 XDEF draw_box
 XDEF print_string
 XDEF print_uint16
+XDEF print_uint8
+XDEF print_sint8
+XDEF print_hex_word
+XDEF print_hex_byte
 XDEF put_hex
 
 	; draw a fancy box with border and shadow
@@ -148,6 +152,71 @@ XDEF put_hex
 	SBC	HL, BC
 	JP	spi_transmit_A
 	;RET optimized away by JP above
+
+; print 8 bit integer (signed)
+.print_sint8
+	CALL	video_start_write
+	BIT	7, C
+	JR	Z, print_sint8_positive
+.print_sint8_negative
+	LD	A, C
+	NEG	A
+	LD	C, A
+	LD	A, '-'
+	JR	print_sint8_common
+.print_sint8_positive
+	LD	A, '+'
+.print_sint8_common
+	CALL	spi_transmit_A
+	JR	print_int8_common
+; print 8 bit integer (unsigned)
+.print_uint8
+	CALL	video_start_write
+.print_int8_common
+	LD	B, 100
+	CALL	print_uint8_digit
+	LD	B, 10
+	CALL	print_uint8_digit
+	LD	B, 1
+	CALL	print_uint8_digit
+	JP	spi_deselect
+	;RET optimized away by JP above
+.print_uint8_digit
+	LD	A, C
+	LD	C, '0' - 1
+.print_uint8_digit_loop
+	INC	C
+	SUB	A, B
+	JR	NC, print_uint8_digit_loop
+	ADD	A, B
+	; swap A and C (trashes B)
+	LD	B, A
+	LD	A, C
+	LD	C, B
+	JP	spi_transmit_A
+	;RET optimized away by JP above
+
+.print_hex_word
+	INC	HL
+	CALL	print_hex_byte
+	DEC	HL
+	INC	DE
+	INC	DE
+	; fall through
+.print_hex_byte
+        CALL	video_start_write
+        ; high nibble
+        LD	A, (HL)
+        RRA
+        RRA
+        RRA
+        RRA
+        CALL	put_hex
+        ; low nibble
+        LD	A, (HL)
+        CALL	put_hex
+        JP	spi_deselect
+        ;RET optimized away by JP above
 
 .put_hex
         OR      A, $F0
