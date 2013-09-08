@@ -3,8 +3,8 @@
 INCLUDE "sprite.inc"
 
 XREF video_start_write
-XREF video_spi_transmit_A
-XREF video_end_transfer
+XREF spi_transmit_A
+XREF spi_deselect
 
 XDEF sprite_move
 
@@ -22,11 +22,11 @@ XDEF sprite_move
 	DEFB	$ED, $5C
 	LD	A, (HL)
 	ADD	A, E
-	CALL	video_spi_transmit_A
+	CALL	spi_transmit_A
 	INC	HL
 	LD	A, (HL)
 	ADC	A, D
-	CALL	video_spi_transmit_A
+	CALL	spi_transmit_A
 	; DE = C*8 (relative y in pixels)
 	LD	D, 8
 	LD	E, C
@@ -35,9 +35,9 @@ XDEF sprite_move
 	INC	HL
 	LD	A, (HL)
 	ADD	A, E
-	CALL	video_spi_transmit_A
+	CALL	spi_transmit_A
 	INC	HL
 	LD	A, (HL)
 	ADC	A, D
-	CALL	video_spi_transmit_A
-	JP	video_end_transfer
+	CALL	spi_transmit_A
+	JP	spi_deselect

@@ -1,4 +1,4 @@
-; loader - load data into ram from the serial interface
+; eZ80 ASM file: loader - load data into ram from the serial interface
 
 INCLUDE "loader.inc"
 INCLUDE "keyboard.inc"
@@ -7,16 +7,17 @@ XREF keyboard_getchar
 XREF serial_transmit
 XREF serial_receive
 
-XREF dialog_style
 XREF draw_box
 XREF print_string
 XREF print_uint16
+XREF put_hex
+
 XREF icon_show
 XREF icon_hide
 
 XREF video_start_write
-XREF video_spi_transmit_A
-XREF video_end_transfer
+XREF spi_transmit_A
+XREF spi_deselect
 XREF video_write
 XREF video_fill
 
@@ -46,15 +47,14 @@ DEFC ADDRESS_CHAR_OFFSET = $B0 ; cyan hex chars
 	DEFM	"Press ESC to close. ", 0
 
 .progress_chars
-	DEFB	0 ; black square
-	DEFB	2 ; green square
+	DEFB	$FF
+	DEFB	$DB
 
 	; opens the loader screen
 .loader_open
 	; box
 	LD	BC, LOADER_WIDTH*256 + LOADER_HEIGHT
 	LD	IY, LOADER_TOP*64 + LOADER_LEFT
-	LD	HL, dialog_style
 	CALL	draw_box
 	; icon
 	LD	BC, [LOADER_LEFT + 1]*256 + [LOADER_TOP + 1]
@@ -72,27 +72,27 @@ DEFC ADDRESS_CHAR_OFFSET = $B0 ; cyan hex chars
 	; target address
 	LD	DE, [LOADER_TOP + 4]*64 + [LOADER_LEFT + 20]
 	CALL	video_start_write
-	LD	B, IXH
-	CALL	loader_print_byte
-	LD	B, IXL
-	CALL	loader_print_byte
-	CALL	video_end_transfer
-	JR	loader_wait_data_start
-.loader_print_byte
-	LD	A, B
+	; high nibble
+	LD	A, IXH
 	RRA
 	RRA
 	RRA
 	RRA
-	AND	A, $0F
-	OR	A, ADDRESS_CHAR_OFFSET
-	CALL	video_spi_transmit_A
+	CALL	put_hex
 	; low nibble
-	LD	A, B
-	AND	A, $0F
-	OR	A, ADDRESS_CHAR_OFFSET
-	JP	video_spi_transmit_A
-	; RET optimized away by JP above
+	LD	A, IXH
+	CALL	put_hex
+	; high nibble
+	LD	A, IXL
+	RRA
+	RRA
+	RRA
+	RRA
+	CALL	put_hex
+	; low nibble
+	LD	A, IXL
+	CALL	put_hex
+	CALL	spi_deselect
 
 .loader_wait_data_start
 	; wait for '!', respond with '?'

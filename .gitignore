@@ -1,10 +1,9 @@
-*.bin
+main.bin
 *.lst
 *.sym
 *.obj
 *.map
 *.def
-
 *.aux
 *.toc
 doc/.DS_Store
@@ -12,3 +11,4 @@ doc/.DS_Store
 *.pdf
 *.gz
 *.log
+.DS_Store

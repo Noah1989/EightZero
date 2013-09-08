@@ -11,11 +11,11 @@ XREF video_copy
 XREF sprite_move
 
 .icon_default_even
-	; X=4, ROT=0, PAL=$4, Y=0, IMAGE=1, C=0
-	DEFB	4, $40, 0, 1*2
+	; X=0, ROT=0, PAL=$4, Y=2, IMAGE=1, C=0
+	DEFB	4, $40, 6, 1*2
 .icon_default_odd
-	; X=4, ROT=0, PAL=$6, Y=0, IMAGE=1, C=0
-	DEFB	4, $60, 0, 1*2
+	; X=0, ROT=0, PAL=$6, Y=2, IMAGE=1, C=0
+	DEFB	4, $60, 6, 1*2
 
 ; load icon sprites
 .icons_load
@@ -52,10 +52,9 @@ XREF sprite_move
 .icon_show_odd
 	LD	HL, icon_default_odd
 .icon_show_common
-	DEC	B ; decrement x because default location represents x=1, y=0
 	JP	sprite_move
 	; RET optimized away by JP above
 
 .icons0
 	; 16-color "help" and "load" icons (1 sprite image)
-	BINARY	"icons0.spr"
+	BINARY	"sprites.bin"
