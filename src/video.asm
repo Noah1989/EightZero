@@ -33,18 +33,12 @@ XDEF video_write_32
 	LD	DE, RAM_PIC
 	LD	BC, 64*64
 	CALL	video_fill
-	; background color
-	LD	HL, bg_color_default
-	LD	DE, BG_COLOR
-;	CALL	video_write_16
 	; reset scroll position
 	LD	HL, scroll_default
 	LD	DE, SCROLL_X
 	LD	BC, 2*2 ; 2 words
 	JR	video_copy
 	;RET optimized away by JR above
-.bg_color_default
-	DEFW	@00000*COLOR_R | @00000*COLOR_G | @00000*COLOR_B
 .clear_character
 	DEFB	' '
 .sprite_offscreen_position

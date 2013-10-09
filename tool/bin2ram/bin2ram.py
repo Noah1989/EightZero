@@ -75,7 +75,7 @@ def program_through_loader():
     tty.send(struct.pack('<H', size))
     tty.expect('!')
     print 'Sending data...'
-    for bytes in [image_bytes[i:i+16] for i in range(0, len(image_bytes), 16)]:
+    for bytes in [image_bytes[i:i+32] for i in range(0, len(image_bytes), 32)]:
         tty.send(bytes)
 
 programmer_arg = sys.argv[1]

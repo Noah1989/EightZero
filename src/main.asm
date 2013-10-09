@@ -2,7 +2,7 @@
 
 INCLUDE "main.inc"
 
-ORG $C000
+ORG $0000
 
 XREF serial_init
 XREF keyboard_init
@@ -52,7 +52,7 @@ XREF monitor
 	EI
 
 	CALL	video_reset
-;	CALL	charmap_load
+	CALL	charmap_load
 	CALL	icons_load
 	CALL	cursor_init
 
