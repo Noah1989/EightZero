@@ -49,11 +49,12 @@ DEFC KEYBOARD_EXTENDED = 4
 	;RET	optimized away by JP above
 .keyboard_init_sequence
 	; falling edge triggered interrupt
-	; on PORT A pin 1, all others are inputs
-	DEFB	PA_DR, $00
-	DEFB	PA_ALT2, $02
-	DEFB	PA_ALT1, $02
-	DEFB	PA_DDR, $FF
+	; on PORT A pin 1, debug out on pin 3,
+	;  all others are inputs
+	DEFB	PA_DR,   @00000000
+	DEFB	PA_ALT2, @00000010
+	DEFB	PA_ALT1, @00000010
+	DEFB	PA_DDR,  @11111011
 .end_keyboard_init_sequence
 
 ; returns a decoded character from the keyboard in C
@@ -80,6 +81,11 @@ DEFC KEYBOARD_EXTENDED = 4
 	; save registers
 	PUSH	AF
 	PUSH	BC
+
+	; for debugging
+	LD	A, @00000100
+	; eZ80 instruction: OUT0 (PA_DR), A
+	DEFM	$ED, $39, PA_DR
 
 	; B: status; C: incoming byte
 	LD	BC, (INTERRUPT_TABLE + KEYBOARD_ISR_DATA)
@@ -274,6 +280,12 @@ DEFC KEYBOARD_EXTENDED = 4
 	LD	A, $02
 	; eZ80 instruction: OUT0 (PA_ALT0), A
 	DEFB	$ED, $39, PA_ALT0
+
+	; for debugging
+	XOR	A, A
+	; eZ80 instruction: OUT0 (PA_DR), A
+	DEFM	$ED, $39, PA_DR
+
 	; restore original state and return
 	POP	BC
 	POP	AF
