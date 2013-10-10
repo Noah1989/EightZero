@@ -24,11 +24,12 @@ DEFC KEYBOARD_ISR_DATA = $86
 ; either an ASCII character, or a contol sequence, or a special key character,
 ; or 0 when there is no data available.
 
-DEFC PA_DR = $96
-DEFC PA_DDR = $97
+DEFC PA_DR   = $96
+DEFC PA_DDR  = $97
 DEFC PA_ALT1 = $98
 DEFC PA_ALT2 = $99
 DEFC PA_ALT0 = $A6
+DEFC INT_P2  = $12
 
 ; upper status bits
 DEFC KEYBOARD_CONTROL = 7
@@ -50,11 +51,13 @@ DEFC KEYBOARD_EXTENDED = 4
 .keyboard_init_sequence
 	; falling edge triggered interrupt
 	; on PORT A pin 1, debug out on pin 3,
-	;  all others are inputs
+	; all others are inputs
 	DEFB	PA_DR,   @00000000
 	DEFB	PA_ALT2, @00000010
 	DEFB	PA_ALT1, @00000010
 	DEFB	PA_DDR,  @11111011
+	; increase PORT A 1 interrupt priority
+	DEFB	INT_P2,  @00000010
 .end_keyboard_init_sequence
 
 ; returns a decoded character from the keyboard in C
