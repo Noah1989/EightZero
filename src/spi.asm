@@ -143,7 +143,7 @@ DEFC SPI_MODE = @10110000
 	CP	A, $01
 	; transfer immediately, if possible
 	JR	C, spi_transmit_out
-	; but byte on buffer, if possible
+	; put byte on buffer, if possible
 	JR	Z, spi_transmit_buffer
 	; else wait...
 	EI
