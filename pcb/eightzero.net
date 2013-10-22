@@ -1,573 +1,810 @@
-# EESchema Netlist Version 1.1 created  21/04/2013 16:30:05
-(
- ( /5173EAE3 $noname  P7 MII {Lib=CONN_24}
-  (    1 N-000065 )
-  (    2 N-000061 )
-  (    3 N-000043 )
-  (    4 N-000053 )
-  (    5 N-000049 )
-  (    6 N-000045 )
-  (    7 N-000035 )
-  (    8 N-000030 )
-  (    9 N-000025 )
-  (   10 N-000060 )
-  (   11 N-000056 )
-  (   12 N-000052 )
-  (   13 N-000048 )
-  (   14 N-000044 )
-  (   15 N-000020 )
-  (   16 N-000029 )
-  (   17 N-000024 )
-  (   18 N-000154 )
-  (   19 ? )
-  (   20 ? )
-  (   21 ? )
-  (   22 ? )
-  (   23 ? )
-  (   24 ? )
- )
- ( /5173D795 $noname  P6 PORT_D {Lib=CONN_10}
-  (    1 N-000132 )
-  (    2 N-000131 )
-  (    3 N-000130 )
-  (    4 N-000129 )
-  (    5 N-000128 )
-  (    6 N-000127 )
-  (    7 N-000126 )
-  (    8 N-000125 )
-  (    9 ? )
-  (   10 ? )
- )
- ( /5173D78F $noname  P5 PORT_C {Lib=CONN_10}
-  (    1 N-000122 )
-  (    2 N-000088 )
-  (    3 N-000079 )
-  (    4 N-000075 )
-  (    5 N-000070 )
-  (    6 N-000073 )
-  (    7 N-000090 )
-  (    8 N-000085 )
-  (    9 ? )
-  (   10 ? )
- )
- ( /5173D74F $noname  P4 PORT_B {Lib=CONN_10}
-  (    1 N-000038 )
-  (    2 N-000033 )
-  (    3 N-000028 )
-  (    4 N-000023 )
-  (    5 N-000067 )
-  (    6 N-000063 )
-  (    7 N-000059 )
-  (    8 N-000055 )
-  (    9 ? )
-  (   10 ? )
- )
- ( /5173D703 $noname  P3 PORT_A {Lib=CONN_10}
-  (    1 N-000066 )
-  (    2 N-000062 )
-  (    3 N-000058 )
-  (    4 N-000054 )
-  (    5 N-000050 )
-  (    6 N-000046 )
-  (    7 N-000036 )
-  (    8 N-000031 )
-  (    9 ? )
-  (   10 ? )
- )
- ( /5173D612 $noname  P2 DATA {Lib=CONN_24}
-  (    1 /CS0 )
-  (    2 /CS1 )
-  (    3 /CS2 )
-  (    4 /CS3 )
-  (    5 /D0 )
-  (    6 /D1 )
-  (    7 /D2 )
-  (    8 /D3 )
-  (    9 /D4 )
-  (   10 /D5 )
-  (   11 /D6 )
-  (   12 /D7 )
-  (   13 /IORQ )
-  (   14 /MREQ )
-  (   15 /RD )
-  (   16 /WR )
-  (   17 /INSTRD )
-  (   18 /WAIT )
-  (   19 /RESET )
-  (   20 /NMI )
-  (   21 /BUSREQ )
-  (   22 /BUSACK )
-  (   23 /HALT )
-  (   24 /WP )
- )
- ( /5173D605 $noname  P1 ADDRESS {Lib=CONN_24}
-  (    1 /A0 )
-  (    2 /A1 )
-  (    3 /A2 )
-  (    4 /A3 )
-  (    5 /A4 )
-  (    6 /A5 )
-  (    7 /A6 )
-  (    8 /A7 )
-  (    9 /A8 )
-  (   10 /A9 )
-  (   11 /A10 )
-  (   12 /A11 )
-  (   13 /A12 )
-  (   14 /A13 )
-  (   15 /A14 )
-  (   16 /A15 )
-  (   17 /A16 )
-  (   18 /A17 )
-  (   19 /A18 )
-  (   20 /A19 )
-  (   21 /A20 )
-  (   22 /A21 )
-  (   23 /A22 )
-  (   24 /A23 )
- )
- ( /51739D2B $noname  U1 EZ80F91 {Lib=EZ80F91}
-  (    1 /A0 )
-  (    2 /A1 )
-  (    3 /A2 )
-  (    4 /A3 )
-  (    5 /A4 )
-  (    6 ? )
-  (    7 ? )
-  (    8 /A5 )
-  (    9 /A6 )
-  (   10 /A7 )
-  (   11 /A8 )
-  (   12 /A9 )
-  (   13 /A10 )
-  (   14 ? )
-  (   15 ? )
-  (   16 /A11 )
-  (   17 /A12 )
-  (   18 /A13 )
-  (   19 /A14 )
-  (   20 /A15 )
-  (   21 /A16 )
-  (   22 ? )
-  (   23 ? )
-  (   24 /A17 )
-  (   25 /A18 )
-  (   26 /A19 )
-  (   27 /A20 )
-  (   28 /A21 )
-  (   29 /A22 )
-  (   30 /A23 )
-  (   31 ? )
-  (   32 ? )
-  (   33 /CS0 )
-  (   34 /CS1 )
-  (   35 /CS2 )
-  (   36 /CS3 )
-  (   37 ? )
-  (   38 ? )
-  (   39 /D0 )
-  (   40 /D1 )
-  (   41 /D2 )
-  (   42 /D3 )
-  (   43 /D4 )
-  (   44 /D5 )
-  (   45 /D6 )
-  (   46 /D7 )
-  (   47 ? )
-  (   48 ? )
-  (   49 /IORQ )
-  (   50 /MREQ )
-  (   51 /RD )
-  (   52 /WR )
-  (   53 /INSTRD )
-  (   54 /WAIT )
-  (   55 /RESET )
-  (   56 /NMI )
-  (   57 /BUSREQ )
-  (   58 /BUSACK )
-  (   59 ? )
-  (   60 ? )
-  (   61 ? )
-  (   62 ? )
-  (   63 ? )
-  (   64 ? )
-  (   65 /HALT )
-  (   66 ? )
-  (   67 ? )
-  (   68 ? )
-  (   69 ? )
-  (   70 ? )
-  (   71 ? )
-  (   72 ? )
-  (   73 N-000132 )
-  (   74 N-000131 )
-  (   75 N-000130 )
-  (   76 N-000129 )
-  (   77 N-000128 )
-  (   78 N-000127 )
-  (   79 N-000126 )
-  (   80 N-000125 )
-  (   81 ? )
-  (   82 ? )
-  (   83 ? )
-  (   84 ? )
-  (   85 ? )
-  (   86 ? )
-  (   87 ? )
-  (   88 ? )
-  (   89 ? )
-  (   90 N-000122 )
-  (   91 N-000088 )
-  (   92 N-000079 )
-  (   93 N-000075 )
-  (   94 N-000070 )
-  (   95 N-000073 )
-  (   96 N-000090 )
-  (   97 N-000085 )
-  (   98 ? )
-  (   99 ? )
-  (  100 N-000038 )
-  (  101 N-000033 )
-  (  102 N-000028 )
-  (  103 N-000023 )
-  (  104 N-000067 )
-  (  105 N-000063 )
-  (  106 N-000059 )
-  (  107 N-000055 )
-  (  108 ? )
-  (  109 ? )
-  (  110 ? )
-  (  111 ? )
-  (  112 ? )
-  (  113 ? )
-  (  114 N-000066 )
-  (  115 N-000062 )
-  (  116 N-000058 )
-  (  117 N-000054 )
-  (  118 N-000050 )
-  (  119 N-000046 )
-  (  120 N-000036 )
-  (  121 N-000031 )
-  (  122 ? )
-  (  123 ? )
-  (  124 N-000065 )
-  (  125 N-000061 )
-  (  126 N-000043 )
-  (  127 N-000053 )
-  (  128 N-000049 )
-  (  129 N-000045 )
-  (  130 N-000035 )
-  (  131 N-000030 )
-  (  132 N-000025 )
-  (  133 ? )
-  (  134 ? )
-  (  135 N-000060 )
-  (  136 N-000056 )
-  (  137 N-000052 )
-  (  138 N-000048 )
-  (  139 N-000044 )
-  (  140 N-000020 )
-  (  141 N-000029 )
-  (  142 N-000024 )
-  (  143 N-000154 )
-  (  144 /WP )
- )
-)
-*
-{ Pin List by Nets
-Net 20 "" ""
- P7 15
- U1 140
-Net 23 "" ""
- U1 103
- P4 4
-Net 24 "" ""
- P7 17
- U1 142
-Net 25 "" ""
- P7 9
- U1 132
-Net 28 "" ""
- U1 102
- P4 3
-Net 29 "" ""
- U1 141
- P7 16
-Net 30 "" ""
- P7 8
- U1 131
-Net 31 "" ""
- P3 8
- U1 121
-Net 33 "" ""
- P4 2
- U1 101
-Net 35 "" ""
- P7 7
- U1 130
-Net 36 "" ""
- P3 7
- U1 120
-Net 38 "" ""
- U1 100
- P4 1
-Net 43 "" ""
- P7 3
- U1 126
-Net 44 "" ""
- P7 14
- U1 139
-Net 45 "" ""
- P7 6
- U1 129
-Net 46 "" ""
- U1 119
- P3 6
-Net 48 "" ""
- P7 13
- U1 138
-Net 49 "" ""
- U1 128
- P7 5
-Net 50 "" ""
- P3 5
- U1 118
-Net 52 "" ""
- U1 137
- P7 12
-Net 53 "" ""
- U1 127
- P7 4
-Net 54 "" ""
- U1 117
- P3 4
-Net 55 "" ""
- U1 107
- P4 8
-Net 56 "" ""
- U1 136
- P7 11
-Net 58 "" ""
- U1 116
- P3 3
-Net 59 "" ""
- P4 7
- U1 106
-Net 60 "" ""
- U1 135
- P7 10
-Net 61 "" ""
- U1 125
- P7 2
-Net 62 "" ""
- P3 2
- U1 115
-Net 63 "" ""
- P4 6
- U1 105
-Net 65 "" ""
- U1 124
- P7 1
-Net 66 "" ""
- P3 1
- U1 114
-Net 67 "" ""
- U1 104
- P4 5
-Net 70 "" ""
- P5 5
- U1 94
-Net 73 "" ""
- P5 6
- U1 95
-Net 75 "" ""
- P5 4
- U1 93
-Net 79 "" ""
- U1 92
- P5 3
-Net 85 "" ""
- P5 8
- U1 97
-Net 88 "" ""
- P5 2
- U1 91
-Net 90 "" ""
- P5 7
- U1 96
-Net 93 "/D1" "D1"
- P2 6
- U1 40
-Net 94 "/A16" "A16"
- P1 17
- U1 21
-Net 95 "/A17" "A17"
- P1 18
- U1 24
-Net 96 "/A18" "A18"
- U1 25
- P1 19
-Net 97 "/A19" "A19"
- P1 20
- U1 26
-Net 98 "/A20" "A20"
- U1 27
- P1 21
-Net 99 "/A21" "A21"
- U1 28
- P1 22
-Net 100 "/A22" "A22"
- U1 29
- P1 23
-Net 101 "/A23" "A23"
- P1 24
- U1 30
-Net 102 "/CS0" "CS0"
- P2 1
- U1 33
-Net 103 "/CS1" "CS1"
- U1 34
- P2 2
-Net 104 "/CS2" "CS2"
- U1 35
- P2 3
-Net 105 "/CS3" "CS3"
- P2 4
- U1 36
-Net 106 "/D0" "D0"
- P2 5
- U1 39
-Net 107 "/A15" "A15"
- P1 16
- U1 20
-Net 108 "/D2" "D2"
- U1 41
- P2 7
-Net 109 "/D3" "D3"
- U1 42
- P2 8
-Net 110 "/D4" "D4"
- U1 43
- P2 9
-Net 111 "/D5" "D5"
- P2 10
- U1 44
-Net 112 "/D6" "D6"
- P2 11
- U1 45
-Net 113 "/D7" "D7"
- U1 46
- P2 12
-Net 114 "/IORQ" "IORQ"
- U1 49
- P2 13
-Net 115 "/MREQ" "MREQ"
- P2 14
- U1 50
-Net 116 "/RD" "RD"
- U1 51
- P2 15
-Net 117 "/WR" "WR"
- U1 52
- P2 16
-Net 118 "/INSTRD" "INSTRD"
- P2 17
- U1 53
-Net 119 "/WAIT" "WAIT"
- P2 18
- U1 54
-Net 120 "/RESET" "RESET"
- P2 19
- U1 55
-Net 121 "/A2" "A2"
- P1 3
- U1 3
-Net 122 "" ""
- P5 1
- U1 90
-Net 125 "" ""
- U1 80
- P6 8
-Net 126 "" ""
- P6 7
- U1 79
-Net 127 "" ""
- U1 78
- P6 6
-Net 128 "" ""
- P6 5
- U1 77
-Net 129 "" ""
- U1 76
- P6 4
-Net 130 "" ""
- U1 75
- P6 3
-Net 131 "" ""
- P6 2
- U1 74
-Net 132 "" ""
- U1 73
- P6 1
-Net 133 "/A0" "A0"
- U1 1
- P1 1
-Net 134 "/A1" "A1"
- U1 2
- P1 2
-Net 135 "/NMI" "NMI"
- U1 56
- P2 20
-Net 136 "/A3" "A3"
- P1 4
- U1 4
-Net 137 "/A4" "A4"
- U1 5
- P1 5
-Net 138 "/A5" "A5"
- P1 6
- U1 8
-Net 139 "/A6" "A6"
- U1 9
- P1 7
-Net 140 "/A7" "A7"
- P1 8
- U1 10
-Net 141 "/A8" "A8"
- P1 9
- U1 11
-Net 142 "/A9" "A9"
- P1 10
- U1 12
-Net 143 "/A10" "A10"
- P1 11
- U1 13
-Net 144 "/A11" "A11"
- P1 12
- U1 16
-Net 145 "/A12" "A12"
- U1 17
- P1 13
-Net 146 "/A13" "A13"
- P1 14
- U1 18
-Net 147 "/A14" "A14"
- U1 19
- P1 15
-Net 149 "/BUSREQ" "BUSREQ"
- P2 21
- U1 57
-Net 150 "/BUSACK" "BUSACK"
- U1 58
- P2 22
-Net 151 "/WP" "WP"
- U1 144
- P2 24
-Net 152 "/HALT" "HALT"
- P2 23
- U1 65
-Net 154 "" ""
- P7 18
- U1 143
-}
-#End
+(export (version D)
+  (design
+    (source /home/stefan/prj/eightzero/pcb/eightzero.sch)
+    (date "Tue Oct 22 15:00:51 2013")
+    (tool "eeschema (2013-may-18)-stable"))
+  (components
+    (comp (ref P7)
+      (value MII)
+      (libsource (lib conn_24) (part CONN_24))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 5173EAE3))
+    (comp (ref P6)
+      (value "PORT D")
+      (libsource (lib conn) (part CONN_10))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 5173D795))
+    (comp (ref P5)
+      (value "PORT C")
+      (libsource (lib conn) (part CONN_10))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 5173D78F))
+    (comp (ref P4)
+      (value "PORT B")
+      (libsource (lib conn) (part CONN_10))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 5173D74F))
+    (comp (ref P3)
+      (value "PORT A")
+      (libsource (lib conn) (part CONN_10))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 5173D703))
+    (comp (ref P2)
+      (value DATA)
+      (libsource (lib conn_24) (part CONN_24))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 5173D612))
+    (comp (ref P1)
+      (value ADDRESS)
+      (libsource (lib conn_24) (part CONN_24))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 5173D605))
+    (comp (ref U1)
+      (value EZ80F91)
+      (libsource (lib ez80f91) (part EZ80F91))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 51739D2B))
+    (comp (ref J1)
+      (value VGA)
+      (libsource (lib conn) (part DB15))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 51EEB57A))
+    (comp (ref R1)
+      (value R)
+      (libsource (lib device) (part R))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 51EEBF91))
+    (comp (ref R2)
+      (value R)
+      (libsource (lib device) (part R))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 51EEBFA0))
+    (comp (ref R3)
+      (value R)
+      (libsource (lib device) (part R))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 51EEBFAF))
+    (comp (ref R4)
+      (value R)
+      (libsource (lib device) (part R))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 51EEBFBE))
+    (comp (ref R5)
+      (value R)
+      (libsource (lib device) (part R))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 51EEBFCD))
+    (comp (ref R6)
+      (value R)
+      (libsource (lib device) (part R))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 51EEBFDC))
+    (comp (ref R7)
+      (value R)
+      (libsource (lib device) (part R))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 51EEBFEB))
+    (comp (ref R8)
+      (value R)
+      (libsource (lib device) (part R))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 51EEBFFA))
+    (comp (ref R9)
+      (value R)
+      (libsource (lib device) (part R))
+      (sheetpath (names /) (tstamps /))
+      (tstamp 51EEC009)))
+  (libparts
+    (libpart (lib device) (part R)
+      (description Resistance)
+      (footprints
+        (fp R?)
+        (fp SM0603)
+        (fp SM0805)
+        (fp R?-*)
+        (fp SM1206))
+      (fields
+        (field (name Reference) R)
+        (field (name Value) R)
+        (field (name Footprint) ~)
+        (field (name Datasheet) ~))
+      (pins
+        (pin (num 1) (name ~) (type passive))
+        (pin (num 2) (name ~) (type passive))))
+    (libpart (lib conn) (part CONN_10)
+      (description "Symbole general de connecteur")
+      (fields
+        (field (name Reference) P)
+        (field (name Value) CONN_10)
+        (field (name Footprint) ~)
+        (field (name Datasheet) ~))
+      (pins
+        (pin (num 1) (name P1) (type passive))
+        (pin (num 2) (name P2) (type passive))
+        (pin (num 3) (name P3) (type passive))
+        (pin (num 4) (name P4) (type passive))
+        (pin (num 5) (name P5) (type passive))
+        (pin (num 6) (name P6) (type passive))
+        (pin (num 7) (name P7) (type passive))
+        (pin (num 8) (name P8) (type passive))
+        (pin (num 9) (name P9) (type passive))
+        (pin (num 10) (name P10) (type passive))))
+    (libpart (lib conn) (part DB15)
+      (footprints
+        (fp DB15*))
+      (fields
+        (field (name Reference) J)
+        (field (name Value) DB15)
+        (field (name Footprint) ~)
+        (field (name Datasheet) ~))
+      (pins
+        (pin (num 1) (name 1) (type passive))
+        (pin (num 2) (name 2) (type passive))
+        (pin (num 3) (name 3) (type passive))
+        (pin (num 4) (name 4) (type passive))
+        (pin (num 5) (name 5) (type passive))
+        (pin (num 6) (name 6) (type passive))
+        (pin (num 7) (name 7) (type passive))
+        (pin (num 8) (name 8) (type passive))
+        (pin (num 9) (name P9) (type passive))
+        (pin (num 10) (name P10) (type passive))
+        (pin (num 11) (name P111) (type passive))
+        (pin (num 12) (name P12) (type passive))
+        (pin (num 13) (name P13) (type passive))
+        (pin (num 14) (name P14) (type passive))
+        (pin (num 15) (name P15) (type passive))))
+    (libpart (lib conn_24) (part CONN_24)
+      (fields
+        (field (name Reference) P)
+        (field (name Value) CONN_24))
+      (pins
+        (pin (num 1) (name P1) (type passive))
+        (pin (num 2) (name P2) (type passive))
+        (pin (num 3) (name P3) (type passive))
+        (pin (num 4) (name P4) (type passive))
+        (pin (num 5) (name P5) (type passive))
+        (pin (num 6) (name P6) (type passive))
+        (pin (num 7) (name P7) (type passive))
+        (pin (num 8) (name P8) (type passive))
+        (pin (num 9) (name P9) (type passive))
+        (pin (num 10) (name P10) (type passive))
+        (pin (num 11) (name P11) (type passive))
+        (pin (num 12) (name P12) (type passive))
+        (pin (num 13) (name P13) (type passive))
+        (pin (num 14) (name P14) (type passive))
+        (pin (num 15) (name P15) (type passive))
+        (pin (num 16) (name P16) (type passive))
+        (pin (num 17) (name P17) (type passive))
+        (pin (num 18) (name P18) (type passive))
+        (pin (num 19) (name P19) (type passive))
+        (pin (num 20) (name P20) (type passive))
+        (pin (num 21) (name P21) (type passive))
+        (pin (num 22) (name P22) (type passive))
+        (pin (num 23) (name P23) (type passive))
+        (pin (num 24) (name P24) (type passive))))
+    (libpart (lib ez80f91) (part EZ80F91)
+      (fields
+        (field (name Reference) U)
+        (field (name Value) EZ80F91))
+      (pins
+        (pin (num 1) (name ADDR0) (type BiDi))
+        (pin (num 2) (name ADDR1) (type BiDi))
+        (pin (num 3) (name ADDR2) (type BiDi))
+        (pin (num 4) (name ADDR3) (type BiDi))
+        (pin (num 5) (name ADDR4) (type BiDi))
+        (pin (num 6) (name VDD) (type power_in))
+        (pin (num 7) (name VSS) (type power_in))
+        (pin (num 8) (name ADDR5) (type BiDi))
+        (pin (num 9) (name ADDR6) (type BiDi))
+        (pin (num 10) (name ADDR7) (type BiDi))
+        (pin (num 11) (name ADDR8) (type BiDi))
+        (pin (num 12) (name ADDR9) (type BiDi))
+        (pin (num 13) (name ADDR10) (type BiDi))
+        (pin (num 14) (name VDD) (type power_in))
+        (pin (num 15) (name VSS) (type power_in))
+        (pin (num 16) (name ADDR11) (type BiDi))
+        (pin (num 17) (name ADDR12) (type BiDi))
+        (pin (num 18) (name ADDR13) (type BiDi))
+        (pin (num 19) (name ADDR14) (type BiDi))
+        (pin (num 20) (name ADDR15) (type BiDi))
+        (pin (num 21) (name ADDR16) (type BiDi))
+        (pin (num 22) (name VDD) (type power_in))
+        (pin (num 23) (name VSS) (type power_in))
+        (pin (num 24) (name ADDR17) (type BiDi))
+        (pin (num 25) (name ADDR18) (type BiDi))
+        (pin (num 26) (name ADDR19) (type BiDi))
+        (pin (num 27) (name ADDR20) (type BiDi))
+        (pin (num 28) (name ADDR21) (type BiDi))
+        (pin (num 29) (name ADDR22) (type BiDi))
+        (pin (num 30) (name ADDR23) (type BiDi))
+        (pin (num 31) (name VDD) (type power_in))
+        (pin (num 32) (name VSS) (type power_in))
+        (pin (num 33) (name CS0) (type output))
+        (pin (num 34) (name CS1) (type output))
+        (pin (num 35) (name CS2) (type output))
+        (pin (num 36) (name CS3) (type output))
+        (pin (num 37) (name VDD) (type power_in))
+        (pin (num 38) (name VSS) (type power_in))
+        (pin (num 39) (name DATA0) (type BiDi))
+        (pin (num 40) (name DATA1) (type BiDi))
+        (pin (num 41) (name DATA2) (type BiDi))
+        (pin (num 42) (name DATA3) (type BiDi))
+        (pin (num 43) (name DATA4) (type BiDi))
+        (pin (num 44) (name DATA5) (type BiDi))
+        (pin (num 45) (name DATA6) (type BiDi))
+        (pin (num 46) (name DATA7) (type BiDi))
+        (pin (num 47) (name VDD) (type power_in))
+        (pin (num 48) (name VSS) (type power_in))
+        (pin (num 49) (name IORQ) (type BiDi))
+        (pin (num 50) (name MREQ) (type BiDi))
+        (pin (num 51) (name RD) (type output))
+        (pin (num 52) (name WR) (type output))
+        (pin (num 53) (name INSTRD) (type output))
+        (pin (num 54) (name WAIT) (type input))
+        (pin (num 55) (name RESET) (type BiDi))
+        (pin (num 56) (name NMI) (type input))
+        (pin (num 57) (name BUSREQ) (type input))
+        (pin (num 58) (name BUSACK) (type output))
+        (pin (num 59) (name VDD) (type power_in))
+        (pin (num 60) (name VSS) (type power_in))
+        (pin (num 61) (name RTC_XIN) (type input))
+        (pin (num 62) (name RTC_XOUT) (type BiDi))
+        (pin (num 63) (name RTC_VDD) (type power_in))
+        (pin (num 64) (name VSS) (type power_in))
+        (pin (num 65) (name HALT_SLP) (type output))
+        (pin (num 66) (name TMS) (type input))
+        (pin (num 67) (name TCK) (type input))
+        (pin (num 68) (name TRIGOUT) (type output))
+        (pin (num 69) (name TDI) (type BiDi))
+        (pin (num 70) (name TDO) (type output))
+        (pin (num 71) (name TRST) (type input))
+        (pin (num 72) (name VSS) (type power_in))
+        (pin (num 73) (name PD0/TxD0/IR_TxD) (type BiDi))
+        (pin (num 74) (name PD1/RxD0/IR_RxD) (type BiDi))
+        (pin (num 75) (name PD2/RTS0) (type BiDi))
+        (pin (num 76) (name PD3/CTS0) (type BiDi))
+        (pin (num 77) (name PD4/DTR0) (type BiDi))
+        (pin (num 78) (name PD5/DSR0) (type BiDi))
+        (pin (num 79) (name PD6/DCD0) (type BiDi))
+        (pin (num 80) (name PD7/RI0) (type BiDi))
+        (pin (num 81) (name VDD) (type power_in))
+        (pin (num 82) (name VSS) (type power_in))
+        (pin (num 83) (name LOOP_FILT) (type passive))
+        (pin (num 84) (name PLL_VSS) (type power_in))
+        (pin (num 85) (name XOUT) (type output))
+        (pin (num 86) (name XIN) (type input))
+        (pin (num 87) (name PLL_VDD) (type power_in))
+        (pin (num 88) (name VDD) (type power_in))
+        (pin (num 89) (name VSS) (type power_in))
+        (pin (num 90) (name PC0/TxD1) (type BiDi))
+        (pin (num 91) (name PC1/RxD1) (type BiDi))
+        (pin (num 92) (name PC2/RTS1) (type BiDi))
+        (pin (num 93) (name PC3/CTS1) (type BiDi))
+        (pin (num 94) (name PC4/DTR1) (type BiDi))
+        (pin (num 95) (name PC5/DSR1) (type BiDi))
+        (pin (num 96) (name PC6/DCD1) (type BiDi))
+        (pin (num 97) (name PC7/RI1) (type BiDi))
+        (pin (num 98) (name VDD) (type power_in))
+        (pin (num 99) (name VSS) (type power_in))
+        (pin (num 100) (name PB0/IC0/EC0) (type BiDi))
+        (pin (num 101) (name PB1/IC1) (type BiDi))
+        (pin (num 102) (name PB2/SS) (type BiDi))
+        (pin (num 103) (name PB3/SCK) (type BiDi))
+        (pin (num 104) (name PB4/IC2) (type BiDi))
+        (pin (num 105) (name PB5/IC3) (type BiDi))
+        (pin (num 106) (name PB6/MISO) (type BiDi))
+        (pin (num 107) (name PB7/MOSI) (type BiDi))
+        (pin (num 108) (name VSS) (type power_in))
+        (pin (num 109) (name SDA) (type BiDi))
+        (pin (num 110) (name SCL) (type BiDi))
+        (pin (num 111) (name PHI) (type output))
+        (pin (num 112) (name VDD) (type power_in))
+        (pin (num 113) (name VSS) (type power_in))
+        (pin (num 114) (name PA0/PWM0/OC0) (type BiDi))
+        (pin (num 115) (name PA1/PWM1/OC1) (type BiDi))
+        (pin (num 116) (name PA2/PWM2/OC2) (type BiDi))
+        (pin (num 117) (name PA3/PWM3/OC3) (type BiDi))
+        (pin (num 118) (name PA4/NPWM0/TOUT0) (type BiDi))
+        (pin (num 119) (name PA5/NPWM1/TOUT2) (type BiDi))
+        (pin (num 120) (name PA6/NPWM2/EC1) (type BiDi))
+        (pin (num 121) (name PA7/NPWM3) (type BiDi))
+        (pin (num 122) (name VDD) (type power_in))
+        (pin (num 123) (name VSS) (type power_in))
+        (pin (num 124) (name CRS) (type input))
+        (pin (num 125) (name COL) (type input))
+        (pin (num 126) (name TxD3) (type output))
+        (pin (num 127) (name TxD2) (type output))
+        (pin (num 128) (name TxD1) (type output))
+        (pin (num 129) (name TxD0) (type output))
+        (pin (num 130) (name Tx_EN) (type output))
+        (pin (num 131) (name Tx_CLK) (type input))
+        (pin (num 132) (name Tx_ER) (type output))
+        (pin (num 133) (name VDD) (type power_in))
+        (pin (num 134) (name VSS) (type power_in))
+        (pin (num 135) (name Rx_ER) (type input))
+        (pin (num 136) (name Rx_CLK) (type input))
+        (pin (num 137) (name Rx_DV) (type input))
+        (pin (num 138) (name RxD0) (type input))
+        (pin (num 139) (name RxD1) (type input))
+        (pin (num 140) (name RxD2) (type input))
+        (pin (num 141) (name RxD3) (type input))
+        (pin (num 142) (name MDC) (type output))
+        (pin (num 143) (name MDIO) (type BiDi))
+        (pin (num 144) (name WP) (type input)))))
+  (libraries
+    (library (logical device)
+      (uri /usr/share/kicad/library/device.lib))
+    (library (logical conn)
+      (uri /usr/share/kicad/library/conn.lib))
+    (library (logical ez80f91)
+      (uri ez80f91.lib))
+    (library (logical conn_24)
+      (uri conn_24.lib)))
+  (nets
+    (net (code 1) (name "")
+      (node (ref U1) (pin 140))
+      (node (ref P7) (pin 15)))
+    (net (code 2) (name "")
+      (node (ref U1) (pin 136))
+      (node (ref P7) (pin 11)))
+    (net (code 3) (name "")
+      (node (ref P7) (pin 12))
+      (node (ref U1) (pin 137)))
+    (net (code 4) (name "")
+      (node (ref U1) (pin 135))
+      (node (ref P7) (pin 10)))
+    (net (code 5) (name "")
+      (node (ref U1) (pin 132))
+      (node (ref P7) (pin 9)))
+    (net (code 6) (name "")
+      (node (ref U1) (pin 142))
+      (node (ref P7) (pin 17)))
+    (net (code 7) (name "")
+      (node (ref U1) (pin 143))
+      (node (ref P7) (pin 18)))
+    (net (code 8) (name "")
+      (node (ref R9) (pin 1)))
+    (net (code 9) (name "")
+      (node (ref R8) (pin 1)))
+    (net (code 10) (name "")
+      (node (ref R7) (pin 1)))
+    (net (code 11) (name "")
+      (node (ref R6) (pin 1)))
+    (net (code 12) (name "")
+      (node (ref U1) (pin 141))
+      (node (ref P7) (pin 16)))
+    (net (code 13) (name "")
+      (node (ref R5) (pin 1)))
+    (net (code 14) (name "")
+      (node (ref R4) (pin 1)))
+    (net (code 15) (name /RED)
+      (node (ref R1) (pin 2))
+      (node (ref R2) (pin 2))
+      (node (ref R3) (pin 2))
+      (node (ref J1) (pin 1)))
+    (net (code 16) (name "")
+      (node (ref R3) (pin 1)))
+    (net (code 17) (name "")
+      (node (ref R2) (pin 1)))
+    (net (code 18) (name "")
+      (node (ref R1) (pin 1)))
+    (net (code 19) (name "")
+      (node (ref U1) (pin 114))
+      (node (ref P3) (pin 1)))
+    (net (code 20) (name "")
+      (node (ref P3) (pin 3))
+      (node (ref U1) (pin 116)))
+    (net (code 21) (name "")
+      (node (ref U1) (pin 118))
+      (node (ref P3) (pin 5)))
+    (net (code 22) (name "")
+      (node (ref U1) (pin 120))
+      (node (ref P3) (pin 7)))
+    (net (code 23) (name "")
+      (node (ref U1) (pin 124))
+      (node (ref P7) (pin 1)))
+    (net (code 24) (name "")
+      (node (ref U1) (pin 125))
+      (node (ref P7) (pin 2)))
+    (net (code 25) (name "")
+      (node (ref P7) (pin 4))
+      (node (ref U1) (pin 127)))
+    (net (code 26) (name "")
+      (node (ref U1) (pin 126))
+      (node (ref P7) (pin 3)))
+    (net (code 27) (name "")
+      (node (ref U1) (pin 130))
+      (node (ref P7) (pin 7)))
+    (net (code 28) (name "")
+      (node (ref U1) (pin 131))
+      (node (ref P7) (pin 8)))
+    (net (code 29) (name "")
+      (node (ref U1) (pin 129))
+      (node (ref P7) (pin 6)))
+    (net (code 30) (name "")
+      (node (ref U1) (pin 128))
+      (node (ref P7) (pin 5)))
+    (net (code 31) (name "")
+      (node (ref P7) (pin 13))
+      (node (ref U1) (pin 138)))
+    (net (code 32) (name "")
+      (node (ref U1) (pin 139))
+      (node (ref P7) (pin 14)))
+    (net (code 33) (name "")
+      (node (ref U1) (pin 122)))
+    (net (code 34) (name "")
+      (node (ref P3) (pin 2))
+      (node (ref U1) (pin 115)))
+    (net (code 35) (name "")
+      (node (ref P4) (pin 6))
+      (node (ref U1) (pin 105)))
+    (net (code 36) (name "")
+      (node (ref U1) (pin 134)))
+    (net (code 37) (name "")
+      (node (ref P4) (pin 5))
+      (node (ref U1) (pin 104)))
+    (net (code 38) (name "")
+      (node (ref U1) (pin 133)))
+    (net (code 39) (name "")
+      (node (ref U1) (pin 123)))
+    (net (code 40) (name "")
+      (node (ref U1) (pin 113)))
+    (net (code 41) (name "")
+      (node (ref U1) (pin 103))
+      (node (ref P4) (pin 4)))
+    (net (code 42) (name "")
+      (node (ref U1) (pin 112)))
+    (net (code 43) (name "")
+      (node (ref U1) (pin 102))
+      (node (ref P4) (pin 3)))
+    (net (code 44) (name "")
+      (node (ref U1) (pin 121))
+      (node (ref P3) (pin 8)))
+    (net (code 45) (name "")
+      (node (ref U1) (pin 111)))
+    (net (code 46) (name "")
+      (node (ref P4) (pin 2))
+      (node (ref U1) (pin 101)))
+    (net (code 47) (name "")
+      (node (ref U1) (pin 110)))
+    (net (code 48) (name "")
+      (node (ref P4) (pin 1))
+      (node (ref U1) (pin 100)))
+    (net (code 49) (name "")
+      (node (ref U1) (pin 99)))
+    (net (code 50) (name "")
+      (node (ref U1) (pin 89)))
+    (net (code 51) (name "")
+      (node (ref P6) (pin 7))
+      (node (ref U1) (pin 79)))
+    (net (code 52) (name "")
+      (node (ref J1) (pin 15)))
+    (net (code 53) (name "")
+      (node (ref J1) (pin 12)))
+    (net (code 54) (name "")
+      (node (ref J1) (pin 11)))
+    (net (code 55) (name "")
+      (node (ref J1) (pin 9)))
+    (net (code 56) (name "")
+      (node (ref J1) (pin 4)))
+    (net (code 57) (name "")
+      (node (ref P3) (pin 6))
+      (node (ref U1) (pin 119)))
+    (net (code 58) (name "")
+      (node (ref U1) (pin 109)))
+    (net (code 59) (name "")
+      (node (ref U1) (pin 108)))
+    (net (code 60) (name "")
+      (node (ref U1) (pin 117))
+      (node (ref P3) (pin 4)))
+    (net (code 61) (name "")
+      (node (ref P4) (pin 8))
+      (node (ref U1) (pin 107)))
+    (net (code 62) (name "")
+      (node (ref U1) (pin 106))
+      (node (ref P4) (pin 7)))
+    (net (code 63) (name /HSYNC)
+      (node (ref J1) (pin 13)))
+    (net (code 64) (name /BLUE)
+      (node (ref R9) (pin 2))
+      (node (ref R7) (pin 2))
+      (node (ref R8) (pin 2))
+      (node (ref J1) (pin 3)))
+    (net (code 65) (name /GREEN)
+      (node (ref R4) (pin 2))
+      (node (ref R6) (pin 2))
+      (node (ref R5) (pin 2))
+      (node (ref J1) (pin 2)))
+    (net (code 66) (name GND)
+      (node (ref J1) (pin 5))
+      (node (ref J1) (pin 8))
+      (node (ref J1) (pin 10))
+      (node (ref J1) (pin 7))
+      (node (ref J1) (pin 6)))
+    (net (code 67) (name /VSYNC)
+      (node (ref J1) (pin 14)))
+    (net (code 68) (name "")
+      (node (ref U1) (pin 94))
+      (node (ref P5) (pin 5)))
+    (net (code 69) (name "")
+      (node (ref U1) (pin 80))
+      (node (ref P6) (pin 8)))
+    (net (code 70) (name "")
+      (node (ref P6) (pin 6))
+      (node (ref U1) (pin 78)))
+    (net (code 71) (name "")
+      (node (ref U1) (pin 76))
+      (node (ref P6) (pin 4)))
+    (net (code 72) (name "")
+      (node (ref U1) (pin 74))
+      (node (ref P6) (pin 2)))
+    (net (code 73) (name "")
+      (node (ref U1) (pin 73))
+      (node (ref P6) (pin 1)))
+    (net (code 74) (name "")
+      (node (ref U1) (pin 75))
+      (node (ref P6) (pin 3)))
+    (net (code 75) (name "")
+      (node (ref U1) (pin 77))
+      (node (ref P6) (pin 5)))
+    (net (code 76) (name "")
+      (node (ref U1) (pin 97))
+      (node (ref P5) (pin 8)))
+    (net (code 77) (name "")
+      (node (ref U1) (pin 95))
+      (node (ref P5) (pin 6)))
+    (net (code 78) (name "")
+      (node (ref P5) (pin 4))
+      (node (ref U1) (pin 93)))
+    (net (code 79) (name "")
+      (node (ref P5) (pin 2))
+      (node (ref U1) (pin 91)))
+    (net (code 80) (name "")
+      (node (ref P5) (pin 1))
+      (node (ref U1) (pin 90)))
+    (net (code 81) (name "")
+      (node (ref P5) (pin 3))
+      (node (ref U1) (pin 92)))
+    (net (code 82) (name "")
+      (node (ref U1) (pin 69)))
+    (net (code 83) (name "")
+      (node (ref P5) (pin 7))
+      (node (ref U1) (pin 96)))
+    (net (code 84) (name "")
+      (node (ref P6) (pin 9)))
+    (net (code 85) (name "")
+      (node (ref P5) (pin 10)))
+    (net (code 86) (name "")
+      (node (ref P5) (pin 9)))
+    (net (code 87) (name "")
+      (node (ref P6) (pin 10)))
+    (net (code 88) (name /A0)
+      (node (ref U1) (pin 1))
+      (node (ref P1) (pin 1)))
+    (net (code 89) (name /A1)
+      (node (ref P1) (pin 2))
+      (node (ref U1) (pin 2)))
+    (net (code 90) (name /A2)
+      (node (ref P1) (pin 3))
+      (node (ref U1) (pin 3)))
+    (net (code 91) (name /A3)
+      (node (ref P1) (pin 4))
+      (node (ref U1) (pin 4)))
+    (net (code 92) (name /A4)
+      (node (ref P1) (pin 5))
+      (node (ref U1) (pin 5)))
+    (net (code 93) (name /A5)
+      (node (ref P1) (pin 6))
+      (node (ref U1) (pin 8)))
+    (net (code 94) (name /A6)
+      (node (ref U1) (pin 9))
+      (node (ref P1) (pin 7)))
+    (net (code 95) (name /A7)
+      (node (ref U1) (pin 10))
+      (node (ref P1) (pin 8)))
+    (net (code 96) (name "")
+      (node (ref P3) (pin 10)))
+    (net (code 97) (name "")
+      (node (ref P3) (pin 9)))
+    (net (code 98) (name "")
+      (node (ref P4) (pin 10)))
+    (net (code 99) (name "")
+      (node (ref P4) (pin 9)))
+    (net (code 100) (name "")
+      (node (ref P7) (pin 23)))
+    (net (code 101) (name /INSTRD)
+      (node (ref U1) (pin 53))
+      (node (ref P2) (pin 17)))
+    (net (code 102) (name /WAIT)
+      (node (ref U1) (pin 54))
+      (node (ref P2) (pin 18)))
+    (net (code 103) (name /RESET)
+      (node (ref U1) (pin 55))
+      (node (ref P2) (pin 19)))
+    (net (code 104) (name /NMI)
+      (node (ref U1) (pin 56))
+      (node (ref P2) (pin 20)))
+    (net (code 105) (name /BUSREQ)
+      (node (ref U1) (pin 57))
+      (node (ref P2) (pin 21)))
+    (net (code 106) (name /BUSACK)
+      (node (ref P2) (pin 22))
+      (node (ref U1) (pin 58)))
+    (net (code 107) (name /WP)
+      (node (ref U1) (pin 144))
+      (node (ref P2) (pin 24)))
+    (net (code 108) (name /HALT)
+      (node (ref P2) (pin 23))
+      (node (ref U1) (pin 65)))
+    (net (code 109) (name "")
+      (node (ref P7) (pin 19)))
+    (net (code 110) (name "")
+      (node (ref P7) (pin 24)))
+    (net (code 111) (name /WR)
+      (node (ref P2) (pin 16))
+      (node (ref U1) (pin 52)))
+    (net (code 112) (name "")
+      (node (ref P7) (pin 22)))
+    (net (code 113) (name "")
+      (node (ref P7) (pin 21)))
+    (net (code 114) (name "")
+      (node (ref P7) (pin 20)))
+    (net (code 115) (name /A23)
+      (node (ref P1) (pin 24))
+      (node (ref U1) (pin 30)))
+    (net (code 116) (name /A8)
+      (node (ref P1) (pin 9))
+      (node (ref U1) (pin 11)))
+    (net (code 117) (name /A9)
+      (node (ref U1) (pin 12))
+      (node (ref P1) (pin 10)))
+    (net (code 118) (name /A10)
+      (node (ref U1) (pin 13))
+      (node (ref P1) (pin 11)))
+    (net (code 119) (name /A11)
+      (node (ref U1) (pin 16))
+      (node (ref P1) (pin 12)))
+    (net (code 120) (name /A12)
+      (node (ref U1) (pin 17))
+      (node (ref P1) (pin 13)))
+    (net (code 121) (name /A13)
+      (node (ref P1) (pin 14))
+      (node (ref U1) (pin 18)))
+    (net (code 122) (name /A14)
+      (node (ref P1) (pin 15))
+      (node (ref U1) (pin 19)))
+    (net (code 123) (name /A15)
+      (node (ref U1) (pin 20))
+      (node (ref P1) (pin 16)))
+    (net (code 124) (name /A16)
+      (node (ref U1) (pin 21))
+      (node (ref P1) (pin 17)))
+    (net (code 125) (name /A17)
+      (node (ref P1) (pin 18))
+      (node (ref U1) (pin 24)))
+    (net (code 126) (name /A18)
+      (node (ref U1) (pin 25))
+      (node (ref P1) (pin 19)))
+    (net (code 127) (name /A19)
+      (node (ref P1) (pin 20))
+      (node (ref U1) (pin 26)))
+    (net (code 128) (name /A20)
+      (node (ref U1) (pin 27))
+      (node (ref P1) (pin 21)))
+    (net (code 129) (name /A21)
+      (node (ref P1) (pin 22))
+      (node (ref U1) (pin 28)))
+    (net (code 130) (name /A22)
+      (node (ref U1) (pin 29))
+      (node (ref P1) (pin 23)))
+    (net (code 131) (name /CS0)
+      (node (ref P2) (pin 1))
+      (node (ref U1) (pin 33)))
+    (net (code 132) (name /CS1)
+      (node (ref U1) (pin 34))
+      (node (ref P2) (pin 2)))
+    (net (code 133) (name /CS2)
+      (node (ref U1) (pin 35))
+      (node (ref P2) (pin 3)))
+    (net (code 134) (name /CS3)
+      (node (ref U1) (pin 36))
+      (node (ref P2) (pin 4)))
+    (net (code 135) (name /D0)
+      (node (ref U1) (pin 39))
+      (node (ref P2) (pin 5)))
+    (net (code 136) (name /D1)
+      (node (ref P2) (pin 6))
+      (node (ref U1) (pin 40)))
+    (net (code 137) (name /D2)
+      (node (ref P2) (pin 7))
+      (node (ref U1) (pin 41)))
+    (net (code 138) (name /D3)
+      (node (ref U1) (pin 42))
+      (node (ref P2) (pin 8)))
+    (net (code 139) (name /D4)
+      (node (ref U1) (pin 43))
+      (node (ref P2) (pin 9)))
+    (net (code 140) (name /D5)
+      (node (ref U1) (pin 44))
+      (node (ref P2) (pin 10)))
+    (net (code 141) (name /D6)
+      (node (ref P2) (pin 11))
+      (node (ref U1) (pin 45)))
+    (net (code 142) (name /D7)
+      (node (ref U1) (pin 46))
+      (node (ref P2) (pin 12)))
+    (net (code 143) (name /IORQ)
+      (node (ref P2) (pin 13))
+      (node (ref U1) (pin 49)))
+    (net (code 144) (name /MREQ)
+      (node (ref U1) (pin 50))
+      (node (ref P2) (pin 14)))
+    (net (code 145) (name /RD)
+      (node (ref U1) (pin 51))
+      (node (ref P2) (pin 15)))
+    (net (code 146) (name "")
+      (node (ref U1) (pin 85)))
+    (net (code 147) (name "")
+      (node (ref U1) (pin 15)))
+    (net (code 148) (name "")
+      (node (ref U1) (pin 84)))
+    (net (code 149) (name "")
+      (node (ref U1) (pin 64)))
+    (net (code 150) (name "")
+      (node (ref U1) (pin 14)))
+    (net (code 151) (name "")
+      (node (ref U1) (pin 83)))
+    (net (code 152) (name "")
+      (node (ref U1) (pin 63)))
+    (net (code 153) (name "")
+      (node (ref U1) (pin 23)))
+    (net (code 154) (name "")
+      (node (ref U1) (pin 82)))
+    (net (code 155) (name "")
+      (node (ref U1) (pin 72)))
+    (net (code 156) (name "")
+      (node (ref U1) (pin 62)))
+    (net (code 157) (name "")
+      (node (ref U1) (pin 87)))
+    (net (code 158) (name "")
+      (node (ref U1) (pin 59)))
+    (net (code 159) (name "")
+      (node (ref U1) (pin 98)))
+    (net (code 160) (name "")
+      (node (ref U1) (pin 88)))
+    (net (code 161) (name "")
+      (node (ref U1) (pin 68)))
+    (net (code 162) (name "")
+      (node (ref U1) (pin 48)))
+    (net (code 163) (name "")
+      (node (ref U1) (pin 38)))
+    (net (code 164) (name "")
+      (node (ref U1) (pin 67)))
+    (net (code 165) (name "")
+      (node (ref U1) (pin 47)))
+    (net (code 166) (name "")
+      (node (ref U1) (pin 37)))
+    (net (code 167) (name "")
+      (node (ref U1) (pin 86)))
+    (net (code 168) (name "")
+      (node (ref U1) (pin 66)))
+    (net (code 169) (name "")
+      (node (ref U1) (pin 70)))
+    (net (code 170) (name "")
+      (node (ref U1) (pin 32)))
+    (net (code 171) (name "")
+      (node (ref U1) (pin 22)))
+    (net (code 172) (name "")
+      (node (ref U1) (pin 81)))
+    (net (code 173) (name "")
+      (node (ref U1) (pin 71)))
+    (net (code 174) (name "")
+      (node (ref U1) (pin 61)))
+    (net (code 175) (name "")
+      (node (ref U1) (pin 31)))
+    (net (code 176) (name "")
+      (node (ref U1) (pin 60)))
+    (net (code 177) (name "")
+      (node (ref U1) (pin 7)))
+    (net (code 178) (name "")
+      (node (ref U1) (pin 6)))))

@@ -1,4 +1,11 @@
-Cmp-Mod V01 Created by CvPcb (2012-01-19 BZR 3256)-stable date = 21/04/2013 16:18:01
+Cmp-Mod V01 Created by CvPcb (2013-may-18)-stable date = Tue Oct 22 16:41:48 2013
+
+BeginCmp
+TimeStamp = /51EEB57A;
+Reference = J1;
+ValeurCmp = VGA;
+IdModule  = EDAC_15;
+EndCmp
 
 BeginCmp
 TimeStamp = /5173D605;
@@ -17,28 +24,28 @@ EndCmp
 BeginCmp
 TimeStamp = /5173D703;
 Reference = P3;
-ValeurCmp = PORT_A;
+ValeurCmp = PORT A;
 IdModule  = 71991-305LF;
 EndCmp
 
 BeginCmp
 TimeStamp = /5173D74F;
 Reference = P4;
-ValeurCmp = PORT_B;
+ValeurCmp = PORT B;
 IdModule  = 71991-305LF;
 EndCmp
 
 BeginCmp
 TimeStamp = /5173D78F;
 Reference = P5;
-ValeurCmp = PORT_C;
+ValeurCmp = PORT C;
 IdModule  = 71991-305LF;
 EndCmp
 
 BeginCmp
 TimeStamp = /5173D795;
 Reference = P6;
-ValeurCmp = PORT_D;
+ValeurCmp = PORT D;
 IdModule  = 71991-305LF;
 EndCmp
 
@@ -47,6 +54,69 @@ TimeStamp = /5173EAE3;
 Reference = P7;
 ValeurCmp = MII;
 IdModule  = 71991-312LF;
+EndCmp
+
+BeginCmp
+TimeStamp = /51EEBF91;
+Reference = R1;
+ValeurCmp = R;
+IdModule  = R4;
+EndCmp
+
+BeginCmp
+TimeStamp = /51EEBFA0;
+Reference = R2;
+ValeurCmp = R;
+IdModule  = R4;
+EndCmp
+
+BeginCmp
+TimeStamp = /51EEBFAF;
+Reference = R3;
+ValeurCmp = R;
+IdModule  = R4;
+EndCmp
+
+BeginCmp
+TimeStamp = /51EEBFBE;
+Reference = R4;
+ValeurCmp = R;
+IdModule  = R4;
+EndCmp
+
+BeginCmp
+TimeStamp = /51EEBFCD;
+Reference = R5;
+ValeurCmp = R;
+IdModule  = R4;
+EndCmp
+
+BeginCmp
+TimeStamp = /51EEBFDC;
+Reference = R6;
+ValeurCmp = R;
+IdModule  = R4;
+EndCmp
+
+BeginCmp
+TimeStamp = /51EEBFEB;
+Reference = R7;
+ValeurCmp = R;
+IdModule  = R4;
+EndCmp
+
+BeginCmp
+TimeStamp = /51EEBFFA;
+Reference = R8;
+ValeurCmp = R;
+IdModule  = R4;
+EndCmp
+
+BeginCmp
+TimeStamp = /51EEC009;
+Reference = R9;
+ValeurCmp = R;
+IdModule  = R4;
 EndCmp
 
 BeginCmp

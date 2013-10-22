@@ -1,40 +1,5 @@
-update=Tue 23 Jul 2013 08:05:56 PM CEST
-last_client=eeschema
-[pcbnew]
-version=1
-PadDrlX=295
-PadDimH=630
-PadDimV=630
-BoardThickness=630
-TxtPcbV=800
-TxtPcbH=600
-TxtModV=600
-TxtModH=600
-TxtModW=120
-VEgarde=100
-DrawLar=150
-EdgeLar=150
-TxtLar=120
-MSegLar=150
-LastNetListRead=eightzero.net
-[pcbnew/libraries]
-LibName1=sockets
-LibName2=connect
-LibName3=discret
-LibName4=pin_array
-LibName5=divers
-LibName6=libcms
-LibName7=display
-LibName8=valves
-LibName9=led
-LibName10=dip_sockets
-LibName11=71991-YXXXLF
-LibDir=
-[cvpcb]
-version=1
-NetIExt=net
-[cvpcb/libraries]
-EquName1=devcms
+update=Tue Oct 22 16:08:50 2013
+last_client=pcbnew
 [eeschema]
 version=1
 LibDir=
@@ -77,3 +42,41 @@ LibName30=valves
 LibName31=ez80f91
 LibName32=conn_24
 LibName33=gd_core
+[cvpcb]
+version=1
+NetIExt=net
+[cvpcb/libraries]
+EquName1=devcms
+[pcbnew]
+version=1
+LastNetListRead=eightzero.net
+UseCmpFile=1
+PadDrill="    1.930400"
+PadDrillOvalY="    1.930400"
+PadSizeH="    3.000000"
+PadSizeV="    3.000000"
+PcbTextSizeV="    2.032000"
+PcbTextSizeH="    1.524000"
+PcbTextThickness="    0.304800"
+ModuleTextSizeV="    1.524000"
+ModuleTextSizeH="    1.524000"
+ModuleTextSizeThickness="    0.304800"
+SolderMaskClearance="    0.254000"
+SolderMaskMinWidth="    0.000000"
+DrawSegmentWidth="    0.248920"
+BoardOutlineThickness="    0.381000"
+ModuleOutlineThickness="    0.381000"
+[pcbnew/libraries]
+LibDir=
+LibName1=sockets
+LibName2=connect
+LibName3=discret
+LibName4=pin_array
+LibName5=divers
+LibName6=libcms
+LibName7=display
+LibName8=valves
+LibName9=led
+LibName10=dip_sockets
+LibName11=71991-YXXXLF
+LibName12=EDAC_15
