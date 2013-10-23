@@ -1,4 +1,39 @@
-Cmp-Mod V01 Created by CvPcb (2013-may-18)-stable date = Tue Oct 22 16:41:48 2013
+Cmp-Mod V01 Created by CvPcb (2013-may-18)-stable date = Wed Oct 23 05:09:55 2013
+
+BeginCmp
+TimeStamp = /52674DF5;
+Reference = C1;
+ValeurCmp = ~;
+IdModule  = SM0402;
+EndCmp
+
+BeginCmp
+TimeStamp = /52674E04;
+Reference = C2;
+ValeurCmp = ~;
+IdModule  = SM0402;
+EndCmp
+
+BeginCmp
+TimeStamp = /52674E13;
+Reference = C3;
+ValeurCmp = ~;
+IdModule  = SM0402;
+EndCmp
+
+BeginCmp
+TimeStamp = /52674E22;
+Reference = C4;
+ValeurCmp = ~;
+IdModule  = SM0402;
+EndCmp
+
+BeginCmp
+TimeStamp = /52674E31;
+Reference = C5;
+ValeurCmp = ~;
+IdModule  = SM0402;
+EndCmp
 
 BeginCmp
 TimeStamp = /51EEB57A;
@@ -124,6 +159,13 @@ TimeStamp = /51739D2B;
 Reference = U1;
 ValeurCmp = EZ80F91;
 IdModule  = TQFP144;
+EndCmp
+
+BeginCmp
+TimeStamp = /5267180D;
+Reference = U2;
+ValeurCmp = GD_CORE;
+IdModule  = TQFP_100;
 EndCmp
 
 EndListe
