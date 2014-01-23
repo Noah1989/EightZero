@@ -7,10 +7,12 @@ Use the tools from Z88dk to compile/assemble.
 
 Memory Map:
 
-$0000..$DFFF unused
-$E000..$F9FF code
+$0000..$BFFF system ROM
+$C000..$CFFF EMAC RAM
+$E000..      user code
+     ..$F9FF user stack
 $FA00..$FAFF string buffer
-$FB00..$FBFF global system variables
+$FB00..$FBFF system globals
 $FC00..$FCFF interrupt vectors
 $FD00..$FEFF sdhc sector buffer
-$FF00..$FFFF stack
+$FF00..$FFFF system stack

@@ -8,9 +8,7 @@ XREF serial_init
 XREF keyboard_init
 XREF spi_init
 XREF video_reset
-XREF hexdigits_load
-XREF linechars_load
-XREF symbolchars_load
+XREF charmap_load
 XREF icons_load
 XREF cursor_init
 XREF monitor
@@ -20,7 +18,7 @@ XREF monitor
 	LD	I, A
 
 	; set up stack
-	LD	SP, 0
+	LD	SP, SYSTEM_STACK
 
 	CALL	serial_init
 	CALL	keyboard_init
@@ -29,9 +27,7 @@ XREF monitor
 	EI
 
 	CALL	video_reset
-	CALL	hexdigits_load
-	CALL	linechars_load
-	CALL	symbolchars_load
+;	CALL	charmap_load
 	CALL	icons_load
 	CALL	cursor_init
 
