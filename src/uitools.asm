@@ -1,13 +1,16 @@
 ; eZ80 ASM file: uitools - user interface tools
 
 INCLUDE "uitools.inc"
+INCLUDE "video.inc"
 
 XREF video_start_write
 XREF spi_transmit
 XREF spi_transmit_A
 XREF spi_deselect
+XREF decompress
 
 XDEF draw_box
+XDEF draw_screen
 XDEF print_string
 XDEF print_uint16
 XDEF print_uint8
@@ -105,6 +108,45 @@ XDEF put_hex
 	CALL	spi_transmit_A
 	JP	spi_deselect
 	;RET optimized away by JP above
+
+; Draw a screen by decompressing video data,
+; skipping zero bytes for non-redraw areas.
+; HL points to run-length encoded screen data.
+.draw_screen
+	EXX
+	LD	DE, RAM_PIC
+	CALL	video_start_write
+	DEC	DE
+	EXX
+	;LD	HL, monitor_screen
+	LD	IY, draw_screen_callback
+	CALL	decompress
+	JP	spi_deselect
+	;RET optimized away by JP above
+.draw_screen_callback
+	EXX
+	INC	DE
+	EXX
+	AND	A, A
+	JP	NZ, spi_transmit_A
+	LD	IY, draw_screen_skip
+	JP	spi_deselect
+	;RET optimized away by JP above
+.draw_screen_skip
+	EXX
+	INC	DE
+	EXX
+	AND	A, A
+	RET	Z
+	LD	E, A
+	EXX
+	CALL	video_start_write
+	EXX
+	LD	A, E
+	LD	IY, draw_screen_callback
+	JP	spi_transmit_A
+	;RET optimized away by JP above
+
 
 .print_string_newline
 	CALL	spi_deselect

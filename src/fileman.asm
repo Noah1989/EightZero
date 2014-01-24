@@ -15,6 +15,8 @@ XREF spi_transmit
 XREF spi_transmit_A
 XREF spi_deselect
 XREF print_string
+XREF print_uint8
+XREF draw_screen
 XREF keyboard_getchar
 XREF sdhc_init
 XREF fat32_init
@@ -22,105 +24,139 @@ XREF fat32_dir
 
 XDEF fileman_start
 
-; screen coordinate of the menu
-DEFC MENU_X = 1
-DEFC MENU_Y = 0
-
 ; main window inner dimensions
-DEFC WINDOW_X = 1
-DEFC WINDOW_Y = 5
-DEFC WINDOW_WIDTH = 49
-DEFC WINDOW_HEIGHT = 32
+DEFC WINDOW_X = 0
+DEFC WINDOW_Y = 4
+; status output location
+DEFC STATUS_X = 1
+DEFC STATUS_Y = 33
 
-.border_char
-	DEFB	$08 ; <- gray square
-.background_car
-	DEFB	$20 ; <- space
-
-.menu_string
-	DEFM	"F1:Help F2:Menu F3:View F4:Edit F5:Copy F6:Move"
-.end_menu_string
-.title_string
-	DEFM	$08, " Name                                     ", $08 ," Size ", $08
-.end_title_string
+.fileman_screen
+	; escape character
+	DEFB	-1
+	; line 0
+	DEFM	" F1:Help   F2:Menu   F3:View   F4:Edit   F5:Copy "
+	DEFM	$B3, -1, 13, 0, $B3
+	; line 1
+	DEFM	" F6:Move   F7:MkDir  F8:Delete F9:Load  ESC:Quit "
+	DEFM	$B3, -1, 13, 0, $B3
+	; line 2
+	DEFM	-1, 49, $C4, $B4, -1, 13, 0, $C3
+	; line 3-30
+	DEFM	-1, 49, " ", $B3, -1, 13, 0, $B3
+	DEFM	-1, 49, " ", $B3, -1, 13, 0, $B3
+	DEFM	-1, 49, " ", $B3, -1, 13, 0, $B3
+	DEFM	-1, 49, " ", $B3, -1, 13, 0, $B3
+	DEFM	-1, 49, " ", $B3, -1, 13, 0, $B3
+	DEFM	-1, 49, " ", $B3, -1, 13, 0, $B3
+	DEFM	-1, 49, " ", $B3, -1, 13, 0, $B3
+	DEFM	-1, 49, " ", $B3, -1, 13, 0, $B3
+	DEFM	-1, 49, " ", $B3, -1, 13, 0, $B3
+	DEFM	-1, 49, " ", $B3, -1, 13, 0, $B3
+	DEFM	-1, 49, " ", $B3, -1, 13, 0, $B3
+	DEFM	-1, 49, " ", $B3, -1, 13, 0, $B3
+	DEFM	-1, 49, " ", $B3, -1, 13, 0, $B3
+	DEFM	-1, 49, " ", $B3, -1, 13, 0, $B3
+	DEFM	-1, 49, " ", $B3, -1, 13, 0, $B3
+	DEFM	-1, 49, " ", $B3, -1, 13, 0, $B3
+	DEFM	-1, 49, " ", $B3, -1, 13, 0, $B3
+	DEFM	-1, 49, " ", $B3, -1, 13, 0, $B3
+	DEFM	-1, 49, " ", $B3, -1, 13, 0, $B3
+	DEFM	-1, 49, " ", $B3, -1, 13, 0, $B3
+	DEFM	-1, 49, " ", $B3, -1, 13, 0, $B3
+	DEFM	-1, 49, " ", $B3, -1, 13, 0, $B3
+	DEFM	-1, 49, " ", $B3, -1, 13, 0, $B3
+	DEFM	-1, 49, " ", $B3, -1, 13, 0, $B3
+	DEFM	-1, 49, " ", $B3, -1, 13, 0, $B3
+	DEFM	-1, 49, " ", $B3, -1, 13, 0, $B3
+	DEFM	-1, 49, " ", $B3, -1, 13, 0, $B3
+	DEFM	-1, 49, " ", $B3, -1, 13, 0, $B3
+	; line 31
+	DEFM	-1, 38, $C4, $C2, -1, 10, 0, $B4, -1, 13, 0, $C3
+	; line 32-35
+	DEFM	-1, 38, " ", $B3, -1, 10, 0, $B3, -1, 13, 0, $B3
+	DEFM	" ", 0, 0, 0, " files total", -1, 22, " ", $B3, -1, 10, 0, $B3, -1, 13, 0, $B3
+	DEFM	-1, 38, " ", $B3, -1, 10, 0, $B3, -1, 13, 0, $B3
+	DEFM	-1, 38, " ", $B3, -1, 10, 0, $B3, -1, 13, 0, $B3
+	; line 36
+	DEFM	-1, 38, $C4, $C1, -1, 10, $C4, $D9, -1, 13, 0, $C0
+	; line 37-62 (26*64 = 6*255 + 134)
+	DEFM	-1, 255, 0, -1, 255, 0, -1, 255, 0
+	DEFM	-1, 255, 0, -1, 255, 0, -1, 255, 0
+	DEFM	-1, 134, 0
+	; line 63
+	DEFM	-1, 49, $C4, $BF, -1, 13, 0, $DA
+	; end
+	DEFM	-1, 0
 
 .fileman_start
 	CALL	sdhc_init
 	RET	C
 	CALL	fat32_init
-        ; print menu
-        LD      HL, menu_string
-        LD      DE, MENU_X + MENU_Y*64
-        LD      BC, #end_menu_string-menu_string
-        CALL    video_copy
-        ; title border
-        LD	HL, border_char
-        LD	DE, [WINDOW_X - 1] + [WINDOW_Y - 3]*64
-        LD	BC, WINDOW_WIDTH + 2
-        CALL	video_fill
-        ; title
-        LD	HL, title_string
-        LD	DE, [WINDOW_X - 1] + [WINDOW_Y - 2]*64
-        LD	BC, #end_title_string-title_string
-        CALL	video_copy
-        ; top horizontal border
-        LD	HL, border_char
-        LD	DE, [WINDOW_X - 1] + [WINDOW_Y - 1]*64
-        LD	BC, WINDOW_WIDTH + 2
-        CALL	video_fill
-        ; vertical border and content
-        LD      IY, [WINDOW_X - 1] + WINDOW_Y*64
-        EXX
-        LD      B, WINDOW_HEIGHT
-.fileman_window_loop
+	; draw screen
+	LD	HL, fileman_screen
+	CALL	draw_screen
+.fileman_dir
+	; list files
 	EXX
-	; eZ80 instruction: LEA DE, IY + 0
-	DEFB    $ED, $13, 0
-	CALL    video_start_write
-	; left  border line
-	CALL	spi_transmit
-	; inner space
-	INC	HL
-	LD	B, WINDOW_WIDTH - 7
-.fileman_fill_line_loop1
-	CALL	spi_transmit
-	DJNZ	fileman_fill_line_loop1
-	DEC	HL
-	; size seperator
-	CALL	spi_transmit
-	INC	HL
-	LD	B, 6
-.fileman_fill_line_loop2
-	CALL	spi_transmit
-	DJNZ	fileman_fill_line_loop2
-        DEC	HL
-        ; right border line
-        CALL	spi_transmit
-        CALL	spi_deselect
-        ; next line
-        ; eZ80 instruction: LEA IY, IY + 64
-        DEFB    $ED, $33, 64
-        EXX
-        DJNZ    fileman_window_loop
-        EXX
-        ; bottom border
-        ; eZ80 instruction: LEA DE, IY + 0
-        DEFB    $ED, $13, 0
-	LD	BC, WINDOW_WIDTH + 2
-	CALL	video_fill
-        ; list files
-	EXX
-	LD	DE, [WINDOW_X + 1] + WINDOW_Y*64
+	LD	DE, [WINDOW_X + 2] + WINDOW_Y*64
+	LD	C, 0
 	EXX
 	LD	HL, (DATA_SECTOR)
 	LD	DE, (DATA_SECTOR + 2)
 	LD	IY, fileman_dir_callback
 	CALL	fat32_dir
+	; print file count
+	LD	A, (DIR_FILE_COUNT)
+	LD	C, A
+	LD	DE, [STATUS_X] + STATUS_Y*64
+	CALL	print_uint8
+	; selected entry
+	LD	E, 0
+	LD	C, $1A ; arrow
+	CALL	fileman_print_cursor
 .fileman_input_loop
 	CALL	keyboard_getchar
+	LD	A, K_UPA
+	CP	A, C
+	JR	Z, fileman_input_up
+	LD	A, K_DNA
+	CP	A, C
+	JR	Z, fileman_input_dn
 	LD	A, K_ESC
 	CP	A, C
 	JR	NZ, fileman_input_loop
+	RET
+
+.fileman_input_up
+	LD	A, -1
+	JR	fileman_input_updn
+.fileman_input_dn
+	LD	A, 1
+.fileman_input_updn
+	ADD	A, E ; E = old entry
+	LD	D, A ; D = new entry
+	LD	A, (DIR_FILE_COUNT)
+	DEC	A
+	CP	A, D
+	JR	C, fileman_input_loop
+	LD	C, ' '
+	CALL	fileman_print_cursor
+	LD	E, D
+	LD	C, $1A
+	CALL	fileman_print_cursor
+	JR	fileman_input_loop
+
+.fileman_print_cursor
+	PUSH	DE
+	LD	D, 64
+	LD	HL, [WINDOW_X + 1] + WINDOW_Y*64
+	; eZ80: MLT DE
+	DEFM	$ED, $5C
+	ADD	HL, DE
+	EX	DE, HL
+	CALL	video_write_C
+	POP	DE
 	RET
 
 .fileman_dir_callback
@@ -131,6 +167,7 @@ DEFC WINDOW_HEIGHT = 32
 	CALL	print_string
 	; eZ80: LEA DE, IY + 64
 	DEFB	$ED, $13, 64
+	INC	C
 	EXX
 	LD	IY, fileman_dir_callback
 	RET

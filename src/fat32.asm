@@ -105,6 +105,10 @@ DEFC DIR_LFN_END_BIT = 6
 ; IX points to directory entry
 ; callback must retain IX and IY
 .fat32_dir
+	;reset file count
+	XOR	A, A
+	LD	(DIR_FILE_COUNT), A
+	; read single block
 	CALL	sdhc_read_block
 	LD	IX, SDHC_BLOCK_BUFFER - 32
 .fat32_dir_loop
@@ -120,6 +124,10 @@ DEFC DIR_LFN_END_BIT = 6
 	; check for end of list
 	AND	A, A
 	RET	Z
+	; count files
+	LD	HL, DIR_FILE_COUNT
+	INC	(HL)
+	; save pointer to original entry
 	PUSH	IX
 	; get long file name (ASCII only)
 	LD	DE, FILE_NAME_BUFFER
@@ -151,6 +159,9 @@ DEFC DIR_LFN_END_BIT = 6
 	; check for last LFN entry
 	BIT	DIR_LFN_END_BIT, (IX + 0)
 	JR	Z, fat32_dir_lfn_loop
+	; add zero byte to end of string
+	XOR	A, A
+	LD	(DE), A
 	POP	IX
 	; callback
 	LD	HL, fat32_dir_loop
