@@ -21,12 +21,14 @@ XREF keyboard_getchar
 XREF sdhc_init
 XREF fat32_init
 XREF fat32_dir
+XREF fat32_find
+XREF editor_open_file
 
 XDEF fileman_start
 
 ; main window inner dimensions
 DEFC WINDOW_X = 0
-DEFC WINDOW_Y = 4
+DEFC WINDOW_Y = 3
 ; status output location
 DEFC STATUS_X = 1
 DEFC STATUS_Y = 33
@@ -72,10 +74,10 @@ DEFC STATUS_Y = 33
 	DEFM	-1, 49, " ", $B3, -1, 13, 0, $B3
 	DEFM	-1, 49, " ", $B3, -1, 13, 0, $B3
 	; line 31
-	DEFM	-1, 38, $C4, $C2, -1, 10, 0, $B4, -1, 13, 0, $C3
+	DEFM	-1, 38, $C4, $C2, -1, 10, $C4, $B4, -1, 13, 0, $C3
 	; line 32-35
 	DEFM	-1, 38, " ", $B3, -1, 10, 0, $B3, -1, 13, 0, $B3
-	DEFM	" ", 0, 0, 0, " files total", -1, 22, " ", $B3, -1, 10, 0, $B3, -1, 13, 0, $B3
+	DEFM	" 000 files total", -1, 22, " ", $B3, -1, 10, 0, $B3, -1, 13, 0, $B3
 	DEFM	-1, 38, " ", $B3, -1, 10, 0, $B3, -1, 13, 0, $B3
 	DEFM	-1, 38, " ", $B3, -1, 10, 0, $B3, -1, 13, 0, $B3
 	; line 36
@@ -93,13 +95,14 @@ DEFC STATUS_Y = 33
 	CALL	sdhc_init
 	RET	C
 	CALL	fat32_init
+.fileman_redraw
 	; draw screen
 	LD	HL, fileman_screen
 	CALL	draw_screen
 .fileman_dir
 	; list files
 	EXX
-	LD	DE, [WINDOW_X + 2] + WINDOW_Y*64
+	LD	DE, [WINDOW_X + 1] + WINDOW_Y*64
 	LD	C, 0
 	EXX
 	LD	HL, (DATA_SECTOR)
@@ -123,6 +126,9 @@ DEFC STATUS_Y = 33
 	LD	A, K_DNA
 	CP	A, C
 	JR	Z, fileman_input_dn
+	LD	A, K_F4
+	CP	A, C
+	JR	Z, fileman_edit
 	LD	A, K_ESC
 	CP	A, C
 	JR	NZ, fileman_input_loop
@@ -147,10 +153,18 @@ DEFC STATUS_Y = 33
 	CALL	fileman_print_cursor
 	JR	fileman_input_loop
 
+.fileman_edit
+	LD	B, E
+	LD	HL, (DATA_SECTOR)
+	LD	DE, (DATA_SECTOR + 2)
+	CALL	fat32_find
+	CALL	editor_open_file
+	JR	fileman_redraw
+
 .fileman_print_cursor
 	PUSH	DE
 	LD	D, 64
-	LD	HL, [WINDOW_X + 1] + WINDOW_Y*64
+	LD	HL, WINDOW_X + WINDOW_Y*64
 	; eZ80: MLT DE
 	DEFM	$ED, $5C
 	ADD	HL, DE
