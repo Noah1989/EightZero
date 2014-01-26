@@ -11,12 +11,15 @@ XREF video_write_C
 XREF spi_transmit_A
 XREF spi_deselect
 XREF keyboard_getchar
+XREF print_uint16
 
 XDEF editor_open_file
 
-DEFC WINDOW_X = 0
+DEFC WINDOW_X = 0 ; some code relies on this to be 0
 DEFC WINDOW_Y = 3
-DEFC WINDOW_H = 28
+DEFC WINDOW_H = 28 ; should be dividable by 4
+DEFC STATUS_X = 1
+DEFC STATUS_Y = 33
 DEFC CURSOR = $DB
 
 .editor_screen
@@ -63,7 +66,7 @@ DEFC CURSOR = $DB
 	DEFM	-1, 38, $C4, $C2, -1, 10, $C4, $B4, -1, 13, 0, $C3
 	; line 32-35
 	DEFM	-1, 38, " ", $B3, -1, 10, 0, $B3, -1, 13, 0, $B3
-	DEFM	-1, 38, " ", $B3, -1, 10, 0, $B3, -1, 13, 0, $B3
+	DEFM	" 00000 bytes total", -1, 20, " ", $B3, -1, 10, 0, $B3, -1, 13, 0, $B3
 	DEFM	-1, 38, " ", $B3, -1, 10, 0, $B3, -1, 13, 0, $B3
 	DEFM	-1, 38, " ", $B3, -1, 10, 0, $B3, -1, 13, 0, $B3
 	; line 36
@@ -83,21 +86,32 @@ DEFC CURSOR = $DB
 .editor_redraw
 	LD	HL, editor_screen
 	CALL	draw_screen
+.editor_print
 	POP	BC
+	PUSH	BC
 	LD	IY, WINDOW_X + WINDOW_Y*64
 	LD	HL, FILE_BUFFER
 	LD	E, WINDOW_H ; line counter
 .editor_print_loop
 	PUSH	DE
 	CALL	print_line
+	; eZ80 instruction: LEA IY, IY + 64
+	DEFB	$ED, $33, 64
 	POP	DE
 	; check for end of screen
 	DEC	E
-	JR	Z, editor_print_end
+	JR	Z, editor_print_size
 	; check for EOF
 	LD	A, B
 	OR	A, C
 	JR	NZ, editor_print_loop
+.editor_print_eof
+	LD	(HL), $FF
+.editor_print_size
+	LD	DE, STATUS_X + STATUS_Y*64
+	POP	HL ; file size
+	PUSH	HL
+	CALL	print_uint16
 .editor_print_end
 	; cursor screen position
 	LD	IY, WINDOW_X + WINDOW_Y*64
@@ -109,11 +123,218 @@ DEFC CURSOR = $DB
 	BIT	0, A
 	CALL	NZ, editor_cursor_update
 	CALL	keyboard_getchar
-	LD	A, K_ESC
-	CP	A, C
-	JR	NZ, editor_input_loop
+	LD	A, C
+	; tabs and line breaks
+	CP	A, 9
+	JP	Z, editor_ins_char
+	CP	A, 10
+	JP	Z, editor_ins_char
+	; escape
+	CP	A, K_ESC
+	JR	Z, editor_exit
+	; arrows
+	CP	A, K_RTA
+	JR	Z, editor_next
+	CP	A, K_LFA
+	JR	Z, editor_prev
+	CP	A, K_UPA
+	JR	Z, editor_up
+	CP	A, K_DNA
+	JR	Z, editor_down
+	; backspace
+	CP	A, 8
+	JR	Z, editor_backspace
+	; delete
+	CP	A, K_DEL
+	JP	Z, editor_del_char
+	; ignore other control chars
+	CP	A, $20
+	JR	C, editor_input_loop
+	; printable characters
+	CP	A, $7F
+	JR	C, editor_ins_char
+	JR	editor_input_loop
+.editor_exit
 	CALL	editor_cursor_blink_off
+	POP	BC ; tidy up stack
 	RET
+
+.editor_up
+	CALL	editor_cursor_0
+	CALL	editor_find_line_start
+	JR	editor_prev_nocursor
+
+.editor_down
+	CALL	editor_cursor_0
+	LD	A, (HL)
+	CP	A, $FF ; EOF guard
+	JR	Z, editor_next_end_noinc
+	LD	A, 10
+	CPIR
+	DEC	HL
+	JR	editor_next_nocursor
+
+.editor_next
+	CALL	editor_cursor_0
+.editor_next_nocursor
+	LD	A, (HL)
+	CP	A, $FF ; EOF guard
+	JR	Z, editor_next_end_noinc
+	CP	A, 10
+	JR	Z, editor_next_line
+	CP	A, 9
+	JR	Z, editor_next_tab
+	INC	IY
+.editor_next_end
+	INC	HL
+.editor_next_end_noinc
+	CALL	editor_cursor_1
+	JR	editor_input_loop
+.editor_next_line
+	; eZ80 instruction: LEA IY, IY + 64
+	DEFB	$ED, $33, 64
+	LD	A, IYL
+	AND	A, -64
+	LD	IYL, A
+	JR	editor_next_end
+.editor_next_tab
+	LD	A, IYL
+	AND	A, -8
+	ADD	A, 8
+	LD	IYL, A
+	JR	editor_next_end
+
+.editor_backspace
+	CALL	editor_cursor_0
+	DEC	HL
+	DEC	IY
+	LD	A, FILE_BUFFER / $100 - 1
+	CP	A, H
+	JR	NZ, editor_del_char
+	INC	IY
+	; fall through
+.editor_prev_stop
+	INC	HL
+	JR	editor_prev_end
+.editor_prev
+	CALL	editor_cursor_0
+.editor_prev_nocursor
+	DEC	HL
+	LD	A, FILE_BUFFER / $100 - 1
+	CP	A, H
+	JR	Z, editor_prev_stop
+	LD	A, (HL)
+	CP	A, 10
+	JR	Z, editor_prev_line
+	CP	A, 9
+	JR	Z, editor_prev_tab
+	DEC	IY
+.editor_prev_end
+	CALL	editor_cursor_1
+	JP	editor_input_loop
+.editor_prev_line
+	; eZ80 instruction: LEA IY, IY - 64
+	DEFB	$ED, $33, -64
+.editor_prev_tab
+	CALL	editor_find_line_start
+	JP	editor_input_loop
+
+.editor_ins_char
+	AND	A, A
+	LD	A, C
+	LD	BC, FILE_BUFFER
+	PUSH	HL ; file position
+	SBC	HL, BC
+	POP	BC ; file position
+	EX	DE, HL ; rel. pos now in DE
+	POP	HL ; file size
+	PUSH	HL ; remains on stack
+	SBC	HL, DE ; tail size now in HL
+	LD	B, H ; BC <- tail size
+	LD	C, L
+	POP	DE ; file size
+	PUSH	DE
+	LD	HL, FILE_BUFFER
+	ADD	HL, DE ; HL <- end of file
+	LD	D, H
+	LD	E, L
+	; move tail by one byte
+	INC	DE
+	INC	BC
+	LDDR
+	INC	HL
+	; HL should point to original file position
+	LD	(HL), A
+	; increase size
+	POP	BC
+	INC	BC
+	PUSH	BC
+	LD	A, (HL)
+	CP	A, 10 inserted newline?
+	JP	Z, editor_redraw
+	PUSH	HL
+	CALL	print_line
+	POP	HL
+	JP	editor_next
+
+.editor_del_char
+	LD	A, (HL)
+	CP	A, $FF ; EOF guard
+	JP	Z, editor_input_loop
+	AND	A, A
+	LD	BC, FILE_BUFFER
+	PUSH	HL ; file position
+	SBC	HL, BC
+	POP	BC ; file position
+	EX	DE, HL ; rel. pos now in DE
+	POP	HL ; file size
+	PUSH	HL ; remains on stack
+	SBC	HL, DE ; tail size now in HL
+	LD	D, B ; DE <- original file position
+	LD	E, C
+	LD	B, H ; BC <- tail size
+	LD	C, L
+	LD	H, D ; HL <- original file position
+	LD	L, E
+	PUSH	HL ; copy on stack
+	; move tail by one byte
+	INC	HL
+	LDIR
+	; restore file position
+	POP	HL
+	; decrease size
+	POP	BC
+	DEC	BC
+	PUSH	BC
+	CP	A, 9 ; deleted a tab?
+	JP	Z, editor_redraw
+	CP	A, 10 ; or newline?
+	JP	Z, editor_redraw
+	PUSH	HL
+	CALL	print_line
+	POP	HL
+	JP	editor_input_loop
+
+.editor_find_line_start
+	LD	A, IYL
+	AND	A, -64
+	LD	IYL, A
+	AND	A, A
+	LD	BC, FILE_BUFFER
+	PUSH	HL ; file position
+	SBC	HL, BC
+	LD	B, H ; rel pos in BC
+	LD	C, L ; to avoid underflov
+	INC	BC ; allow one more
+	POP	HL ; file position
+	LD	A, 10
+	; find beginning of line
+	DEC	HL
+	CPDR
+	INC	HL
+	INC	HL
+	RET
+
 
 .editor_cursor_update
 	AND	A, $FE
@@ -130,6 +351,11 @@ DEFC CURSOR = $DB
 	; eZ80 instruction: LEA DE, IY
 	DEFB	$ED, $13, 0
 	LD	C, (HL)
+	LD	A, $1F
+	CP	A, C
+	JR	C, edit_cursor_0_write
+	LD	C, ' '
+.edit_cursor_0_write
 	JP	video_write_C
 	;RET
 
@@ -174,8 +400,11 @@ DEFC CURSOR = $DB
 	; eZ80 instruction: LEA DE, IY
 	DEFB	$ED, $13, 0
 	CALL	video_start_write
-	; column counter
-	LD	E, 0
+	; column counter (mod 8)
+	LD	A, IYL
+	; WINDOW_X=0, else: SUB A, WINDOW_X
+	AND	A, 7
+	LD	E, A
 .print_line_loop
 	; EOF?
 	LD	A, B
@@ -188,6 +417,8 @@ DEFC CURSOR = $DB
 	; check for end of line
 	CP	A, 10
 	JR	Z, print_line_end
+	CP	A, $FF ; EOF
+	JR	Z, print_line_end
 	; handle tab
 	CP	A, 9
 	JR	Z, print_line_tab
@@ -195,8 +426,8 @@ DEFC CURSOR = $DB
 	INC	E
 	JR	print_line_loop
 .print_line_end
-	; eZ80 instruction: LEA IY, IY + 64
-	DEFB	$ED, $33, 64
+	LD	A, ' '
+	CALL	spi_transmit_A
 	JP	spi_deselect
 	; RET optimized away by JP above
 .print_line_tab
