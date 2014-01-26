@@ -18,7 +18,7 @@ XDEF	getitem
 	LD	IX, queuetab
 	LD	B, SIZEOF_qentry
 	LD	C, A
-INCLUDE	"eZ80/MLT_BE.asm"
+INCLUDE	"eZ80/MLT_BC.asm"
 	ADD	IX, BC
 	; get first process after head
 	LD	A, (IX + qentry_qnext)
@@ -37,7 +37,7 @@ INCLUDE	"eZ80/MLT_BE.asm"
 	LD	IX, queuetab
 	LD	B, SIZEOF_qentry
 	LD	C, A
-INCLUDE	"eZ80/MLT_BE.asm"
+INCLUDE	"eZ80/MLT_BC.asm"
 	ADD	IX, BC
 	; get first process before tail
 	LD	A, (IX + qentry_qprev)
@@ -64,7 +64,7 @@ INCLUDE	"eZ80/MLT_BE.asm"
 	LD	IX, queuetab
 	LD	B, SIZEOF_qentry
 	LD	C, A
-INCLUDE	"eZ80/MLT_BE.asm"
+INCLUDE	"eZ80/MLT_BC.asm"
 	ADD	IX, BC
 	; get prev and next
 IF qentry_qnext + 1 = qentry_qprev
@@ -79,7 +79,7 @@ ENDIF
 	LD	IX, queuetab
 	LD	B, SIZEOF_qentry
 	LD	C, D
-INCLUDE	"eZ80/MLT_BE.asm"
+INCLUDE	"eZ80/MLT_BC.asm"
 	ADD	IX, BC
 	; queuetab[prev].qnext = next
 	LD	(IX + qentry_qnext), E
@@ -88,7 +88,7 @@ INCLUDE	"eZ80/MLT_BE.asm"
 	LD	IX, queuetab
 	LD	B, SIZEOF_qentry
 	LD	C, E
-INCLUDE	"eZ80/MLT_BE.asm"
+INCLUDE	"eZ80/MLT_BC.asm"
 	ADD	IX, BC
 	; queuetab[next].qprev = prev
 	LD	(IX + qentry_qprev), D
