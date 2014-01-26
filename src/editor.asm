@@ -237,7 +237,7 @@ DEFC CURSOR = $DB
 	DEFB	$ED, $33, -64
 .editor_prev_tab
 	CALL	editor_find_line_start
-	JP	editor_input_loop
+	JR	editor_prev_end
 
 .editor_ins_char
 	AND	A, A
@@ -334,7 +334,6 @@ DEFC CURSOR = $DB
 	INC	HL
 	INC	HL
 	RET
-
 
 .editor_cursor_update
 	AND	A, $FE
