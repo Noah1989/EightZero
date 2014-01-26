@@ -1,0 +1,18 @@
+This is the source for the code that runs on the microcomputer.
+
+I have many plans for this but I'm not ready to write it all down yet.
+For now I'm still bootstrapping a standalone system.
+
+Use the tools from Z88dk to compile/assemble.
+
+Memory Map:
+
+$0000..$BFFF system ROM
+$C000..$CFFF EMAC RAM / large buffer
+$E000..      user code
+     ..$F9FF user stack
+$FA00..$FAFF string buffer
+$FB00..$FBFF system globals
+$FC00..$FCFF interrupt vectors
+$FD00..$FEFF sdhc sector buffer
+$FF00..$FFFF system stack
