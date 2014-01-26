@@ -8,7 +8,7 @@ Use the tools from Z88dk to compile/assemble.
 Memory Map:
 
 $0000..$BFFF system ROM
-$C000..$CFFF EMAC RAM
+$C000..$CFFF EMAC RAM / large buffer
 $E000..      user code
      ..$F9FF user stack
 $FA00..$FAFF string buffer

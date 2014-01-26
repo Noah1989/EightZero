@@ -35,7 +35,8 @@ DEFC SD_APP_SEND_OP_COND = 41
 	DEFB	$ED, $74, $01
 	JR	NZ, sdhc_init_card_detected
 	CALL	sdhc_error
-	DEFM	"No card in slot.", 0
+	DEFM	"no card ", 10
+	DEFM	"in slot.", 0
 .sdhc_init_card_detected
 	CALL	spi_slow
 	; select nothing
@@ -63,7 +64,8 @@ DEFC SD_APP_SEND_OP_COND = 41
 	DJNZ	sdhc_init_go_idle_loop
 	EXX
 	CALL	sdhc_error
-	DEFM	"Card not responding.", 0
+	DEFM	"card not", 10
+	DEFM	"respond.", 0
 .sdhc_init_card_idle
 	; send CMD8 (SEND_IF_COND)
 	LD	C, SD_SEND_IF_COND
@@ -81,7 +83,8 @@ DEFC SD_APP_SEND_OP_COND = 41
 	DJNZ	sdhc_init_send_if_cond_loop
 	EXX
 	CALL	sdhc_error
-	DEFM	"Not an SDHC 2.0 card.", 0
+	DEFM	"no SDHC ", 10
+	DEFM	"2.0 card", 0
 .sdhc_init_send_op_cond
 	; send ACMD 41 (SEND_OP_COND)
 	LD	C, SD_APP_SEND_OP_COND
@@ -100,7 +103,8 @@ DEFC SD_APP_SEND_OP_COND = 41
 	DJNZ	sdhc_init_send_op_cond_loop
 	EXX
 	CALL	sdhc_error
-	DEFM	"Could not initialize card.", 0
+	DEFM	"card not", 10
+	DEFM	"ready.  ", 0
 .sdhc_init_card_ready
 	; SD card can now operate at full speed
 	CALL	spi_fast
@@ -118,7 +122,8 @@ DEFC SD_APP_SEND_OP_COND = 41
 	DEC	B
 	JR	Z, sdhc_read_block_ready
 	CALL	sdhc_error
-	DEFM	"Cannot read block.", 0
+	DEFM	"read blk", 10
+	DEFM	"error.  ", 0
 .sdhc_read_block_ready
 	; wait for start block token ($FE)
 	LD	A, SPI_CS_SDHC
@@ -137,7 +142,8 @@ DEFC SD_APP_SEND_OP_COND = 41
 	; extra 8 clock cycles
 	CALL	spi_receive
 	CALL	sdhc_error
-	DEFM	"Timeout reading block", 0
+	DEFM	"read blk", 10
+	DEFM	"timeout.", 0
 .sdhc_read_block_receive
 	LD	HL, SDHC_BLOCK_BUFFER
 	LD	BC, 512
@@ -246,14 +252,14 @@ DEFC SD_APP_SEND_OP_COND = 41
 .sdhc_error
 	; reset SPI speed
 	CALL	spi_fast
-	; clear line
-	LD	HL, space_char
-	LD	DE, 1*64
-	LD	BC, 64
-	CALL	video_fill
+;	; clear line
+;	LD	HL, space_char
+;	LD	DE, 1*64
+;	LD	BC, 64
+;	CALL	video_fill
 	; message is given inline
 	POP	HL
-	LD	IY, 1*64 + 1
+	LD	IY, 33*64 + 40
 	CALL	print_string
 	; carry flag indicates error
 	SCF

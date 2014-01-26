@@ -4,7 +4,7 @@ SOURCES = \
 	ioutil.asm decompress.asm \
 	spi.asm serial.asm keyboard.asm \
 	video.asm uitools.asm sdhc.asm fat32.asm \
-	fileman.asm \
+	fileman.asm editor.asm \
 	charmap.asm sprite.asm icons.asm cursor.asm
 
 
