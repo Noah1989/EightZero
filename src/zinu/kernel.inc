@@ -1,0 +1,2 @@
+DEFC	OK	= 1
+DEFC	SYSERR	= -1
