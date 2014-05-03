@@ -1,2 +1,2 @@
  ;eZ80:	LD 	DE, (IX+d)
-	DEFM	$DD, $17
+	DEFB	$DD, $17

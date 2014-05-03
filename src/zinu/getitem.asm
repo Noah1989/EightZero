@@ -72,7 +72,7 @@ XDEF	getitem
 	; get prev and next
 	; to stitch them together
 IF qentry_qnext + 1 = qentry_qprev
-	INCLUDE "eZ80/LD_DE_IXd_ind.asm"
+	INCLUDE "eZ80/LD_DE_IXdi.asm"
 	DEFB	qentry_qnext
 ELSE
 	LD	E, (IX + qentry_qnext)

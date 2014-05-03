@@ -68,7 +68,7 @@ ENDIF
 	LD	B, H ; rescue pid
 	LD	H, A ; H = prev, L = tail
 IF qentry_qnext + 1 = qentry_qprev
-	INCLUDE "eZ80/LD_IXd_ind_HL.asm"
+	INCLUDE "eZ80/LD_IXdi_HL.asm"
 	DEFB	qentry_qnext
 ELSE
 	LD	(IX + qentry_qnext), L
@@ -111,7 +111,7 @@ ENDIF
 	ADD	IX, BC
 IF qentry_qnext + 1 = qentry_qprev
 	LD	BC, EMPTY~$FF + (EMPTY~$FF)*$100
-	INCLUDE "eZ80/LD_IXd_ind_BC.asm"
+	INCLUDE "eZ80/LD_IXdi_BC.asm"
 	DEFB	qentry_qnext
 ELSE
 	LD	B, EMPTY

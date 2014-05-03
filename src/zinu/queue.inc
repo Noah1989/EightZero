@@ -10,7 +10,7 @@ DEFC	MINKEY	= 0
 
 DEFVARS 0
 {
-	qentry_qkey	ds.b 1 ; int8
+	qentry_qkey	ds.b 1 ; key8
 	qentry_qnext	ds.b 1 ; qid8
 	qentry_qprev	ds.b 1 ; qid8
 	SIZEOF_qentry
