@@ -21,7 +21,7 @@ DEFVARS -1
 	; check for end marker
 	XOR	A, A
 	CP	A, (IY)
-	RET	Z
+	JR	Z, test_done
 	; clear test name
 	LD	A, '.'
 	LD	HL, test_name
@@ -79,6 +79,13 @@ DEFVARS -1
 	JR	test_loop
 .test_passed_text
 	DEFM	"PASSED", 13, 10, 0
+
+.test_done
+	LD	HL, test_done_text
+	CALL	kprintf
+	RET
+.test_done_text
+	DEFM	"TEST DONE", 13, 10, 0
 
 .test_kprintf
 	; Nothing to do here.
