@@ -13,6 +13,8 @@ DEFVARS -1
 .test_list
 	DEFM	"kprintf", 0
 	DEFW	test_kprintf
+	DEFM	"sprintf", 0
+	DEFW	test_sprintf
 	DEFB	0 ; end marker
 
 .test
@@ -92,4 +94,8 @@ DEFVARS -1
 	; If we see the result,
 	; kprintf must work.
 	XOR	A, A
+	RET
+
+.test_sprintf
+	; not done yet
 	RET
