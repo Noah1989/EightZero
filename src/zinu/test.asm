@@ -23,7 +23,7 @@ DEFVARS -1
 	LD	(test_ptr), HL
 .test_loop
 	; check for end marker
-	LD	HL, test_ptr
+	LD	HL, (test_ptr)
 	XOR	A, A
 	CP	A, (HL)
 	JR	Z, test_done
@@ -38,7 +38,7 @@ DEFVARS -1
 	XOR	A, A ; <- 0
 	LD	(test_name_end), A
 	; load test name
-	LD	HL, test_ptr
+	LD	HL, (test_ptr)
 	LD	DE, test_name
 .test_load_name_loop
 	CP	A, (HL)
