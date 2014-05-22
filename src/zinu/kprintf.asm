@@ -52,8 +52,10 @@ XDEF	kprintf
 ;	TODO		format args
 .kprintf
 	PUSH	IX
+	PUSH	IY
 	LD	IX, kputc
 	LD	IY, devtab + SERIAL0*SIZEOF_dentry
 	CALL	_doprnt
 	POP	IX
+	POP	IY
 	RET

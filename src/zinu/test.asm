@@ -8,6 +8,7 @@ DEFVARS -1
 {
 	test_name	ds.b 32
 	test_name_end	ds.b 1
+	test_ptr	ds.w 1
 }
 
 .test_list
@@ -18,11 +19,13 @@ DEFVARS -1
 	DEFB	0 ; end marker
 
 .test
-	LD	IY, test_list
+	LD	HL, test_list
+	LD	(test_ptr), HL
 .test_loop
 	; check for end marker
+	LD	HL, test_ptr
 	XOR	A, A
-	CP	A, (IY)
+	CP	A, (HL)
 	JR	Z, test_done
 	; clear test name
 	LD	A, '.'
@@ -35,10 +38,8 @@ DEFVARS -1
 	XOR	A, A ; <- 0
 	LD	(test_name_end), A
 	; load test name
-	LD	D, IYH
-	LD	E, IYL
-	LD	HL, test_name
-	EX	DE, HL
+	LD	HL, test_ptr
+	LD	DE, test_name
 .test_load_name_loop
 	CP	A, (HL)
 	JR	Z, test_print_name
@@ -54,11 +55,9 @@ DEFVARS -1
 	; run the test
 	INC	HL
 	INCLUDE	"eZ80/LD_IX_HLi.asm"
-	INC	HL
-	INC	HL
-	EX	DE, HL
-	LD	IYH, D ; point IY
-	LD	IYL, E ; to next entry
+	INC	HL ; point to
+	INC	HL ; next entry
+	LD	(test_ptr), HL
 	DEC	A  ; contains $FF now
 	LD	HL, test_return
 	PUSH	HL ; fake CALL
