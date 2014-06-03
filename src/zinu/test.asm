@@ -9,6 +9,7 @@ DEFVARS -1
 	test_name	ds.b 32
 	test_name_end	ds.b 1
 	test_ptr	ds.w 1
+	test_buffer	ds.b 32
 }
 
 .test_list
@@ -88,13 +89,4 @@ DEFVARS -1
 .test_done_text
 	DEFM	"TEST DONE", 13, 10, 0
 
-.test_kprintf
-	; Nothing to do here.
-	; If we see the result,
-	; kprintf must work.
-	XOR	A, A
-	RET
-
-.test_sprintf
-	; not done yet
-	RET
+INCLUDE	"tests/printf.asm"

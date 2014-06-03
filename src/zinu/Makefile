@@ -1,6 +1,6 @@
 SOURCES	= \
 	zinu.asm start.asm conf.asm nulluser.asm \
-	doprnt.asm kprintf.asm \
+	doprnt.asm kprintf.asm sprintf.asm \
 	ioerr.asm ionull.asm \
 	uartInit.asm uartRead.asm uartWrite.asm uartGetc.asm uartPutc.asm uartControl.asm uartInterrupt.asm \
 	getitem.asm queue.asm insert.asm newqueue.asm \
