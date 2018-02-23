@@ -249,32 +249,39 @@ decrease_pc:
 
 
 reset_pc:
-        ; this sets MBASE:PC to 0xFFE000
-        ; ADL mode on
-        ldi     addr, ZDI_RW_CTL
-        ldi     data, SET_ADL
-        rcall   zdi_write
-        ; MBASE value: 0xFF
+        ; this sets RAM_ADDR_U to 0x00 and PC to $E000
+        
+        ;!; ADL mode on
+        ;!ldi     addr, ZDI_RW_CTL
+        ;!ldi     data, SET_ADL
+        ;!rcall   zdi_write
+        
+        ; RAM_ADDR_U value: 0x00
         ldi     addr, ZDI_WR_DATA_L
-        ldi     data, 0xFF
+        ldi     data, 0x00
         rcall   zdi_write
         ; load value into A
-        ; gets loaded into MBASE
+        ; gets loaded into RAM_ADDR_U
         ; by executing an instruction
         ldi     addr, ZDI_RW_CTL
         ldi     data, WRITE_AF
         rcall   zdi_write
-        ; eZ80: LD MB, A (ED 6D)
+        ; eZ80: OUT0 (RAM_ADDR_U), A -> ED 39 B5
+        ldi     addr, ZDI_IS2
+        ldi     data, 0xB5
+        rcall   zdi_write
         ldi     addr, ZDI_IS1
-        ldi     data, 0x6D
+        ldi     data, 0x39
         rcall   zdi_write
         ldi     addr, ZDI_IS0
         ldi     data, 0xED
         rcall   zdi_write
-        ; ADL mode off
-        ldi     addr, ZDI_RW_CTL
-        ldi     data, RESET_ADL
-        rcall   zdi_write
+        
+        ;!; ADL mode off
+        ;!ldi     addr, ZDI_RW_CTL
+        ;!ldi     data, RESET_ADL
+        ;!rcall   zdi_write
+        
         ldi     XH, 0xE0
         ldi     XL, 0x00
         rcall   set_pc

@@ -1,0 +1,2 @@
+ ;eZ80:	MLT	BC
+	DEFB	$ED, $4C

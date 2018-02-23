@@ -1,6 +1,22 @@
-This is the source for the code that runs on the microcomputer.
+What it is about those subdirectories?
 
-I have many plans for this but I'm not ready to write it all down yet.
-For now I'm still bootstrapping a standalone system.
+"hacky" is the first version of the ROM code,
+it has a very nice machine code monitor, good
+keyboard, video, SPI and SDHC drivers, a
+crappy FAT32 implementation and an unusable
+editor. :D All these applications run on the
+bare metal. I originally planned to take this
+as far as having an assembler, but the lack of
+proper operating system level services,
+especially memory management and consistent
+file abstraction, would make it too buggy.
 
-Use the tools from Z88dk to compile/assemble.
+"zinu" takes the experience from building
+hacky and does the right thing (tm). Now
+that I know which abstractions are useful,
+the design should become very beautiful yet
+efficient. The code is loosely based on the
+XINU operating system, but hand-compiled
+into eZ80 assembly. When zinu is mature, the
+usable parts of hacky will be merged into it
+and it will take its place in ROM.

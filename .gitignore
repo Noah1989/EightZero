@@ -1,6 +1,8 @@
-*.bin
+main.bin
 *.lst
 *.sym
 *.obj
 *.map
 *.def
+
+.DS_Store
