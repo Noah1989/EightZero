@@ -1,0 +1,171 @@
+Cmp-Mod V01 Created by CvPcb (2013-may-18)-stable date = Wed Oct 23 05:09:55 2013
+
+BeginCmp
+TimeStamp = /52674DF5;
+Reference = C1;
+ValeurCmp = ~;
+IdModule  = SM0402;
+EndCmp
+
+BeginCmp
+TimeStamp = /52674E04;
+Reference = C2;
+ValeurCmp = ~;
+IdModule  = SM0402;
+EndCmp
+
+BeginCmp
+TimeStamp = /52674E13;
+Reference = C3;
+ValeurCmp = ~;
+IdModule  = SM0402;
+EndCmp
+
+BeginCmp
+TimeStamp = /52674E22;
+Reference = C4;
+ValeurCmp = ~;
+IdModule  = SM0402;
+EndCmp
+
+BeginCmp
+TimeStamp = /52674E31;
+Reference = C5;
+ValeurCmp = ~;
+IdModule  = SM0402;
+EndCmp
+
+BeginCmp
+TimeStamp = /51EEB57A;
+Reference = J1;
+ValeurCmp = VGA;
+IdModule  = EDAC_15;
+EndCmp
+
+BeginCmp
+TimeStamp = /5173D605;
+Reference = P1;
+ValeurCmp = ADDRESS;
+IdModule  = 71991-312LF;
+EndCmp
+
+BeginCmp
+TimeStamp = /5173D612;
+Reference = P2;
+ValeurCmp = DATA;
+IdModule  = 71991-312LF;
+EndCmp
+
+BeginCmp
+TimeStamp = /5173D703;
+Reference = P3;
+ValeurCmp = PORT A;
+IdModule  = 71991-305LF;
+EndCmp
+
+BeginCmp
+TimeStamp = /5173D74F;
+Reference = P4;
+ValeurCmp = PORT B;
+IdModule  = 71991-305LF;
+EndCmp
+
+BeginCmp
+TimeStamp = /5173D78F;
+Reference = P5;
+ValeurCmp = PORT C;
+IdModule  = 71991-305LF;
+EndCmp
+
+BeginCmp
+TimeStamp = /5173D795;
+Reference = P6;
+ValeurCmp = PORT D;
+IdModule  = 71991-305LF;
+EndCmp
+
+BeginCmp
+TimeStamp = /5173EAE3;
+Reference = P7;
+ValeurCmp = MII;
+IdModule  = 71991-312LF;
+EndCmp
+
+BeginCmp
+TimeStamp = /51EEBF91;
+Reference = R1;
+ValeurCmp = R;
+IdModule  = R4;
+EndCmp
+
+BeginCmp
+TimeStamp = /51EEBFA0;
+Reference = R2;
+ValeurCmp = R;
+IdModule  = R4;
+EndCmp
+
+BeginCmp
+TimeStamp = /51EEBFAF;
+Reference = R3;
+ValeurCmp = R;
+IdModule  = R4;
+EndCmp
+
+BeginCmp
+TimeStamp = /51EEBFBE;
+Reference = R4;
+ValeurCmp = R;
+IdModule  = R4;
+EndCmp
+
+BeginCmp
+TimeStamp = /51EEBFCD;
+Reference = R5;
+ValeurCmp = R;
+IdModule  = R4;
+EndCmp
+
+BeginCmp
+TimeStamp = /51EEBFDC;
+Reference = R6;
+ValeurCmp = R;
+IdModule  = R4;
+EndCmp
+
+BeginCmp
+TimeStamp = /51EEBFEB;
+Reference = R7;
+ValeurCmp = R;
+IdModule  = R4;
+EndCmp
+
+BeginCmp
+TimeStamp = /51EEBFFA;
+Reference = R8;
+ValeurCmp = R;
+IdModule  = R4;
+EndCmp
+
+BeginCmp
+TimeStamp = /51EEC009;
+Reference = R9;
+ValeurCmp = R;
+IdModule  = R4;
+EndCmp
+
+BeginCmp
+TimeStamp = /51739D2B;
+Reference = U1;
+ValeurCmp = EZ80F91;
+IdModule  = TQFP144;
+EndCmp
+
+BeginCmp
+TimeStamp = /5267180D;
+Reference = U2;
+ValeurCmp = GD_CORE;
+IdModule  = TQFP_100;
+EndCmp
+
+EndListe
