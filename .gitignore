@@ -4,5 +4,11 @@ main.bin
 *.obj
 *.map
 *.def
-
+*.aux
+*.toc
+doc/.DS_Store
+.DS_Store
+*.pdf
+*.gz
+*.log
 .DS_Store
